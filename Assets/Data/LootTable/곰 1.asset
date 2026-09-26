@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0c09bd870aaa8049950d05574f5b359, type: 3}
-  m_Name: "\uACF0"
+  m_Name: "\uACF0 1"
   m_EditorClassIdentifier: Assembly-CSharp::LootTable
   guaranteedItems:
   - item: {fileID: 11400000, guid: 281192a1f5a086c4194ef5e9f869feb9, type: 2}
@@ -18,7 +18,7 @@ MonoBehaviour:
     minCount: 6
     maxCount: 6
     isUnique: 0
-  - item: {fileID: 11400000, guid: 0bc0df1cf58022f459ec10df6fd822df, type: 2}
+  - item: {fileID: 11400000, guid: 15cadbd9dfd95ce4ebc3bb2958a0be86, type: 2}
     chance: 1
     minCount: 1
     maxCount: 1
