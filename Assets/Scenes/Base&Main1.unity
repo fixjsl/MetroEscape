@@ -3899,6 +3899,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1001833865}
     m_Modifications:
+    - target: {fileID: -6290476081187679638, guid: 50886839c4cdd0047bcfde4372941d17, type: 3}
+      propertyPath: lootTable
+      value: 
+      objectReference: {fileID: 11400000, guid: 80305037f0c805e4ca90d5175fb39d37, type: 2}
     - target: {fileID: 263550371221452191, guid: 50886839c4cdd0047bcfde4372941d17, type: 3}
       propertyPath: m_LocalPosition.x
       value: 259.25684
@@ -7329,7 +7333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EmergencyExit
   TextObject: {fileID: 1262930409}
   promptText: {fileID: 1262930410}
-  keyItem: {fileID: 11400000, guid: 15cadbd9dfd95ce4ebc3bb2958a0be86, type: 2}
+  keyItem: {fileID: 11400000, guid: 0bc0df1cf58022f459ec10df6fd822df, type: 2}
   noKeyMessage: "\uD0C8\uCD9C\uAD6C \uC5F4\uC1E0 \uD544\uC694"
   hasKeyMessage: "\uD0C8\uCD9C"
 --- !u!65 &455643085
