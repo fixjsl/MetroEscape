@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ba962a7afb11040806578efb1545f2, type: 3}
   m_Name: Gather 1
   m_EditorClassIdentifier: Assembly-CSharp::PerkBase
-  PerkId: 1
+  PerkId: 5
   PerkName: "(\uC218\uC9D1 1)"
   icon: {fileID: -2787450243206682223, guid: 9432c8606a3696c4188afcba338a56e4, type: 3}
   description: "\uAE68\uB057\uD55C \uBB3C\uC744 \uD68D\uB4DD\uD55C\uB2E4."
