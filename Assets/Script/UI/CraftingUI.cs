@@ -142,7 +142,11 @@ public class CraftingUI : MonoBehaviour
     private void OnCraftClicked()
     {
         if (selectedItem == null) return;
-        selectedItem.Craft(PlayerStateMachine.Instance.inventory);
+
+        // 제작에 실패하면 재료가 되돌려지므로 화면 상태도 바뀌지 않는다.
+        // 실패 사유는 인벤토리의 무게·슬롯 초과 안내가 표시한다.
+        if (!selectedItem.Craft(PlayerStateMachine.Instance.inventory)) return;
+
         SelectItem(selectedItem);
     }
 }

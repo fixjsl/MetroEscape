@@ -78,6 +78,21 @@ public class Inventory
         return true;
     }
 
+    // 취소된 조작을 되돌릴 때만 사용한다.
+    // 직전에 이 인벤토리에서 차감한 수량을 그대로 복원하는 용도이므로 무게·슬롯 한도를 검사하지 않으며,
+    // 최초 획득 연출과 수집 지표에도 반영하지 않는다. 일반적인 아이템 획득에는 AddItem을 사용한다.
+    public void RestoreItem(ItemBase itemBase, int num = 1)
+    {
+        if (itemBase == null || num <= 0) return;
+
+        int key = itemBase.itemcode;
+        if (slots.TryGetValue(key, out int count)) slots[key] = count + num;
+        else slots[key] = num;
+
+        currentWeight += itemBase.weight * num;
+        OnInventoryChanged?.Invoke();
+    }
+
     public void UseItem(ItemBase itemBase, PlayerStateMachine player)
     {
         if (!slots.ContainsKey(itemBase.itemcode)) return;
