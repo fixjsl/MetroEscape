@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4.3.1 표 11·12</title>
+<style>
+:root{--bg:#fff;--ink:#1a1a1a;--mut:#666;--line:#ccc;--head:#f2f2f2}
+@media (prefers-color-scheme:dark){:root{--bg:#141719;--ink:#e2e6e6;--mut:#8e9a9b;--line:#333b3e;--head:#1d2224;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0 auto;padding:20px 16px 40px;background:var(--bg);color:var(--ink);
+ font:13px/1.5 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;max-width:680px;word-break:keep-all}
+h1{font-size:16px;margin:0 0 3px}
+p.sub{margin:0 0 20px;color:var(--mut);font-size:11.5px}
+h2{font-size:12.5px;margin:22px 0 5px}
+table{border-collapse:collapse;table-layout:fixed;width:100%;max-width:640px;font-size:11px;line-height:1.3}
+th,td{border:1px solid var(--line);padding:2px 5px;text-align:left;vertical-align:top;
+ overflow-wrap:break-word;font-size:11px;line-height:1.3}
+th{background:var(--head);font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.tot td{background:var(--head);font-weight:600}
+code{font-family:ui-monospace,Consolas,monospace;font-size:10px;overflow-wrap:anywhere}
+p.note{margin:5px 0 0;color:var(--mut);font-size:10.5px;max-width:640px;line-height:1.45}
+@page{size:A4;margin:20mm}
+@media print{body{max-width:none;padding:0;color:#000;background:#fff}h2{page-break-after:avoid}tr{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<h1>4.3.1 확장성 검증 — 표</h1>
+<p class="sub">본문 폭 17cm(A4 세로, 여백 20mm) 기준으로 열 너비를 고정함</p>
+
+<h2>[표 11] 확장 대상별 코드 변경량</h2>
+<table>
+<colgroup><col style="width:24%"><col style="width:30%"><col style="width:11%"><col style="width:15%"><col style="width:20%"></colgroup>
+<thead><tr>
+<th>확장 대상</th><th>관여 계층</th><th class="n">신규 .cs</th><th class="n">기존 .cs 수정</th><th>데이터·씬</th>
+</tr></thead>
+<tbody>
+<tr><td>특성 1종</td><td>데이터</td><td class="n">0</td><td class="n">0</td><td>3파일 41행</td></tr>
+<tr><td>구역 1개 (2→3)</td><td>데이터 · 월드 오브젝트 · UI</td><td class="n">0</td><td class="n">0</td><td>9파일 1,812행</td></tr>
+<tr><td>상호작용 오브젝트 1종</td><td>월드 오브젝트</td><td class="n">1</td><td class="n">0</td><td>—</td></tr>
+<tr><td>플레이어 상태 1종</td><td>상태머신</td><td class="n">1</td><td class="n">1</td><td>—</td></tr>
+<tr><td>구역 확장 구조 일반화 (1→2)</td><td>매니저 · 월드 오브젝트 · UI · 데이터</td><td class="n">2</td><td class="n">2</td><td>씬</td></tr>
+</tbody></table>
+<p class="note">주) 변경량은 각 작업 브랜치의 병합 커밋을 기준으로 산출하였다. 특성 추가는 <code>017cb6f</code>, 구역 추가는 <code>71bc1e5</code>, 구역 일반화는 <code>64c9fb6</code>이며, 전체 기록은 소스코드 저장소의 검증 자료 폴더에 있다. 구역 추가의 변경 파일에는 본 작업과 무관한 렌더러 설정 자산 한 건(2행)이 포함되어 있다.</p>
+
+<h2>[표 12] 구역 확장 구조 일반화의 코드 변경량</h2>
+<table>
+<colgroup><col style="width:34%"><col style="width:26%"><col style="width:12%"><col style="width:12%"><col style="width:16%"></colgroup>
+<thead><tr>
+<th>파일</th><th>계층</th><th class="n">추가</th><th class="n">삭제</th><th>구분</th>
+</tr></thead>
+<tbody>
+<tr><td><code>ZoneEntry.cs</code></td><td>데이터</td><td class="n">12</td><td class="n">0</td><td>신규</td></tr>
+<tr><td><code>ZoneSelectUI.cs</code></td><td>UI</td><td class="n">58</td><td class="n">0</td><td>신규</td></tr>
+<tr><td><code>CycleManager.cs</code></td><td>매니저</td><td class="n">48</td><td class="n">13</td><td>수정</td></tr>
+<tr><td><code>BaseDepartureGate.cs</code></td><td>월드 오브젝트</td><td class="n">14</td><td class="n">10</td><td>수정</td></tr>
+<tr class="tot"><td colspan="2">합계</td><td class="n">132</td><td class="n">23</td><td>—</td></tr>
+</tbody></table>
+<p class="note">주) <code>git diff 64c9fb6~1 91eb4c7 --numstat -- "*.cs"</code>의 출력이다.</p>
+
+</body>
+</html>
