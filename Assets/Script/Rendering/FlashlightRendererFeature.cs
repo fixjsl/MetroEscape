@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -37,8 +38,13 @@ public class FlashlightRendererFeature : ScriptableRendererFeature
         private static readonly int PlDataID        = Shader.PropertyToID("_PointLightData");
         private static readonly int PlColorID       = Shader.PropertyToID("_PointLightColor");
 
-        private static readonly Vector4[] _plDataBuf  = new Vector4[4];
-        private static readonly Vector4[] _plColorBuf = new Vector4[4];
+        private const int MaxPointLights = 4;
+
+        // 전역 벡터 배열을 되읽을 때 사용하는 버퍼.
+        // Shader.GetGlobalVectorArray는 배열을 반환하는 형태로 호출하면 호출마다 새 배열을 할당하므로,
+        // 리스트를 받는 형태로 호출하여 이 버퍼를 프레임마다 재사용한다.
+        private static readonly List<Vector4> _plDataBuf  = new List<Vector4>(MaxPointLights);
+        private static readonly List<Vector4> _plColorBuf = new List<Vector4>(MaxPointLights);
 
         public FlashlightPass(Material mat, RenderPassEvent evt)
         {
@@ -60,8 +66,9 @@ public class FlashlightRendererFeature : ScriptableRendererFeature
             public float           flIntensity;
             public Color           flColor;
             public float           plCount;
-            public Vector4[]       plData  = new Vector4[4];
-            public Vector4[]       plColor = new Vector4[4];
+            // 렌더 그래프가 PassData 객체를 풀에서 재사용하므로 이 배열도 함께 재사용된다.
+            public Vector4[]       plData  = new Vector4[MaxPointLights];
+            public Vector4[]       plColor = new Vector4[MaxPointLights];
         }
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
@@ -84,20 +91,24 @@ public class FlashlightRendererFeature : ScriptableRendererFeature
 
             passData.mat        = _mat;
             passData.source     = sourceCopy;
-            passData.flEnabled  = Shader.GetGlobalFloat("_FlashlightEnabled");
-            passData.flPos      = Shader.GetGlobalVector("_FlashlightPos");
-            passData.flDir      = Shader.GetGlobalVector("_FlashlightDir");
-            passData.flRange      = Shader.GetGlobalFloat("_FlashlightRange");
-            passData.flOuterAngle = Shader.GetGlobalFloat("_FlashlightOuterAngle");
-            passData.flInnerAngle = Shader.GetGlobalFloat("_FlashlightInnerAngle");
-            passData.flIntensity  = Shader.GetGlobalFloat("_FlashlightIntensity");
-            passData.flColor    = Shader.GetGlobalColor("_FlashlightColor");
+            // 전역 값의 조회 또한 캐싱한 식별자를 사용하여 매 프레임 발생하는 문자열 해싱을 제거한다.
+            passData.flEnabled  = Shader.GetGlobalFloat(FlEnabledID);
+            passData.flPos      = Shader.GetGlobalVector(FlPosID);
+            passData.flDir      = Shader.GetGlobalVector(FlDirID);
+            passData.flRange      = Shader.GetGlobalFloat(FlRangeID);
+            passData.flOuterAngle = Shader.GetGlobalFloat(FlOuterAngleID);
+            passData.flInnerAngle = Shader.GetGlobalFloat(FlInnerAngleID);
+            passData.flIntensity  = Shader.GetGlobalFloat(FlIntensityID);
+            passData.flColor    = Shader.GetGlobalColor(FlColorID);
 
-            passData.plCount = Shader.GetGlobalFloat("_PointLightCount");
-            var srcData  = Shader.GetGlobalVectorArray("_PointLightData");
-            var srcColor = Shader.GetGlobalVectorArray("_PointLightColor");
-            if (srcData  != null) System.Array.Copy(srcData,  passData.plData,  Mathf.Min(srcData.Length,  4));
-            if (srcColor != null) System.Array.Copy(srcColor, passData.plColor, Mathf.Min(srcColor.Length, 4));
+            passData.plCount = Shader.GetGlobalFloat(PlCountID);
+            Shader.GetGlobalVectorArray(PlDataID,  _plDataBuf);
+            Shader.GetGlobalVectorArray(PlColorID, _plColorBuf);
+            for (int i = 0; i < MaxPointLights; i++)
+            {
+                passData.plData[i]  = i < _plDataBuf.Count  ? _plDataBuf[i]  : Vector4.zero;
+                passData.plColor[i] = i < _plColorBuf.Count ? _plColorBuf[i] : Vector4.zero;
+            }
 
             builder.SetRenderAttachment(activeColor, 0, AccessFlags.Write);
             builder.UseTexture(passData.source, AccessFlags.Read);
