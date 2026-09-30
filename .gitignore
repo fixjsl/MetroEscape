@@ -100,3 +100,5 @@ InitTestScene*.unity*
 /ProfileAnalyzer/
 /ProfilerCaptures/
 *.pdata 
+/Docs/
+/Claude outputs/
