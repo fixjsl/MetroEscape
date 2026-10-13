@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -10,22 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0c09bd870aaa8049950d05574f5b359, type: 3}
-  m_Name: 구호장비함
+  m_Name: "\uAD6C\uD638\uC7A5\uBE44\uD568"
   m_EditorClassIdentifier: Assembly-CSharp::LootTable
   guaranteedItems:
   - item: {fileID: 11400000, guid: b74e5893af5f28a4aa4964f4aa4750fe, type: 2}
     chance: 1
     minCount: 1
     maxCount: 2
+    isUnique: 0
   randomItems:
   - item: {fileID: 11400000, guid: 8bcccb0a699acd1488c446f54c1c4b88, type: 2}
     chance: 0.5
     minCount: 2
     maxCount: 4
+    isUnique: 0
   - item: {fileID: 11400000, guid: 0fd0284b3da48c84f8f5cb33fad6f29a, type: 2}
     chance: 0.3
     minCount: 1
     maxCount: 5
+    isUnique: 0
   - item: {fileID: 11400000, guid: b97823feea9657242ac1ffbcf3a5d392, type: 2}
     chance: 0.5
     minCount: 1

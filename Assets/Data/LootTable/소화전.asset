@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -17,11 +17,13 @@ MonoBehaviour:
     chance: 1
     minCount: 1
     maxCount: 3
+    isUnique: 0
   randomItems:
   - item: {fileID: 11400000, guid: 93613db8991f37d489f42b36f1de0fe8, type: 2}
     chance: 0.74
     minCount: 1
     maxCount: 2
+    isUnique: 0
   - item: {fileID: 11400000, guid: b97823feea9657242ac1ffbcf3a5d392, type: 2}
     chance: 0.5
     minCount: 1

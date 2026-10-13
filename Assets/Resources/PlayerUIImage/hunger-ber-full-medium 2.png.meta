@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: 5299e9fb0513b714c8297a3a61654e08
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 7937383822281026044
+    second: hunger-ber-full-medium 2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +98,29 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: hunger-ber-full-medium 2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1206
+        height: 1206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf92ef44880472e60800000000000000
+      internalID: 7937383822281026044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
