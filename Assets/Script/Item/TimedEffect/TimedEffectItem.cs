@@ -43,11 +43,11 @@ public class TimedEffectItem : ItemBase
         var status = player.status;
 
         if (modifyHunger)
-            status.hungerDecreasePerMinute = status.baseHungerDecreasePerMinute * hungerDecreaseMultiplier;
+            status.hungerDecreasePerMinute = status.HungerDecayRate;
         if (modifyThirst)
-            status.waterDecreasePerMinute = status.baseWaterDecreasePerMinute * thirstDecreaseMultiplier;
+            status.waterDecreasePerMinute = status.ThirstDecayRate;
         if (modifyStaminaRecovery)
-            status.staminaRecoverey = status.baseStaminaRecovery * staminaRecoveryMultiplier;
+            status.staminaRecoverey = status.StaminaRecoveryRate;
 
         yield return new WaitForSeconds(duration);
 
