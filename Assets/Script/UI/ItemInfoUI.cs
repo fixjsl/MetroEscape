@@ -42,6 +42,7 @@ public class ItemInfoUI : MonoBehaviour
 
     public void Show(string label, Vector2 screenPos)
     {
+        if (descriptionText != null) descriptionText.gameObject.SetActive(false);
         itemNameText.text = label;
         itemTypeText.text = "";
         itemWeightText.text = "";

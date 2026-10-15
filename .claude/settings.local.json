@@ -17,7 +17,12 @@
       "PowerShell(Get-ChildItem -Path \"d:\\\\Popol\\\\SubwayExit\\\\Assets\\\\Script\" -Recurse -File | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"d:\\\\Popol\\\\SubwayExit\\\\Assets\\\\Script\\\\\", \"\"\\) } | Sort-Object)",
       "Bash(grep ^guid: d:/Popol/SubwayExit/Assets/Data/ItemInfo/Meterial/__TRACKED_VAR__.asset.meta)",
       "Bash(grep ^guid: d:/Popol/SubwayExit/Assets/Data/ItemInfo/Consumable/__TRACKED_VAR__.asset.meta)",
-      "Bash(sort -t: -k2 -rn)"
+      "Bash(sort -t: -k2 -rn)",
+      "Bash(cd /d/my/MetroEscape && sed -n '/layers:/,/m_LayerCollisionMatrix/p' ProjectSettings/TagManager.asset | head -40; grep -n \"m_LayerCollisionMatrix\" -A33 ProjectSettings/DynamicsManager.asset)",
+      "Bash(sed -i -e 152d -e 61,79d -e 27d 버그수정_가이드_20261015.md)",
+      "Bash(sed -i -e '5s/.*/- **범위: 실제로 남아 있는 버그만** — B7, B8, B11, B12, B13 + 기타 E1~E4/' -e 's/| 7 | 기타 | ⭐ | null 체크 등 5개 \\(E1~E5\\) |/| 6 | 기타 | ⭐ | null 체크 등 4개 \\(E1~E4\\) |/' 버그수정_가이드_20261015.md)",
+      "Bash(f=버그수정_가이드_20261015.md && sed -i -e 's/^| 3 | B13 /| 2 | B13 /' -e 's/^| 4 | B12 /| 3 | B12 /' -e 's/^| 5 | B8 /| 4 | B8 /' -e 's/^| 6 | B11 /| 5 | B11 /' \"$f\" && sed -n 26,31p \"$f\"; grep -n \"^## 부록\" \"$f\"; tail -3 \"$f\")",
+      "Bash(cat >> *)"
     ]
   }
 }

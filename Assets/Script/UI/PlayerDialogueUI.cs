@@ -56,6 +56,7 @@ public class PlayerDialogueUI : MonoBehaviour
         player.inventory.OnSlotsFull     += onSlotsFull;
         player.status.ChangeHungry       += onHungryChanged;
         player.status.ChangeWater        += onWaterChanged;
+        player.status.ChangeHP           += onHPChanged;
     }
 
     void LateUpdate()

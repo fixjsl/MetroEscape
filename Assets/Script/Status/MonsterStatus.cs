@@ -11,9 +11,10 @@ public class MonsterStatus : ScriptableObject
         get => hp;
         set
         {
+            bool wasAlive = hp > 0;
             hp = Mathf.Clamp(value, 0, Maxhp);
             ChangeHP?.Invoke(hp);
-            if (hp <= 0) OnDie?.Invoke();
+            if (wasAlive && hp <= 0) OnDie?.Invoke();
         }
     }
     public float speed;

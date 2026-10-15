@@ -108,7 +108,7 @@ public class Campfire : ItObjectBase
     {
         var inv = PlayerStateMachine.Instance.inventory;
         if (!inv.RemoveItem(rawMeat, 1)) return;
-        inv.AddItem(cookedMeat);
+        if (!inv.AddItem(cookedMeat)) inv.AddItem(rawMeat, 1, true, false);
         CampfireUI.Instance.Refresh(this);
     }
 

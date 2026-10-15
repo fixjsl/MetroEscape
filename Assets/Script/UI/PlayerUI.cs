@@ -72,6 +72,7 @@ public class PlayerUI : MonoBehaviour
     void OnDestroy()
     {
         if (status == null) return;
+        if (GameManager.Instance == null) return;
         status.ChangeHP      -= OnHPChanged;
         status.ChangeStamina -= OnStaminaChanged;
         status.ChangeHungry  -= OnHungryChanged;
