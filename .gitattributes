@@ -1,5 +1,5 @@
 # ---- Unity YAML: 스마트 머지 ----
-# UnityYAMLMerge 드라이버는 PC마다 .git/config에 따로 등록해야 동작함 (Docs/리팩토링_로드맵 1단계 참고)
+# UnityYAMLMerge 드라이버는 PC마다 .git/config에 따로 등록해야 동작함 (D:/my/AIDOCS/리팩토링_로드맵 1단계 참고)
 # 등록 전에는 일반 텍스트 머지로 동작 (해 없음)
 *.unity       merge=unityyamlmerge
 *.prefab      merge=unityyamlmerge
