@@ -40,24 +40,6 @@ public class TimedEffectItem : ItemBase
 
     private IEnumerator ApplyEffect(PlayerStateMachine player)
     {
-        var status = player.status;
-
-        if (modifyHunger)
-            status.hungerDecreasePerMinute = status.HungerDecayRate;
-        if (modifyThirst)
-            status.waterDecreasePerMinute = status.ThirstDecayRate;
-        if (modifyStaminaRecovery)
-            status.staminaRecoverey = status.StaminaRecoveryRate;
-
         yield return new WaitForSeconds(duration);
-
-        if (modifyHunger)
-            status.hungerDecreasePerMinute = status.baseHungerDecreasePerMinute;
-        if (modifyThirst)
-            status.waterDecreasePerMinute = status.baseWaterDecreasePerMinute;
-        if (modifyStaminaRecovery)
-            status.staminaRecoverey = status.baseStaminaRecovery;
-
-        player.timedEffectCoroutine = null;
     }
 }

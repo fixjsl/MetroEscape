@@ -6,11 +6,11 @@ public enum StatType
 }
 public class StatModifier
 {
-    public StatType Stat;
-    public float multiplier;
-    public object source;
-    public StatModifier(StatType state, float multipier, object source)
+    public readonly StatType Stat;
+    public readonly float multiplier;
+    public readonly object source;
+    public StatModifier(StatType stat, float multiplier, object source)
     {
-        Stat = state; this.multiplier = multipier; this.source = source;
+        Stat = stat; this.multiplier = multiplier; this.source = source;
     }
 }

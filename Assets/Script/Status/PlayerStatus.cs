@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -111,30 +110,7 @@ public class PlayerStatus
         set { _noiseSprint = value; ChangeNoiseStat?.Invoke(); }
     }
     //ItemMethod
-    private List<StatModifier> Effect = new List<StatModifier>();
-    public void AddModifier(StatModifier modifier)
-    {
-        Effect.Add(modifier);
-    }
-    public void RemoveModifier(StatModifier modifier)
-    {
-        Effect.Remove(modifier);
-    }
-    public void ClearModifier(StatModifier modifier)
-    {
-        Effect.Clear();
-    }
-    float GetMultiplier(StatType type)
-    {
-        float up = 1f, down = 1f;
-        foreach (var m in Effect)
-        {
-            if (m.Stat != type) continue;
-            if (m.multiplier > 1f) up   = Mathf.Max(up,   m.multiplier);
-            else                   down = Mathf.Min(down, m.multiplier);
-        }
-        return up * down;
-    }
+    public StatModifierSet Modifiers { get; } = new StatModifierSet();
 
 
     [Header("Recovery")]
@@ -142,9 +118,9 @@ public class PlayerStatus
     [Header("Survival")]
     public float hungerDecreasePerMinute = 0.1f;   // 그대로
     public float waterDecreasePerMinute = 0.3f;
-    public float StaminaRecoveryRate => staminaRecoverey * GetMultiplier(StatType.Stamina);
-    public float HungerDecayRate => hungerDecreasePerMinute * GetMultiplier(StatType.Hungry);
-    public float ThirstDecayRate => waterDecreasePerMinute * GetMultiplier(StatType.Thirst);
+    public float StaminaRecoveryRate => staminaRecoverey * Modifiers.GetMultiplier(StatType.Stamina);
+    public float HungerDecayRate => hungerDecreasePerMinute * Modifiers.GetMultiplier(StatType.Hungry);
+    public float ThirstDecayRate => waterDecreasePerMinute * Modifiers.GetMultiplier(StatType.Thirst);
 
     public float dodgeSpeed;
 

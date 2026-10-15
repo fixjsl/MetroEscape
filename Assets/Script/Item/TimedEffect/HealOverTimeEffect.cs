@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class OverTimeEffect
+public class HealOverTimeEffect
 {
     
 }

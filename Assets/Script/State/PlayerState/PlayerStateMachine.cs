@@ -11,8 +11,22 @@ public enum StateType
     None, idle, Dodge, Attack, interact,Parry, crunch
 }
 [RequireComponent(typeof(BoxCollider))]
-public class PlayerStateMachine : MonoBehaviour
+public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
 {
+    //IEffectTarget
+    public StatModifierSet Modifiers => status.Modifiers;
+    //IDamageable (이미 죽었으면 무시 → OnDie 중복 방지)
+    public void Heal(float amount)
+    {
+        if (status.Hp <= 0) return;
+        status.Hp += amount;
+    }
+    public void TakeDamage(float amount)
+    {
+        if (status.Hp <= 0) return;
+        status.Hp -= amount;
+    }
+
 
     public static PlayerStateMachine Instance { get; private set; }
 
@@ -204,9 +218,6 @@ public class PlayerStateMachine : MonoBehaviour
         status.Stamina = status.MaxStamina;
         status.Hungry  = status.MaxHungry;
         status.Water   = status.MaxWater;
-        status.baseHungerDecreasePerMinute = status.hungerDecreasePerMinute;
-        status.baseWaterDecreasePerMinute  = status.waterDecreasePerMinute;
-        status.baseStaminaRecovery         = status.staminaRecoverey;
 
         stateInit();
         InputBindings.Init(action);
