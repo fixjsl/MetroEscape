@@ -32,7 +32,7 @@ public class Idle : PlayerState
     public override void LogicUpdate()
     {
         if(player.status.Stamina != player.status.MaxStamina)
-            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime;
+            player.status.Stamina += player.status.StaminaRecoveryRate * Time.deltaTime;
 
         if (!player.animator.IsInTransition(1))
         {

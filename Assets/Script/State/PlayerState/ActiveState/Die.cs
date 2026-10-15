@@ -16,6 +16,7 @@ public class Die : PlayerState
         player.gameObject.layer = Layercache.Die;
         player.OnDisable();
         player.inventory.LoseOnDeath(player.status.curdeathItemLossRate);
+        player.effects.ClearOnDeath();
         player.status.Chance--;     
         if (player.status.Chance >0)
             player.StartCoroutine(RespawnRoutine());

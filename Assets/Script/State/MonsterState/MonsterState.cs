@@ -25,7 +25,7 @@ public abstract class MonsterState : State
 
     public override void HandleDamage(float Damage)
     {
-            //½´ÆÛ¾Æ¸Ó¿ë µ¥¹ÌÁö ÇÔ¼ö
+            //ìŠˆí¼ì•„ë¨¸ìš© ë°ë¯¸ì§€ í•¨ìˆ˜
             Monster.status.Hp -= Damage;
 
         }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "TimedEffectItem", menuName = "Scriptable Objects/Item/TimedEffectItem")]
@@ -6,40 +7,29 @@ public class TimedEffectItem : ItemBase
 {
     private void Reset() => itemType = ItemType.Consumable;
 
-    public float duration = 60f;
-
-    [Header("Hunger")]
-    public bool modifyHunger;
-    public float hungerDecreaseMultiplier = 1f;
-
-    [Header("Thirst")]
-    public bool modifyThirst;
-    public float thirstDecreaseMultiplier = 1f;
-
-    [Header("Stamina Recovery")]
-    public bool modifyStaminaRecovery;
-    public float staminaRecoveryMultiplier = 1f;
+    [SerializeReference] public List<TimedEffect> effects = new List<TimedEffect>();
 
     public override string GetEffectDescription()
     {
-        var parts = new System.Collections.Generic.List<string>();
-        parts.Add($"{duration}초 동안");
-        if (modifyHunger) parts.Add($"배고픔 감소 x{hungerDecreaseMultiplier}");
-        if (modifyThirst) parts.Add($"수분 감소 x{thirstDecreaseMultiplier}");
-        if (modifyStaminaRecovery) parts.Add($"스태미나 회복 x{staminaRecoveryMultiplier}");
-        return string.Join("  ", parts);
+        if (effects == null || effects.Count == 0) return "";
+
+        var lines = new List<string>();
+        foreach (var e in effects)
+        {
+            if (e == null) continue;          // 인스펙터에서 빈 칸(null)이 들어가 있을 때 대비
+            lines.Add(e.Describe());
+        }
+        return string.Join("\n", lines);
     }
 
     public override bool OnUse(PlayerStateMachine player)
     {
-        if (player.timedEffectCoroutine != null)
-            player.StopCoroutine(player.timedEffectCoroutine);
-        player.timedEffectCoroutine = player.StartCoroutine(ApplyEffect(player));
+        foreach (var effect in effects)
+        {
+            if(effect == null) continue;
+            player.effects.Apply(effect, this);
+        }
         return true;
     }
 
-    private IEnumerator ApplyEffect(PlayerStateMachine player)
-    {
-        yield return new WaitForSeconds(duration);
-    }
 }

@@ -21,10 +21,31 @@ MonoBehaviour:
   weight: 0.5
   canBurnAsFuel: 0
   materials: []
-  duration: 120
-  modifyHunger: 1
-  hungerDecreaseMultiplier: 0.5
-  modifyThirst: 1
-  thirstDecreaseMultiplier: 0.5
-  modifyStaminaRecovery: 1
-  staminaRecoveryMultiplier: 1.5
+  effects:
+  - rid: 244674662543917124
+  - rid: 244674662543917125
+  - rid: 244674662543917126
+  references:
+    version: 2
+    RefIds:
+    - rid: 244674662543917124
+      type: {class: StatMultiplierEffect, ns: , asm: Assembly-CSharp}
+      data:
+        duration: 60
+        removeOnDeath: 1
+        stat: 0
+        multiplier: 0.5
+    - rid: 244674662543917125
+      type: {class: StatMultiplierEffect, ns: , asm: Assembly-CSharp}
+      data:
+        duration: 60
+        removeOnDeath: 1
+        stat: 1
+        multiplier: 0.5
+    - rid: 244674662543917126
+      type: {class: StatMultiplierEffect, ns: , asm: Assembly-CSharp}
+      data:
+        duration: 60
+        removeOnDeath: 1
+        stat: 2
+        multiplier: 1.5

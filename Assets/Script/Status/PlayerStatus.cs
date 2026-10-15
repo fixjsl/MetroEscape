@@ -114,11 +114,11 @@ public class PlayerStatus
 
 
     [Header("Recovery")]
-    public float staminaRecoverey;                 // 그대로 (저장된 10/15 유지)
+    public float StaminaRecovery;                 // 그대로 (저장된 10/15 유지)
     [Header("Survival")]
     public float hungerDecreasePerMinute = 0.1f;   // 그대로
     public float waterDecreasePerMinute = 0.3f;
-    public float StaminaRecoveryRate => staminaRecoverey * Modifiers.GetMultiplier(StatType.Stamina);
+    public float StaminaRecoveryRate => StaminaRecovery * Modifiers.GetMultiplier(StatType.Stamina);
     public float HungerDecayRate => hungerDecreasePerMinute * Modifiers.GetMultiplier(StatType.Hungry);
     public float ThirstDecayRate => waterDecreasePerMinute * Modifiers.GetMultiplier(StatType.Thirst);
 

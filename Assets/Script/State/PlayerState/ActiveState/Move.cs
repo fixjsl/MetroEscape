@@ -72,7 +72,7 @@ public class Move : PlayerState
 
         if (!player.isSprint || player.isTired)
         {
-            player.status.Stamina += player.status.staminaRecoverey * Time.deltaTime;
+            player.status.Stamina += player.status.StaminaRecoveryRate * Time.deltaTime;
         }
         else
         {

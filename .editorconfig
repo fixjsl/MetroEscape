@@ -1,0 +1,6 @@
+root = true
+
+# C# 소스: UTF-8(BOM 없음)으로 저장. 기존 파일 대부분이 이 형식이고, 한글이 CP949로 저장돼 깨지는 것을 막음
+[*.cs]
+charset = utf-8
+end_of_line = crlf

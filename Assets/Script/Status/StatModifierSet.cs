@@ -18,10 +18,12 @@ public class StatModifierSet
         float up = 1f, down = 1f;
         foreach (var m in modifiers)
         {
-            if (m.Stat != type) continue;
+            if (m.stat != type) continue;
             if (m.multiplier > 1f) up   = Mathf.Max(up,   m.multiplier);
             else                   down = Mathf.Min(down, m.multiplier);
         }
         return up * down;
     }
 }
+
+

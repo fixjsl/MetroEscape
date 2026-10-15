@@ -29,8 +29,8 @@ public class HungerThirst : PassiveState
 
     private void OnMinuteTick(int hour, int minute)
     {
-        hungerAccum += player.status.hungerDecreasePerMinute;
-        thirstAccum += player.status.waterDecreasePerMinute;
+        hungerAccum += player.status.HungerDecayRate;
+        thirstAccum += player.status.ThirstDecayRate;
 
         int hungerDelta = (int)hungerAccum;
         int thirstDelta = (int)thirstAccum;

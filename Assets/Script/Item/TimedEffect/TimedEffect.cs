@@ -2,7 +2,11 @@ using UnityEngine;
 [System.Serializable]
 public abstract class TimedEffect
 {
-    public float duration = 60f; // 지속 시간
+    [Tooltip("0 이하 = 무한 지속")]
+    public float duration = 60f;
+    public bool removeOnDeath = true;
+
+    public bool IsInfinite => duration <= 0f;
     public virtual void OnStart(IEffectTarget target, ActiveEffect active) { }
     public virtual void OnTick(IEffectTarget target, ActiveEffect active, float dt) { }
     public virtual void OnEnd(IEffectTarget target, ActiveEffect active) { }

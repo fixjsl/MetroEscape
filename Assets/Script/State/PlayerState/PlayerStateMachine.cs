@@ -114,7 +114,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
 
     [SerializeField] private ItemBase startItem;
     [SerializeField] private int startItemCount = 1;
-    public Coroutine timedEffectCoroutine;
+    public EffectRunner effects;
     private List<IInteractable> nearbyInteractables = new List<IInteractable>();
     public IInteractable nearbyInteractable => GetClosest();
     public void SetInteractable(IInteractable interactable)
@@ -219,14 +219,16 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
         status.Hungry  = status.MaxHungry;
         status.Water   = status.MaxWater;
 
+        effects = new EffectRunner(this);
+
         stateInit();
         InputBindings.Init(action);
     }
     void Update()
     {
         if (flashlight != null) flashlight.UpdateShaderGlobals();
+        effects.Tick(Time.deltaTime);
         CheckStateChange();
-
 #if UNITY_EDITOR
         if (UnityEngine.InputSystem.Keyboard.current.iKey.wasPressedThisFrame)
         {
