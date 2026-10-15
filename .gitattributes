@@ -1,0 +1,44 @@
+# ---- Unity YAML: 스마트 머지 ----
+# UnityYAMLMerge 드라이버는 PC마다 .git/config에 따로 등록해야 동작함 (Docs/리팩토링_로드맵 1단계 참고)
+# 등록 전에는 일반 텍스트 머지로 동작 (해 없음)
+*.unity       merge=unityyamlmerge
+*.prefab      merge=unityyamlmerge
+*.asset       merge=unityyamlmerge
+*.mat         merge=unityyamlmerge
+*.anim        merge=unityyamlmerge
+*.controller  merge=unityyamlmerge
+*.overrideController merge=unityyamlmerge
+*.meta        merge=unityyamlmerge
+
+# ---- Git LFS: 바이너리 ----
+# 이 파일을 추가한 뒤에 새로 커밋되는 파일부터 LFS로 저장됨
+# 기존 이력까지 옮기려면 git lfs migrate 필요 (이력 재작성, 별도 결정)
+
+# 이미지
+*.png  filter=lfs diff=lfs merge=lfs -text
+*.jpg  filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.tga  filter=lfs diff=lfs merge=lfs -text
+*.psd  filter=lfs diff=lfs merge=lfs -text
+*.tif  filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
+*.exr  filter=lfs diff=lfs merge=lfs -text
+*.hdr  filter=lfs diff=lfs merge=lfs -text
+
+# 3D 모델
+*.fbx   filter=lfs diff=lfs merge=lfs -text
+*.obj   filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+
+# 오디오 / 비디오
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+
+# 폰트 / 라이브러리 / 압축
+*.ttf filter=lfs diff=lfs merge=lfs -text
+*.otf filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text

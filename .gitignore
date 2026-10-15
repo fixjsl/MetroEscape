@@ -102,3 +102,25 @@ InitTestScene*.unity*
 *.pdata 
 /Docs/
 /Claude outputs/
+
+# ---- MetroEscape 추가 (2026-10-15) ----
+# 크래시 복구 씬 (Unity가 자동 생성)
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
+
+# IDE 생성 파일 / 개인 설정
+*.slnx
+.vscode/
+.claude/settings.local.json
+
+# 논문·측정 자료 (게임 빌드와 무관, 별도 보관)
+/렌더링 성능 검사/
+/제안_AI/
+/확장성 검증 깃 스샷/
+/관련연구 검증_AI/
+/개선점_AI/
+
+# 기획 문서 (로컬 보관)
+/기능명세서.md
+/기능명세서_수정본.md
+/기획서 초안.docx
