@@ -19,11 +19,17 @@ MonoBehaviour:
   description: 
   maxamount: 99
   weight: 0.01
+  canBurnAsFuel: 0
   materials: []
-  duration: 60
-  modifyHunger: 1
-  hungerDecreaseMultiplier: 0.7
-  modifyThirst: 0
-  thirstDecreaseMultiplier: 1
-  modifyStaminaRecovery: 0
-  staminaRecoveryMultiplier: 1
+  effects:
+  - rid: 244674662543917127
+  references:
+    version: 2
+    RefIds:
+    - rid: 244674662543917127
+      type: {class: StatMultiplierEffect, ns: , asm: Assembly-CSharp}
+      data:
+        duration: 60
+        removeOnDeath: 1
+        stat: 0
+        multiplier: 0.7
