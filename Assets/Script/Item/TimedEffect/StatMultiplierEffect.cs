@@ -5,10 +5,10 @@ public class StatMultiplierEffect : TimedEffect
     public StatType stat;
     public float multiplier;
 
-    public override void OnStart(PlayerStateMachine player, ActiveEffect active)
+    public override void OnStart(IEffectTarget target, ActiveEffect active)
     {
         var modifier = new StatModifier(stat, multiplier, active);
-        player.status.AddModifier(modifier);
+        target.Modifiers.Add(modifier);
         active.state = modifier;
     }
     public override string Describe()
