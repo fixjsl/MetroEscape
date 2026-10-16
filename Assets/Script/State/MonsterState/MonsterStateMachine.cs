@@ -14,7 +14,7 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] protected LayerMask playerLayer;
     public Coroutine DetectCorutine { get; private set; }
     public PlayerStateMachine Targetplayer {  get; private set; }
-    public MonsterState ActiveState { get; protected set; }
+    public MonsterState ActiveState => fsm.Current;
     public MonsterState PassiveState { get; private set; }
     public Rigidbody Rb { get; private set; }
     public Animator animator { get; private set; }
