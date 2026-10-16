@@ -53,6 +53,6 @@ public class PerkBase : ScriptableObject
 
         status.Water  = status.Water;
         status.Hungry = status.Hungry;
-        if (startingItem != null) inventory.AddItem(startingItem, 1, true, false);
+        if (startingItem != null) inventory.AddItem(startingItem, 1, false);
     }
 }

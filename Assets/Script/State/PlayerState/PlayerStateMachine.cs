@@ -190,7 +190,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
         inventory = new Inventory(status);
         status.curMaxCarryWeight = status.maxCarryWeight;
         if (startItem != null)
-            inventory.AddItem(startItem, startItemCount, suppressFirstAcquire: true, countAsGathered: false);
+            inventory.AddItem(startItem, startItemCount, countAsGathered: false);
         currentLight = GetComponentInChildren<Light>();
         Rb = GetComponent<Rigidbody>();
         Col = GetComponent<BoxCollider>();

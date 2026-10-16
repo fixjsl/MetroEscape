@@ -9,14 +9,12 @@ public class Campfire : ItObjectBase
     [SerializeField] private ScreenPointLight screenLight;
     [SerializeField] private AudioSource fireAudioSource;
     [SerializeField] private Sprite fuelIcon;
-    [SerializeField] private Sprite tutorialImage;
     [SerializeField] private int requiredFuelCount = 3;
     [SerializeField] private ItemBase lighterItem;
     [SerializeField] private ItemBase rawMeat;
     [SerializeField] private ItemBase cookedMeat;
 
     public bool IsBurning { get; private set; }
-    private bool tutorialShown;
     public Sprite FuelIcon => fuelIcon;
     public int RequiredFuelCount => requiredFuelCount;
     public ItemBase LighterItem => lighterItem;
@@ -34,14 +32,6 @@ public class Campfire : ItObjectBase
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        if (!tutorialShown && tutorialImage != null)
-        {
-            tutorialShown = true;
-            FirstAcquireUI.Instance.Show(tutorialImage);
-            isInteracting = false;
-            return;
-        }
-
         if (CampfireUI.Instance.IsOpen)
             CampfireUI.Instance.Close();
         else
@@ -108,7 +98,7 @@ public class Campfire : ItObjectBase
     {
         var inv = PlayerStateMachine.Instance.inventory;
         if (!inv.RemoveItem(rawMeat, 1)) return;
-        if (!inv.AddItem(cookedMeat)) inv.AddItem(rawMeat, 1, true, false);
+        if (!inv.AddItem(cookedMeat)) inv.AddItem(rawMeat, 1, false);
         CampfireUI.Instance.Refresh(this);
     }
 

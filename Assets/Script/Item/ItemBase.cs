@@ -7,7 +7,6 @@ public enum ItemType { Weapon, Consumable, Material, Equipment, InteractObject, 
 public class ItemBase : ScriptableObject
 {
     public Sprite icon;
-    public Sprite firstAcquireImage;
     public int itemcode;
     public ItemType itemType;
     [TextArea(2, 4)] public string description;

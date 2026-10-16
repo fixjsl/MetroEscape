@@ -11,17 +11,15 @@ public class Inventory
 
     public event Action OnInventoryChanged;
     public event Action OnQuickSlotsChanged;
-    public event Action<ItemBase> OnFirstAcquire;
     public event Action OnInventoryFull;
     public event Action OnSlotsFull;
-    private HashSet<int> acquiredCodes = new HashSet<int>();
 
     public Inventory(PlayerStatus status)
     {
         this.status = status;
     }
 
-    public bool AddItem(ItemBase itemBase, int num = 1, bool suppressFirstAcquire = false, bool countAsGathered = true)
+    public bool AddItem(ItemBase itemBase, int num = 1, bool countAsGathered = true)
     {
         int key = itemBase.itemcode;
         float addWeight = itemBase.weight * num;
@@ -49,12 +47,6 @@ public class Inventory
         currentWeight += addWeight;
         if (countAsGathered)
             MetaProgressManager.Instance?.AddGather(itemBase, num);       // ← 추가
-        if (!suppressFirstAcquire)
-        {
-            bool isNew = acquiredCodes.Add(key);
-            if (isNew && itemBase.firstAcquireImage != null)
-                OnFirstAcquire?.Invoke(itemBase);
-        }
         OnInventoryChanged?.Invoke();
         return true;
     }
