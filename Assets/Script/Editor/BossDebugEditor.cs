@@ -27,7 +27,7 @@ public class BossDebugEditor : Editor
         if (GUILayout.Button("Special")) boss.ChangeState<BossSpecial>();
         if (GUILayout.Button("Hit"))
         {
-            var hit = boss.Statecaches[typeof(BossHit)] as BossHit;
+            var hit = boss.fsm.Get<BossHit>() as BossHit;
             hit.SetHitDuration(0.5f);
             boss.ChangeState<BossHit>();
         }

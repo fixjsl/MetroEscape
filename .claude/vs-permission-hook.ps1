@@ -1,4 +1,4 @@
-# vs:auto-managed - the Claude Code VS extension (re)writes this file on Launch/connect so fixes ship automatically. Remove THIS LINE to take ownership and the extension will leave this file alone.
+# (Owned by user since 2026-10-16: auto-managed marker removed so the AIDOCS bypass below is not overwritten.)
 # Single-gate PreToolUse hook for Edit/Write/MultiEdit (auto-installed by the Claude Code VS extension).
 # Reconstructs the proposed file content, posts it to the VS bridge's /permission endpoint, and lets
 # the native VS diff (Accept/Reject) be the SOLE gate. Fail-open: any error -> allow (never block the CLI).
@@ -34,6 +34,14 @@ try {
     $tool = $p.tool_name
     $ti = $p.tool_input
     $file = $ti.file_path
+
+    # User customization: docs Claude writes in D:\my\AIDOCS skip the VS diff review.
+    if ($file) {
+        $full = [System.IO.Path]::GetFullPath($file)
+        if ($full.StartsWith('D:\my\AIDOCS\', [System.StringComparison]::OrdinalIgnoreCase)) {
+            Emit 'allow' 'AIDOCS doc: VS review skipped'
+        }
+    }
 
     # Read as UTF-8 (PS 5.1 Get-Content defaults to the ANSI codepage, which garbles em-dashes etc.).
     $cur = if ($file -and (Test-Path -LiteralPath $file)) { Get-Content -Raw -LiteralPath $file -Encoding UTF8 } else { '' }

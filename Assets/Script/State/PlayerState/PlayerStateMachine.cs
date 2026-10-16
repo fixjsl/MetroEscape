@@ -30,6 +30,8 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
 
     public static PlayerStateMachine Instance { get; private set; }
 
+    public readonly StateMachine<PlayerState> fsm = new();
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics() => Instance = null;
     //플레이어 키입력
@@ -61,7 +63,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
     public Light currentLight {get; private set; }
     public bool IsLightOn { get; private set; } = true;
     public event System.Action<bool> OnLightToggle;
-    public PlayerState ActiveState { get; private set; }
+    public PlayerState ActiveState => fsm.Current;
     public List<PlayerState> PassiveStates { get; private set; } = new List<PlayerState>();
     public bool isGuard { get; private set; }
     public bool isSprint {  get; private set; }
@@ -69,8 +71,6 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
     public bool isTired { get; private set; }
     public bool isMovementLocked { get; private set; }
     public void SetMovementLocked(bool locked) => isMovementLocked = locked;
-    //플레이어 상태 캐시
-    public Dictionary<System.Type, PlayerState> Statecaches = new Dictionary<System.Type, PlayerState>();
     //애니메이션 상태 해시
     public readonly int idle  = Animator.StringToHash("idle");
     public readonly int move = Animator.StringToHash("move");
@@ -174,25 +174,13 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
         action.PlayerAction.Sprint.canceled += _ => isSprint = false;
         action.PlayerAction.Guard.canceled += _ => isGuard = false;
         action.Enable();
-        var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(PlayerState)) && !t.IsAbstract);
-        foreach (var type in StateT)
-        {
-            try
-            {
-                var Sinstance = Activator.CreateInstance(type, new object[] { this }) as PlayerState;
-                Statecaches.Add(type, Sinstance);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"{type.Name} 클래스의 생성자가 잘못되었습니다! : {e.Message}");
-            }
-        }
+        foreach (var s in StateFactory.CreateAll<PlayerState>(this)) fsm.Register(s);
         AddpassiveStat<NoiseABright>();
         AddpassiveStat<HungerThirst>();
         status.OnDie += () => ChangeState<Die>();
         status.StaminaEmpty += () => { isTired = true; };
-        ActiveState = Statecaches[typeof(Idle)];
-        ActiveState.Enter();
+       
+        fsm.Start<Idle>();
     }
 
 
@@ -279,17 +267,8 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
     //현재 상태에서 다른 상태로 전환 하는 함수
     public void ChangeState<T>() where T : PlayerState
     {
-        System.Type type = typeof(T);
-
-        if (!Statecaches.ContainsKey(type))
-        {
-            Debug.LogError($"{type.Name} 상태가 캐시에 없습니다!");
-            return;
-        }
-        ActiveState?.Exit();
         bufferinput = StateType.None;
-        ActiveState = Statecaches[typeof(T)];
-        ActiveState?.Enter();
+        fsm.ChangeState<T>();
     }
     public bool CheckStateChange()
     {
@@ -360,7 +339,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
         {
             case StateType.Attack:
                 {
-                    if (!Statecaches[typeof(Attack)].CanEnter()) break;
+                    if (!fsm.Get<Attack>().CanEnter()) break;
 
                     MonsterStateMachine execTarget = null;
 
@@ -387,17 +366,17 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
 
                     if (execTarget != null)
                     {
-                        var execution = Statecaches[typeof(Execution)] as Execution;
+                        var execution = fsm.Get<Execution>() as Execution;
                         execution.setTarget(execTarget);
                         ChangeState<Execution>();
                     }
                     else ChangeState<Attack>();
                     break;
                 }
-            case StateType.Parry: if (Statecaches[typeof(Parry)].CanEnter()) ChangeState<Parry>(); break;
+            case StateType.Parry: if (fsm.Get<Parry>().CanEnter()) ChangeState<Parry>(); break;
             case StateType.Dodge:
                 {
-                    if (Statecaches[typeof(Dodge)].CanEnter())
+                    if (fsm.Get<Dodge>().CanEnter())
                     {
                         ChangeState<Dodge>();
                     }
@@ -458,7 +437,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
     //PassiveList에 추가하거나 제거
     public void AddpassiveStat<T>() where T : PlayerState
     {
-        PlayerState passive = Statecaches[typeof(T)];
+        PlayerState passive = fsm.Get<T>();
 
         if (PassiveStates.Contains(passive)) return;
 
@@ -467,7 +446,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
     }
     public void RemovepassiveStat<T>() where T : PlayerState
     {
-        PlayerState passive = Statecaches[typeof(T)];
+        PlayerState passive = fsm.Get<T>();
 
         if (PassiveStates.Contains(passive)) {
             passive.Exit();
@@ -605,7 +584,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
     public void EquipLight(Light newLight)
     {
         currentLight = newLight;
-        (Statecaches[typeof(NoiseABright)] as NoiseABright).light = newLight;
+        (fsm.Get<NoiseABright>() as NoiseABright).light = newLight;
     }
     //애니메이션 회전
     void OnAnimatorMove()

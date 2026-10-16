@@ -9,6 +9,7 @@ using System.Collections;
 
 public class MonsterStateMachine : MonoBehaviour
 {
+    public readonly StateMachine<MonsterState> fsm = new();
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] protected LayerMask playerLayer;
     public Coroutine DetectCorutine { get; private set; }
@@ -40,7 +41,6 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private Transform hpUIPoint;
     [SerializeField] private Transform detectionUIPoint;
     private MonsterUI monsterUI;
-    public Dictionary<System.Type, MonsterState> Statecaches = new Dictionary<System.Type, MonsterState>();
     [SerializeField] private float hitAnimLength = 0.5f;
     public float HitAnimLength => hitAnimLength;
     [SerializeField] private float stunAnimLength = 1f;
@@ -50,22 +50,8 @@ public class MonsterStateMachine : MonoBehaviour
     public Collider AttackCollider => attackCollider; // �ܺο��� �б� ����
     public virtual void stateInit()
     {
-        var StateT = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(MonsterState)) && !t.IsAbstract && t.Namespace == "MonsterStates");
-        foreach (var type in StateT)
-        {
-            try
-            {
-                var Sinstance = Activator.CreateInstance(type, new object[] { this }) as MonsterState;
-                Statecaches.Add(type, Sinstance);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"{type.Name} Ŭ������ �����ڰ� �߸��Ǿ����ϴ�! : {e.Message}");
-            }
-        }
-
-        ActiveState = Statecaches[typeof(MonsterStates.Idle)];
-        ActiveState.Enter();
+        foreach (var s in StateFactory.CreateAll<MonsterState>(this, t => t.Namespace == "MonsterStates")) fsm.Register(s);
+        fsm.Start<MonsterStates.Idle>();
     }
     protected virtual void Awake()
     {
@@ -114,17 +100,7 @@ public class MonsterStateMachine : MonoBehaviour
     }
     public void ChangeState<T>() where T : MonsterState
     {
-        System.Type type = typeof(T);
-
-        if (!Statecaches.TryGetValue(type, out MonsterState nextState))
-        {
-            Debug.LogError($"{type.Name} ���°� ĳ�ÿ� �������� �ʽ��ϴ�!");
-            return;
-        }
-
-        ActiveState?.Exit();
-        ActiveState = Statecaches[typeof(T)];
-        ActiveState?.Enter();
+        fsm.ChangeState<T>();
     }
     public virtual void OnHit(float Damage, float stunStrength)
     {
@@ -136,7 +112,7 @@ public class MonsterStateMachine : MonoBehaviour
             ActiveState?.HandleDamage(Damage);
             return;
         }
-        var hitState = Statecaches[typeof(MonsterStates.Hit)] as MonsterStates.Hit;
+        var hitState = fsm.Get<MonsterStates.Hit>() as MonsterStates.Hit;
         hitState.SetHitduration(stunStrength);
         ChangeState<MonsterStates.Hit>();
         ActiveState?.HandleDamage(Damage);

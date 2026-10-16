@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using BossStates;
+using MonsterStates;
 
 public class BossStateMachine : MonsterStateMachine
 {
@@ -88,24 +89,8 @@ public class BossStateMachine : MonsterStateMachine
 
     public override void stateInit()
     {
-        var bossTypes = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(t => t.IsSubclassOf(typeof(BossState)) && !t.IsAbstract);
-
-        foreach (var type in bossTypes)
-        {
-            try
-            {
-                var instance = Activator.CreateInstance(type, new object[] { this }) as BossState;
-                Statecaches.Add(type, instance);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[Boss] {type.Name} 생성 실패: {e.Message}");
-            }
-        }
-
-        ActiveState = Statecaches[typeof(BossIdle)];
-        ActiveState.Enter();
+        foreach (var s in StateFactory.CreateAll<MonsterState>(this, t => t.IsSubclassOf(typeof(BossState)))) fsm.Register(s);
+        fsm.Start<BossIdle>();
     }
 
     public override void OnHit(float Damage, float stunStrength)
@@ -117,7 +102,7 @@ public class BossStateMachine : MonsterStateMachine
             return;
         }
 
-        var hitState = Statecaches[typeof(BossHit)] as BossHit;
+        var hitState = fsm.Get<BossHit>() as BossHit;
         hitState.SetHitDuration(stunStrength);
         ChangeState<BossHit>();
         ActiveState?.HandleDamage(Damage);
