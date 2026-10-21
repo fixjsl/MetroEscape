@@ -29,7 +29,7 @@ public class QuickSlotUI : MonoBehaviour
         for (int i = 0; i < 2; i++)
         {
             int code = inventory.QuickSlots[i];
-            if (code != 0 && ItemManager.itemDB.TryGetValue(code, out var item))
+            if (code != 0 && ItemManager.TryGet(code, out var item))
             {
                 slotIcons[i].sprite = item.icon;
                 slotIcons[i].color = Color.white;

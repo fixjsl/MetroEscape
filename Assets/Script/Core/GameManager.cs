@@ -18,14 +18,12 @@ public class GameSettings
     public float ambientVolume  = 1f;
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonBehaviour<GameManager>
 {
-    public static GameManager Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     public GameSettings settings { get; private set; } = new GameSettings();
+
+    protected override bool Persistent => true;
 
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private AudioSource bgmSource;
@@ -43,35 +41,19 @@ public class GameManager : MonoBehaviour
     public event Action OnGameOver;
     private string savePath => Path.Combine(Application.persistentDataPath, "settings.json");
 
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
+        base.Awake();
+        if (Instance != this) return;
         LoadSettings();
         ApplySettings();
         PlayBGM(defaultBGM);
     }
 
-    public void SaveSettings()
-    {
-        File.WriteAllText(savePath, JsonUtility.ToJson(settings, true));
-    }
+    public void SaveSettings() => JsonFileStore.Save(savePath, settings);
+    
 
-    void LoadSettings()
-    {
-        if (File.Exists(savePath))
-            JsonUtility.FromJsonOverwrite(File.ReadAllText(savePath), settings);
-        // 파일 없으면 GameSettings 기본값 그대로 사용
-    }
+    void LoadSettings() => settings = JsonFileStore.LoadorDefault<GameSettings>(savePath);
 
     public void ApplySettings()
     {

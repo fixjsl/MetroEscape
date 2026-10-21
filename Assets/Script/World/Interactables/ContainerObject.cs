@@ -56,7 +56,9 @@ public class ContainerObject : ItObjectBase
         if (other.TryGetComponent<PlayerStateMachine>(out _))
         {
             open = false;
+            ContainerUI.Instance.CloseKeepingInventory();
             ContainerUI.Instance.Close();
+
             if (disappearAfterOpen && hasBeenOpened)
                 gameObject.SetActive(false);
         }

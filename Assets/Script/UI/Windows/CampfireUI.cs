@@ -3,14 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
-public class CampfireUI : MonoBehaviour
+public class CampfireUI : UIPanel<CampfireUI>
 {
-    public static CampfireUI Instance { get; private set; }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
-
-    [SerializeField] private GameObject panel;
     [SerializeField] private CraftingMaterialUI fuelSlot;
     [SerializeField] private CraftingMaterialUI lighterSlot;
     [SerializeField] private Button actionButton;
@@ -18,37 +13,26 @@ public class CampfireUI : MonoBehaviour
 
     private Campfire currentCampfire;
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
-        panel.SetActive(false);
+        base.Awake();
+        root.SetActive(false);
         actionButton.onClick.AddListener(OnActionClicked);
     }
 
-    public bool IsOpen => panel.activeSelf;
-
+    
     public void Open(Campfire campfire)
     {
         currentCampfire = campfire;
-        panel.SetActive(true);
-        Refresh(campfire);
-        SetCombatInput(false);
+        Open();
     }
+    protected override void OnOpened() => Refresh(currentCampfire);
 
-    public void Close()
+    protected override void OnClosed()
     {
-        panel.SetActive(false);
         currentCampfire = null;
-        SetCombatInput(true);
     }
 
-    private void SetCombatInput(bool enabled)
-    {
-        System.Action<InputAction> toggle = enabled ? a => a.Enable() : a => a.Disable();
-        toggle(InputBindings.GetAction("Attack"));
-        toggle(InputBindings.GetAction("Dodge"));
-        toggle(InputBindings.GetAction("Guard"));
-    }
 
     public void Refresh(Campfire campfire)
     {

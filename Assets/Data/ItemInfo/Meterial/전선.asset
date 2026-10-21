@@ -18,5 +18,5 @@ MonoBehaviour:
   itemType: 2
   description: 역무실에서 얻은 구리 심선.
   maxamount: 99
-  weight: 0
+  weight: 0.2
   materials: []

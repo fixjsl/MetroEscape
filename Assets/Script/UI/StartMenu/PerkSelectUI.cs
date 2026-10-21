@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PerkSelectUI : MonoBehaviour
+public class PerkSelectUI : SingletonBehaviour<PerkSelectUI>
 {
-    public static PerkSelectUI Instance { get; private set; }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     [SerializeField] private GameObject panel;
     [SerializeField] private Transform buttonContainer;
@@ -24,9 +21,9 @@ public class PerkSelectUI : MonoBehaviour
     private Action<IReadOnlyList<PerkBase>> onConfirmed;
     private Action onCancelled;
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
         panel.SetActive(false);
         confirmButton.onClick.AddListener(Confirm);
         if (cancelButton != null) cancelButton.onClick.AddListener(Cancel);

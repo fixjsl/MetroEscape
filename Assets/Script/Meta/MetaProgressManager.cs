@@ -4,13 +4,11 @@ using UnityEngine;
 
 
 
-public class MetaProgressManager : MonoBehaviour
+public class MetaProgressManager : SingletonBehaviour<MetaProgressManager>
 {
-    public static MetaProgressManager Instance { get; private set; }
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
     [SerializeField] private PerkBase[] allPerks;
 
+    protected override bool Persistent => true;
     public MetaProgress progress { get; private set; } = new MetaProgress();
     private readonly List<PerkBase> pending = new List<PerkBase>();
     public int killCount { get; private set; }
@@ -26,19 +24,15 @@ public class MetaProgressManager : MonoBehaviour
     public IReadOnlyList<PerkBase> AllPerks => allPerks;
     public bool IsUnlocked(PerkBase p) => p != null && progress.unlockedPerkIds.Contains(p.PerkId);
 
-    void Awake()
+    protected override void Awake()
     {
-        if(Instance == null) {Instance = this; DontDestroyOnLoad(gameObject);}
-        else { Destroy(gameObject); return; }
+        base.Awake();
+        if (Instance != this) return;
         Load();
     }
-    void Load()
-    {
-        if(File.Exists(SavePath))
-            JsonUtility.FromJsonOverwrite(File.ReadAllText(SavePath), progress);
-    }
+    void Load() => progress = JsonFileStore.LoadorDefault<MetaProgress>(SavePath);
 
-    public void Save() => File.WriteAllText(SavePath, JsonUtility.ToJson(progress));
+    public void Save() => JsonFileStore.Save(SavePath, progress);
 
     
 

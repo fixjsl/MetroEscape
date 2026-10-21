@@ -3,12 +3,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class PlayerDialogueUI : MonoBehaviour
+public class PlayerDialogueUI : SingletonBehaviour<PlayerDialogueUI>
 {
-    public static PlayerDialogueUI Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     [SerializeField] private GameObject bubble;
     [SerializeField] private TMP_Text dialogueText;
@@ -35,9 +31,9 @@ public class PlayerDialogueUI : MonoBehaviour
     private Action<int>   onWaterChanged;
     private Action<float> onHPChanged;
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
         bubbleRect = bubble.GetComponent<RectTransform>();
         bubble.SetActive(false);
     }
@@ -164,8 +160,9 @@ public class PlayerDialogueUI : MonoBehaviour
         hideCoroutine = null;
     }
 
-    void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         if (PlayerStateMachine.Instance == null) return;
         var player = PlayerStateMachine.Instance;
 

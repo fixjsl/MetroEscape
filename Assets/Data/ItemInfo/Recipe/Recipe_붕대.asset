@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 664f94ef585bd7743a18c4e8cdd0e944, type: 3}
+  m_Name: "Recipe_\uBD95\uB300"
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeSO
+  result: {fileID: 11400000, guid: 9600646672be4d84c863ea6673ada15f, type: 2}
+  resultcount: 2
+  ingredients:
+  - item: {fileID: 11400000, guid: 91501aaf3449cad4e9889e4b26927d12, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: 0fd0284b3da48c84f8f5cb33fad6f29a, type: 2}
+    amount: 3
+  - item: {fileID: 11400000, guid: b74e5893af5f28a4aa4964f4aa4750fe, type: 2}
+    amount: 1

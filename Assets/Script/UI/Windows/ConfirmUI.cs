@@ -4,14 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class ConfirmUI : MonoBehaviour
+public class ConfirmUI : UIPanel<ConfirmUI>
 {
-    public static ConfirmUI Instance { get; private set; }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
-
-    [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text messageText;
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button cancelButton;
@@ -19,48 +14,40 @@ public class ConfirmUI : MonoBehaviour
     private Action _onConfirm;
     private Action _onCancel;
 
-    void Awake()
+    bool confirmed;
+    protected override void Awake()
     {
-        Instance = this;
-        panel.SetActive(false);
+        base.Awake();
+        root.SetActive(false);
         confirmButton.onClick.AddListener(OnConfirm);
         cancelButton.onClick.AddListener(OnCancel);
     }
 
-    void Update()
-    {
-        if (panel.activeSelf && Keyboard.current.escapeKey.wasPressedThisFrame)
-            OnCancel();
-    }
 
     public void Show(string message, Action onConfirm, Action onCancel = null)
     {
         _onConfirm = onConfirm;
         _onCancel  = onCancel;
         messageText.text = message;
-        panel.SetActive(true);
-        SetCombatInput(false);
+        confirmed = false;
+        Open();
     }
 
     private void OnConfirm()
     {
-        panel.SetActive(false);
-        SetCombatInput(true);
+        confirmed = true;
+        Close();
         _onConfirm?.Invoke();
     }
 
-    private void OnCancel()
+    private void OnCancel() => Close();
+    protected override void OnClosed()
     {
-        panel.SetActive(false);
-        SetCombatInput(true);
-        _onCancel?.Invoke();
+        if (!confirmed)
+        {
+            _onCancel?.Invoke();
+        }
     }
 
-    private void SetCombatInput(bool enabled)
-    {
-        Action<InputAction> toggle = enabled ? a => a.Enable() : a => a.Disable();
-        toggle(InputBindings.GetAction("Attack"));
-        toggle(InputBindings.GetAction("Dodge"));
-        toggle(InputBindings.GetAction("Guard"));
-    }
+
 }

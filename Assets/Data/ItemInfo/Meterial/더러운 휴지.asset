@@ -18,6 +18,6 @@ MonoBehaviour:
   itemType: 2
   description: 오염된 종이. 불 피우기용 점화재.
   maxamount: 99
-  weight: 0
+  weight: 0.02
   canBurnAsFuel: 1
   materials: []

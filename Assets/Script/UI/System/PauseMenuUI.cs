@@ -1,29 +1,28 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
-using TMPro;
+using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 
-public class PauseMenuUI : MonoBehaviour
+public class PauseMenuUI : UIPanel
 {
     public static PauseMenuUI Instance { get; private set; }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics() => Instance = null;
 
-    [SerializeField] private GameObject pausePanel;
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private TMP_Text hoverDescText;
 
-    private bool isPaused = false;
 
     void Awake()
     {
         Instance = this;
-        pausePanel.SetActive(false);
+        root.SetActive(false);
 
         resumeButton.onClick.AddListener(Resume);
         mainMenuButton.onClick.AddListener(GoMainMenu);
@@ -35,40 +34,16 @@ public class PauseMenuUI : MonoBehaviour
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (CraftingUI.Instance != null && CraftingUI.Instance.IsOpen)
-                CraftingUI.Instance.Close();
-            else if (ContainerUI.Instance != null && ContainerUI.Instance.IsOpen)
-                ContainerUI.Instance.Close();
-            else if (InventoryUI.Instance != null && InventoryUI.Instance.IsOpen)
-                InventoryUI.Instance.Close();
-            else if (isPaused)
-                Resume();
-            else
-                Pause();
+            if (!UIStackManager.HandleCancel()) Open();
         }
     }
 
-    private void Pause()
-    {
-        isPaused = true;
-        pausePanel.SetActive(true);
-        Time.timeScale = 0f;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        SetCombatInput(false);
-    }
-
-    public void Resume()
-    {
-        isPaused = false;
-        pausePanel.SetActive(false);
-        Time.timeScale = 1f;
-        SetCombatInput(true);
-    }
+    public void Resume() => Close();
 
     private void GoMainMenu()
     {
         Time.timeScale = 1f;
+        UIStackManager.Clear();
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
@@ -83,11 +58,4 @@ public class PauseMenuUI : MonoBehaviour
         trigger.triggers.Add(exit);
     }
 
-    private void SetCombatInput(bool enabled)
-    {
-        System.Action<InputAction> toggle = enabled ? a => a.Enable() : a => a.Disable();
-        toggle(InputBindings.GetAction("Attack"));
-        toggle(InputBindings.GetAction("Dodge"));
-        toggle(InputBindings.GetAction("Guard"));
-    }
 }

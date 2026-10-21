@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: "\uD0C8\uCD9C\uAD6C \uC5F4\uC1E0 zone1 2"
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   icon: {fileID: 21300000, guid: d888da2e1cc53e84aa2fdf063176234d, type: 3}
-  firstAcquireImage: {fileID: 0}
   itemcode: 992
   itemType: 5
   description: "3\uAD6C\uC5ED\uC744 \uD574\uC81C\uD560 \uC218 \uC788\uB294 \uC5F4\uC1E0"
   maxamount: 1
-  weight: 0
+  weight: 0.1
   canBurnAsFuel: 0
   materials: []

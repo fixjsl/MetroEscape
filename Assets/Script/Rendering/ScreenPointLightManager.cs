@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScreenPointLightManager : MonoBehaviour
+public class ScreenPointLightManager : SingletonBehaviour<ScreenPointLightManager>
 {
-    public static ScreenPointLightManager Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     private const int MaxLights = 4;
     private readonly List<ScreenPointLight> lights = new();
@@ -14,9 +10,9 @@ public class ScreenPointLightManager : MonoBehaviour
     private readonly Vector4[] lightData   = new Vector4[MaxLights];
     private readonly Vector4[] lightColors = new Vector4[MaxLights];
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
         Shader.SetGlobalFloat("_PointLightCount", 0f);
         Shader.SetGlobalVectorArray("_PointLightData", lightData);
         Shader.SetGlobalVectorArray("_PointLightColor", lightColors);

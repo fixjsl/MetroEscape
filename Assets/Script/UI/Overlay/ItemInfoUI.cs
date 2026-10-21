@@ -1,12 +1,8 @@
 using UnityEngine;
 using TMPro;
 
-public class ItemInfoUI : MonoBehaviour
+public class ItemInfoUI : SingletonBehaviour<ItemInfoUI>
 {
-    public static ItemInfoUI Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text itemNameText;
@@ -15,9 +11,9 @@ public class ItemInfoUI : MonoBehaviour
     [SerializeField] private TMP_Text fuelText;
     [SerializeField] private TMP_Text descriptionText; 
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
         panel.SetActive(false);
     }
 

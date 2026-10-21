@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: "\uACE0\uBB34\uD638\uC2A4"
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   icon: {fileID: 21300000, guid: 61c8db5e0ecd4224096b51e9b18744f3, type: 3}
-  firstAcquireImage: {fileID: 0}
   itemcode: 104
   itemType: 2
-  description: 액체 이송용 관.
+  description: "\uC561\uCCB4 \uC774\uC1A1\uC6A9 \uAD00."
   maxamount: 99
-  weight: 0
+  weight: 500
+  canBurnAsFuel: 0
   materials:
   - item: {fileID: 11400000, guid: 0fd0284b3da48c84f8f5cb33fad6f29a, type: 2}
     amount: 4

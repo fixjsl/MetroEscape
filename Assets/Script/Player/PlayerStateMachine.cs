@@ -11,7 +11,7 @@ public enum StateType
     None, idle, Dodge, Attack, interact,Parry, crunch
 }
 [RequireComponent(typeof(BoxCollider))]
-public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
+public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffectTarget, IDamageable
 {
     //IEffectTarget
     public StatModifierSet Modifiers => status.Modifiers;
@@ -27,13 +27,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
         status.Hp -= amount;
     }
 
-
-    public static PlayerStateMachine Instance { get; private set; }
-
     public readonly StateMachine<PlayerState> fsm = new();
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
     //플레이어 키입력
     private InputSystem_Actions action;
     //플레이어 객체 및 상태
@@ -185,8 +179,8 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
 
 
 
-    void Awake() {
-        if(Instance == null) Instance = this;
+    protected override void Awake() {
+        base.Awake();
         inventory = new Inventory(status);
         status.curMaxCarryWeight = status.maxCarryWeight;
         if (startItem != null)
@@ -225,7 +219,7 @@ public class PlayerStateMachine : MonoBehaviour, IEffectTarget, IDamageable
             {
                 foreach (var (code, count) in inventory.slots)
                 {
-                    string name = ItemManager.itemDB.TryGetValue(code, out var item) ? item.name : $"코드:{code}";
+                    string name = ItemManager.TryGet(code, out var item) ? item.name : $"코드:{code}";
                     Debug.Log($"[인벤토리] {name} x{count}");
                 }
             }

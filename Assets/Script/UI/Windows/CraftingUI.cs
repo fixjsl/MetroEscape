@@ -4,15 +4,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
-public class CraftingUI : MonoBehaviour
+public class CraftingUI : UIPanel<CraftingUI>
 {
-    public static CraftingUI Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
-
-    [SerializeField] private GameObject panel;
-
     [Header("탭 버튼 (0:무기 1:방어구 2:식료품 3:상위재료)")]
     [SerializeField] private Button[] tabButtons;
 
@@ -33,14 +26,14 @@ public class CraftingUI : MonoBehaviour
         { ItemType.Weapon, ItemType.Equipment, ItemType.Consumable, ItemType.Material };
 
     private int currentTab;
-    private ItemBase selectedItem;
+    private RecipeSO selectedRecipe;
     private readonly List<CraftingSlotUI> activeSlots = new();
     private readonly List<CraftingMaterialUI> activeMaterials = new();
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
-        panel.SetActive(false);
+        base.Awake();
+        root.SetActive(false);
     }
 
     void Start()
@@ -53,34 +46,22 @@ public class CraftingUI : MonoBehaviour
         craftButton.onClick.AddListener(OnCraftClicked);
     }
 
-    public bool IsOpen => panel.activeSelf;
 
-    public void Open()
+    protected override void OnOpened()
     {
-        panel.SetActive(true);
         SelectTab(0);
-        SetCombatInput(false);
     }
 
-    public void Close()
+    protected override void OnClosed()
     {
-        panel.SetActive(false);
-        selectedItem = null;
-        SetCombatInput(true);
+        selectedRecipe = null;
     }
 
-    private void SetCombatInput(bool enabled)
-    {
-        System.Action<InputAction> toggle = enabled ? a => a.Enable() : a => a.Disable();
-        toggle(InputBindings.GetAction("Attack"));
-        toggle(InputBindings.GetAction("Dodge"));
-        toggle(InputBindings.GetAction("Guard"));
-    }
 
     private void SelectTab(int index)
     {
         currentTab = index;
-        selectedItem = null;
+        selectedRecipe = null;
         detailPanel.SetActive(false);
         RefreshList();
     }
@@ -92,34 +73,35 @@ public class CraftingUI : MonoBehaviour
 
         var type = TabTypes[currentTab];
 
-        foreach (var (_, item) in ItemManager.itemDB)
+        foreach (var item in ItemManager.Recipes)
         {
-            bool typeMatch = item.itemType == type ||
-                              (type == ItemType.Consumable && item.itemType == ItemType.InteractObject);
+            if (item == null || item.result == null) continue;
+            bool typeMatch = item.result.itemType == type ||
+                              (type == ItemType.Consumable && item.result.itemType == ItemType.InteractObject);
             if (!typeMatch) continue;
-            if (item.materials == null || item.materials.Count == 0) continue;
+
 
             var slot = Instantiate(craftingSlotPrefab, recipeListParent);
             var captured = item;
-            slot.Setup(item, () => SelectItem(captured));
+            slot.Setup(item.result, () => SelectRecipe(captured));
             activeSlots.Add(slot);
         }
     }
 
-    private void SelectItem(ItemBase item)
+    private void SelectRecipe(RecipeSO recipe)
     {
-        selectedItem = item;
+        selectedRecipe = recipe;
         detailPanel.SetActive(true);
 
-        if (selectedIcon != null) selectedIcon.sprite = item.icon;
-        if (selectedNameText != null) selectedNameText.text = item.name;
-        if (selectedDescText != null) selectedDescText.text = item.description;
+        if (selectedIcon != null) selectedIcon.sprite = recipe.result.icon;
+        if (selectedNameText != null) selectedNameText.text = recipe.result.name;
+        if (selectedDescText != null) selectedDescText.text = recipe.result.description;
 
         foreach (var m in activeMaterials) Destroy(m.gameObject);
         activeMaterials.Clear();
 
         var inventory = PlayerStateMachine.Instance.inventory;
-        foreach (var mat in item.materials)
+        foreach (var mat in recipe.ingredients)
         {
             inventory.slots.TryGetValue(mat.item.itemcode, out int have);
             var entry = Instantiate(materialPrefab, materialListParent);
@@ -128,25 +110,25 @@ public class CraftingUI : MonoBehaviour
         }
 
         foreach (var slot in activeSlots)
-            slot.SetSelected(slot.Item == item);
+            slot.SetSelected(slot.Item == recipe.result);
 
         UpdateCraftButton();
     }
 
     private void UpdateCraftButton()
     {
-        craftButton.interactable = selectedItem != null &&
-            selectedItem.CanCraft(PlayerStateMachine.Instance.inventory);
+        craftButton.interactable = selectedRecipe != null &&
+            selectedRecipe.CanCraft(PlayerStateMachine.Instance.inventory);
     }
 
     private void OnCraftClicked()
     {
-        if (selectedItem == null) return;
+        if (selectedRecipe == null) return;
 
         // 제작에 실패하면 재료가 되돌려지므로 화면 상태도 바뀌지 않는다.
         // 실패 사유는 인벤토리의 무게·슬롯 초과 안내가 표시한다.
-        if (!selectedItem.Craft(PlayerStateMachine.Instance.inventory)) return;
+        if (!selectedRecipe.Craft(PlayerStateMachine.Instance.inventory)) return;
 
-        SelectItem(selectedItem);
+        SelectRecipe(selectedRecipe);
     }
 }

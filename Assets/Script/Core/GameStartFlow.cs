@@ -1,12 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 //튜토리얼 코드
-public class GameStartFlow : MonoBehaviour
+public class GameStartFlow : SingletonBehaviour<GameStartFlow>
 {
-    public static GameStartFlow Instance { get; private set; }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     [Header("Tutorial Pages")]
     [SerializeField] private GameObject tutorialPanel;
@@ -19,10 +16,9 @@ public class GameStartFlow : MonoBehaviour
 
     private int currentPage = 0;
 
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance == null) Instance = this;
-        else { Destroy(gameObject); return; }
+        base.Awake();
         nextButton.onClick.AddListener(OnNext);
     }
 

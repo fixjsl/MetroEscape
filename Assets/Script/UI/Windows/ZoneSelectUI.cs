@@ -3,25 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class ZoneSelectUI : MonoBehaviour
+public class ZoneSelectUI : UIPanel<ZoneSelectUI>
 {
-    public static ZoneSelectUI Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
-
-    [SerializeField] private GameObject panel;
     [SerializeField] private Transform buttonContainer;
     [SerializeField] private Button buttonPrefab;
     [SerializeField] private Button cancelButton;
 
     private Action<ZoneEntry> onSelescted;
 
-    void Awake()
+    protected override void Awake()
     {
-        Instance = this;
-        panel.SetActive(false);
-        cancelButton.onClick.AddListener(Hide);
+        base.Awake();
+        root.SetActive(false);
+        cancelButton.onClick.AddListener(Close);
     }
 
     public void Show(IReadOnlyList<ZoneEntry> zones, Action<ZoneEntry> callback)
@@ -43,16 +37,12 @@ public class ZoneSelectUI : MonoBehaviour
             if (label != null) label.text = zone.zoneName;
             btn.onClick.AddListener(() => {    
                  var cb = onSelescted;
-                Hide();
+                Close();
                 cb?.Invoke(zone);});
             }
 
-        panel.SetActive(true);
+        Open();
     }
 
-    private void Hide()
-    {
-        panel.SetActive(false);
-        onSelescted = null;
-    }
+    protected override void OnClosed() => onSelescted = null;
 }

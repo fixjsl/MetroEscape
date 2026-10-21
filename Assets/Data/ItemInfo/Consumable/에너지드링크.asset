@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0df129ff60794349ae45b001ce8e4a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 84c6cf3e23eb7f646ae62406590fbba7, type: 3}
   m_Name: "\uC5D0\uB108\uC9C0\uB4DC\uB9C1\uD06C"
-  m_EditorClassIdentifier: Assembly-CSharp::TimedEffectItem
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
   icon: {fileID: 21300000, guid: 9a9ffb0e5e533c64390e75a3886f314e, type: 3}
   firstAcquireImage: {fileID: 0}
   itemcode: 36
@@ -21,6 +21,7 @@ MonoBehaviour:
   weight: 0.5
   canBurnAsFuel: 0
   materials: []
+  instant: []
   effects:
   - rid: 244674662543917124
   - rid: 244674662543917125

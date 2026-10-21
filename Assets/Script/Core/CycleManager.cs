@@ -1,22 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CycleManager : MonoBehaviour
+public class CycleManager : SingletonBehaviour<CycleManager>
 {
-    public static CycleManager Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     [SerializeField] private Transform playerBasePosition;
     [SerializeField] private BaseDepartureGate departureGate;
     // 씬에 빈 오브젝트로 배치한 비상구 등장 가능 위치들
     [SerializeField] private ZoneEntry[] zones;
     public IReadOnlyList<ZoneEntry> Zones => zones;
-    void Awake()
-    {
-        Instance = this;
-    }
 
     public void ExecuteCycleReset()
     {

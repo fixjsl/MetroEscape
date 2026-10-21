@@ -18,6 +18,6 @@ MonoBehaviour:
   itemType: 2
   description: 오염되지 않은 직물. 붕대 제작 재료.
   maxamount: 99
-  weight: 0
+  weight: 0.1
   canBurnAsFuel: 0
   materials: []

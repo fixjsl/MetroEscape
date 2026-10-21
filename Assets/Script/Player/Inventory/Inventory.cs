@@ -18,36 +18,73 @@ public class Inventory
     {
         this.status = status;
     }
-
-    public bool AddItem(ItemBase itemBase, int num = 1, bool countAsGathered = true)
+    private static int SlotsFor(ItemBase item, int count)
     {
-        int key = itemBase.itemcode;
-        float addWeight = itemBase.weight * num;
-        if (currentWeight + addWeight > status.curMaxCarryWeight)
+        if (count <= 0) return 0;
+        int max = item.maxamount;
+        if (max <= 0) return 1;                        // 0 = 제한 없음 → 1칸에 다 쌓임
+        return (count + max - 1) / max;                // 올림 나눗셈: 12개, 5 → 3
+    }
+    public int UsedSlots
+    {
+        get
         {
-            OnInventoryFull?.Invoke();
-            return false;
+            int used = 0;
+            foreach (var (code, count) in slots)
+                if (ItemManager.TryGet(code, out var item))
+                    used += SlotsFor(item, count);
+            return used;
         }
+    }
+    public int CanAdd(ItemBase item, int num)
+    {
+        int weightCanNum;
+        float remain = status.curMaxCarryWeight - currentWeight;
+        weightCanNum = Mathf.FloorToInt(remain / item.weight + 0.0001f);   // 오차 여유
+        weightCanNum = Mathf.Max(0, weightCanNum);
+        slots.TryGetValue(item.itemcode, out int cur);                     // 없으면 cur = 0
+        int free = Mathf.Max(0, (int)status.maxSlots - UsedSlots);
+        int max = item.maxamount;
 
-        if (slots.TryGetValue(key, out int count))
+        int slotCanNum;
+        if (max <= 0)                                                      // 0 = 한 칸에 무제한
+            slotCanNum = (cur > 0 || free > 0) ? num : 0;                  // 이미 있거나 빈 칸이 있으면 전부
+        else
+            slotCanNum = (SlotsFor(item, cur) + free) * max - cur;
+
+        return Mathf.Min(num, weightCanNum, slotCanNum);
+    }
+    public int AddUpTo(ItemBase item, int num,bool countAsGathered = true)
+    {
+        int n = CanAdd(item, num);
+
+        if (n < num)                                   // 다 못 넣음 → 왜 막혔는지 안내
         {
-            slots[key] = count + num;
-            currentWeight += addWeight;
-            if (countAsGathered)
-                MetaProgressManager.Instance?.AddGather(itemBase, num);   // ← 추가
-            OnInventoryChanged?.Invoke();
-            return true;
+            NotifyFull(item, n);
         }
-        if (slots.Count >= (int)status.maxSlots)
-        {
-            OnSlotsFull?.Invoke();
-            return false;
-        }
-        slots[key] = num;
-        currentWeight += addWeight;
+        if (n <= 0) return 0;
+
+        slots.TryGetValue(item.itemcode, out int cur);
+        slots[item.itemcode] = cur + n;
+        currentWeight += item.weight * n;
+
         if (countAsGathered)
-            MetaProgressManager.Instance?.AddGather(itemBase, num);       // ← 추가
+            MetaProgressManager.Instance?.AddGather(item, n);    // 넣은 만큼만 채집으로 셈
         OnInventoryChanged?.Invoke();
+        return n;
+    }
+    private void NotifyFull(ItemBase item, int fitted)
+    {
+        bool weightFull = currentWeight + item.weight * (fitted + 1) > status.curMaxCarryWeight + 0.0001f;
+        if (weightFull) OnInventoryFull?.Invoke();
+        else OnSlotsFull?.Invoke();
+    }
+
+    public bool AddItem(ItemBase item, int num = 1, bool countAsGathered = true)
+    {
+        int n = CanAdd(item, num);
+        if (n < num) { NotifyFull(item, n); return false; }     // 전부 아니면 아무것도 안 넣음
+        AddUpTo(item, num, countAsGathered);
         return true;
     }
 
@@ -107,7 +144,7 @@ public class Inventory
         if (slotIndex < 0 || slotIndex >= QuickSlots.Length) return;
         int code = QuickSlots[slotIndex];
         if (code == 0 || !slots.ContainsKey(code)) { QuickSlots[slotIndex] = 0; return; }
-        if (!ItemManager.itemDB.TryGetValue(code, out var item))
+        if (!ItemManager.TryGet(code, out var item))
         {
             Debug.LogWarning($"[Inventory] itemcode {code} not found in itemDB");
             QuickSlots[slotIndex] = 0;
@@ -143,7 +180,7 @@ public class Inventory
     foreach (var pair in slots)
     {
         
-        if (!ItemManager.itemDB.TryGetValue(pair.Key, out var item)) continue;
+        if (!ItemManager.TryGet(pair.Key, out var item)) continue;
         if(item.itemType == ItemType.KeyItem) continue; // 키 아이템은 소실되지 않음
         total += pair.Value;
         if (LootTable.IsUniqueItem(pair.Key)) { uniques.Add((item, pair.Value)); uniqueTotal += pair.Value; }

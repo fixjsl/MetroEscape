@@ -18,5 +18,5 @@ MonoBehaviour:
   itemType: 2
   description: 탄성이 있는 고무 파편. 고무호스 제작 재료.
   maxamount: 99
-  weight: 0
+  weight: 0.1
   materials: []

@@ -1,5 +1,5 @@
 using UnityEngine;
-public class Weapon : MonoBehaviour, ICreatable
+public class Weapon : MonoBehaviour
 {
     private PlayerStateMachine player;
     public WeaponStatus status;
@@ -18,24 +18,6 @@ public class Weapon : MonoBehaviour, ICreatable
         monster.OnHit(status.attack, status.stunStrength);
     }
 
-    public bool canCraft(Inventory inventory)
-    {
-        foreach (var material in iteminfo.materials)
-        {
-            if (!inventory.slots.TryGetValue(material.item.itemcode, out int count)) return false;
-            if (count < material.amount) return false;
-        }
-        return true;
-    }
-
-    public void Craft(Inventory inventory)
-    {
-        if (!canCraft(inventory)) return;
-
-        foreach (var material in iteminfo.materials)
-            inventory.RemoveItem(material.item, material.amount);
-        player.EquipWeapon(this);
-    }
     public void SetPlayer(PlayerStateMachine stateMachine)
     {
         player = stateMachine;

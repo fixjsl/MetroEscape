@@ -2,13 +2,8 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
-public class TutorialManager : MonoBehaviour
+public class TutorialManager : SingletonBehaviour<TutorialManager>
 {
-    public static TutorialManager Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
-
     private TutorialTriggerType? pendingTrigger = null;
     private MonsterStateMachine tutorialWolf;
 
@@ -30,11 +25,6 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private Transform wolfSpawnPoint;
     [SerializeField] private GameObject monsterPrefab;
     [SerializeField] private Transform monsterSpawnPoint;
-    void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     void Start()
     {

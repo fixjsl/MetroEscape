@@ -17,9 +17,10 @@ public class ItemPickup : ItObjectBase
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
         if (item == null) return;
-        if (PlayerStateMachine.Instance.inventory.AddItem(item, count))
-            gameObject.SetActive(false);
-        else
-            isInteracting = false;
+        int added = PlayerStateMachine.Instance.inventory.AddUpTo(item, count);
+        if (added >= count) { gameObject.SetActive(false); return; }
+        count -= added;            // 일부만 들어갔으면 남은 개수로 바닥에 남김
+        isInteracting = false;
+        RefreshPrompt();
     }
 }

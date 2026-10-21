@@ -51,7 +51,7 @@ public class Campfire : ItObjectBase
         int total = 0;
         foreach (var (code, count) in inv.slots)
         {
-            if (!ItemManager.itemDB.TryGetValue(code, out var item)) continue;
+            if (!ItemManager.TryGet(code, out var item)) continue;
             if (item.canBurnAsFuel) total += count;
         }
         return total;
@@ -66,7 +66,7 @@ public class Campfire : ItObjectBase
         foreach (var (code, count) in inv.slots)
         {
             if (remaining <= 0) break;
-            if (!ItemManager.itemDB.TryGetValue(code, out var item)) continue;
+            if (!ItemManager.TryGet(code, out var item)) continue;
             if (!item.canBurnAsFuel) continue;
             int take = Mathf.Min(count, remaining);
             toRemove.Add((item, take));

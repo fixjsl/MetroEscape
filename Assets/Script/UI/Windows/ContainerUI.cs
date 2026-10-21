@@ -2,57 +2,40 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-public class ContainerUI : MonoBehaviour
-{
-    public static ContainerUI Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
-
-    [SerializeField] private GameObject panel;
+public class ContainerUI : UIPanel<ContainerUI>
+{    
     [SerializeField] private Transform slotParent;
     [SerializeField] private ContainerSlotUI slotPrefab;
 
     private List<(ItemBase item, int count)> currentContents;
     
     private readonly List<ContainerSlotUI> activeSlots = new();
-
-    void Awake()
+    bool keepInventoryOnClose;
+    protected override void Awake()
     {
-        Instance = this;
-        panel.SetActive(false);
+        base.Awake();
+        root.SetActive(false);
     }
-
-    public bool IsOpen => panel.activeSelf;
 
     public void Open(List<(ItemBase item, int count)> contents)
     {
         currentContents = contents;
-        Refresh();
-        panel.SetActive(true);
-        InventoryUI.Instance.Open();
-        SetCombatInput(false);
+        if(!InventoryUI.Instance.IsOpen)
+            InventoryUI.Instance.Open();
+        Open();
     }
+    protected override void OnOpened() => Refresh();
 
-    public void Close()
+    protected override void OnClosed()
     {
-        panel.SetActive(false);
         currentContents = null;
-        InventoryUI.Instance.Close();
-        SetCombatInput(true);
+        if(!keepInventoryOnClose)InventoryUI.Instance.Close();
+        keepInventoryOnClose = false;
     }
 
-    private void SetCombatInput(bool enabled)
-    {
-        var toggle = enabled
-            ? (Action<InputAction>)(a => a.Enable())
-            : (a => a.Disable());
 
-        toggle(InputBindings.GetAction("Attack"));
-        toggle(InputBindings.GetAction("Dodge"));
-        toggle(InputBindings.GetAction("Guard"));
-    }
 
     private void UseFromContainer(int index)
     {
@@ -64,6 +47,7 @@ public class ContainerUI : MonoBehaviour
         else
             currentContents[index] = (item, count - 1);
         Refresh();
+
     }
 
     public void TakeItem(int index)
@@ -71,13 +55,15 @@ public class ContainerUI : MonoBehaviour
         if (currentContents == null || index >= currentContents.Count) return;
         var (item, count) = currentContents[index];
 
-        if (!PlayerStateMachine.Instance.inventory.AddItem(item, count))
-        {
-            Debug.LogWarning($"[Container] AddItem 실패 — {item.name} x{count} | 현재무게: {PlayerStateMachine.Instance.inventory.currentWeight} | 슬롯수: {PlayerStateMachine.Instance.inventory.slots.Count}");
-            return;
-        }
+        int added = PlayerStateMachine.Instance.inventory.AddUpTo(item, count);
 
-        currentContents.RemoveAt(index);
+        if (added <= 0) return;                                   // ① 하나도 못 넣음 → 상자 그대로 (안내는 AddUpTo가 이미 띄움)
+
+        if (added >= count)
+            currentContents.RemoveAt(index);                      // ② 전부 넣음 → 상자에서 칸 삭제
+        else
+            currentContents[index] = (item, count - added);       // ③ 일부만 → 남은 개수로
+
         InventoryUI.Instance.HideContextMenu();
         Refresh();
     }
@@ -102,4 +88,5 @@ public class ContainerUI : MonoBehaviour
             activeSlots.Add(slot);
         }
     }
+    public void CloseKeepingInventory() { keepInventoryOnClose = true; Close(); }
 }

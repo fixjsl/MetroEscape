@@ -1,11 +1,7 @@
 using UnityEngine;
 
-public class ItemPlacementController : MonoBehaviour
+public class ItemPlacementController : SingletonBehaviour<ItemPlacementController>
 {
-    public static ItemPlacementController Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
 
     [SerializeField] private Transform anchor;
     [SerializeField] private float spacing = 2f;
@@ -13,7 +9,6 @@ public class ItemPlacementController : MonoBehaviour
 
     private int count = 0;
 
-    void Awake() => Instance = this;
 
     public bool TryPlace(PlaceableItem item)
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 // TimedEffectItem의 [SerializeReference] effects 리스트를 편집하는 인스펙터
 // 기본 인스펙터는 리스트에 null만 추가할 수 있어서, 효과 종류를 골라 추가하는 메뉴를 제공함
-[CustomEditor(typeof(TimedEffectItem))]
+[CustomEditor(typeof(ConsumableItem))]
 public class TimedEffectItemEditor : Editor
 {
     private SerializedProperty effectsProp;

@@ -18,6 +18,6 @@ MonoBehaviour:
   itemType: 2
   description: 낡은 의류.
   maxamount: 99
-  weight: 0
+  weight: 0.5
   canBurnAsFuel: 0
   materials: []

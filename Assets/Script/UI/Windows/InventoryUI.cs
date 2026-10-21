@@ -1,17 +1,13 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-using TMPro;
 
-public class InventoryUI : MonoBehaviour
+public class InventoryUI : UIPanel<InventoryUI>
 {
-    public static InventoryUI Instance { get; private set; }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
-
-    [SerializeField] private GameObject panel;
+   
     [SerializeField] private Transform slotParent;
     [SerializeField] private ContainerSlotUI slotPrefab;
     [SerializeField] private Image weightFill;
@@ -24,16 +20,11 @@ public class InventoryUI : MonoBehaviour
     private readonly List<ContainerSlotUI> activeSlots = new();
     private InputAction _inventoryAction;
 
-    void Awake()
-    {
-        Instance = this;
-    }
-
     void Start()
     {
         inventory = PlayerStateMachine.Instance.inventory;
         inventory.OnInventoryChanged += Refresh;
-        panel.SetActive(false);
+        root.SetActive(false);
 
         _inventoryAction = InputBindings.GetAction("Inventory");
         Debug.Log($"인벤토리 액션: {(_inventoryAction == null ? "null" : "정상")}");
@@ -49,20 +40,17 @@ public class InventoryUI : MonoBehaviour
 
     void Toggle()
     {
-        if (panel.activeSelf) Close();
+        if (IsOpen) Close();
         else Open();
     }
 
-    public bool IsOpen => panel.activeSelf;
-
-    public void Open()
+    
+    protected override void OnOpened()
     {
         GameManager.Instance.PlaySFX(openSound);
         PositionByPlayerSide();
-        panel.SetActive(true);
         Refresh();
         contextMenu.Hide();
-        SetCombatInput(false);
     }
 
     [SerializeField] private float inventorySideOffset = 635f;
@@ -70,7 +58,7 @@ public class InventoryUI : MonoBehaviour
     private void PositionByPlayerSide()
     {
         float viewportX = Camera.main.WorldToViewportPoint(PlayerStateMachine.Instance.transform.position).x;
-        var rt = (RectTransform)panel.transform;
+        var rt = (RectTransform)root.transform;
 
         // anchor/pivot은 인스펙터에서 center(0.5, 0.5)로 고정, 위치만 변경
         if (viewportX < 0.5f)
@@ -79,21 +67,11 @@ public class InventoryUI : MonoBehaviour
             rt.anchoredPosition = new Vector2(-inventorySideOffset, 0f);  // 플레이어 오른쪽 → 인벤 왼쪽
     }
 
-    public void Close()
+    protected override void OnClosed()
     {
         GameManager.Instance.PlaySFX(closeSound);
-        panel.SetActive(false);
         contextMenu.Hide();
         ItemInfoUI.Instance.Hide();
-        SetCombatInput(true);
-    }
-
-    private void SetCombatInput(bool enabled)
-    {
-        System.Action<InputAction> toggle = enabled ? a => a.Enable() : a => a.Disable();
-        toggle(InputBindings.GetAction("Attack"));
-        toggle(InputBindings.GetAction("Dodge"));
-        toggle(InputBindings.GetAction("Guard"));
     }
 
     void Refresh()
@@ -102,13 +80,19 @@ public class InventoryUI : MonoBehaviour
             Destroy(slot.gameObject);
         activeSlots.Clear();
 
-        foreach (var (code, count) in inventory.slots)
+        foreach (var (code, total) in inventory.slots)
         {
-            if (!ItemManager.itemDB.TryGetValue(code, out var item)) continue;
-            var slot = Instantiate(slotPrefab, slotParent);
+            if (!ItemManager.TryGet(code, out var item)) continue;
             var capturedItem = item;
-            slot.Setup(item, count, null, pos => ShowContextMenu(capturedItem, pos));
-            activeSlots.Add(slot);
+            int stackmax = item.maxamount > 0 ? item.maxamount : total;     // 0 = 제한 없음 → 한 칸에 전부
+
+            for (int left = total; left > 0; left -= stackmax)               // 12개, 최대 5 → 5, 5, 2
+            {
+                int n = Mathf.Min(left, stackmax);
+                var slot = Instantiate(slotPrefab, slotParent);
+                slot.Setup(item, n, null, pos => ShowContextMenu(capturedItem, pos));
+                activeSlots.Add(slot);
+            }
         }
 
         var status = PlayerStateMachine.Instance.status;
@@ -126,8 +110,9 @@ public class InventoryUI : MonoBehaviour
 
     public void HideContextMenu() => contextMenu.Hide();
 
-    void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         if (inventory != null)
             inventory.OnInventoryChanged -= Refresh;
         if (_inventoryAction != null)

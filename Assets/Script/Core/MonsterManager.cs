@@ -3,12 +3,9 @@ using System.Reflection;
 using UnityEngine;
 
 public enum MonsterType {}
-public class MonsterManager : MonoBehaviour
+public class MonsterManager : SingletonBehaviour<MonsterManager>
 {
-    public static MonsterManager Instance { get; private set; }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
     // Ȱ��ȭ�� ���� ����Ʈ
     private List<MonsterStateMachine> DiedMonsters = new List<MonsterStateMachine>();
     private List<BossStateMachine> DiedBosses = new List<BossStateMachine>();
@@ -16,11 +13,6 @@ public class MonsterManager : MonoBehaviour
     // ��Ȱ��ȭ�� ���� Ǯ (������ Ÿ�Ժ�)
     private Dictionary<MonsterType, Queue<MonsterStateMachine>> pool = new Dictionary<MonsterType, Queue<MonsterStateMachine>>();
 
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
     public void Preload(MonsterType type, GameObject prefab, int count, Transform parent = null)
     {
         if (!pool.ContainsKey(type))

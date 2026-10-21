@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 865b76aa9989bfe4fbdfebbe91fba5dc, type: 3}
+  m_Script: {fileID: 11500000, guid: 84c6cf3e23eb7f646ae62406590fbba7, type: 3}
   m_Name: "\uB354\uB7EC\uC6B4 \uBB3C"
-  m_EditorClassIdentifier: Assembly-CSharp::DirtyWater
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
   icon: {fileID: 21300000, guid: 32b744ae3b9611749a6e61b7b516b990, type: 3}
   firstAcquireImage: {fileID: 21300000, guid: 983ae5c0d16757c418052098801cdba8, type: 3}
   itemcode: 35
@@ -22,6 +22,14 @@ MonoBehaviour:
   weight: 0.5
   canBurnAsFuel: 0
   materials: []
-  waterAmount: 10
-  hpChange: -1
-  hungryChange: -10
+  instant:
+  - stat: 2
+    amount: 10
+  - stat: 0
+    amount: -1
+  - stat: 1
+    amount: -10
+  effects: []
+  references:
+    version: 2
+    RefIds: []

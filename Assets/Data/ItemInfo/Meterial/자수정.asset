@@ -18,5 +18,5 @@ MonoBehaviour:
   itemType: 2
   description: 늑대를 처치하고 얻은 보라색 광물.
   maxamount: 99
-  weight: 0
+  weight: 0.2
   materials: []

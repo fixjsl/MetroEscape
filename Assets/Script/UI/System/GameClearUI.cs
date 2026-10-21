@@ -2,15 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GameClearUI : MonoBehaviour
+public class GameClearUI : UIPanel
 {
-    [SerializeField] private GameObject panel;
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
     void Awake()
     {
-        panel.SetActive(false);
+        root.SetActive(false);
         mainMenuButton.onClick.AddListener(GoMainMenu);
     }
 
@@ -19,17 +18,18 @@ public class GameClearUI : MonoBehaviour
         GameManager.Instance.OnGameClear += Show;
     }
 
-    private void Show()
+    private void Show() => Open();
+
+    protected override void OnOpened()
     {
         Debug.Log("되냐");
-        panel.SetActive(true);
-        Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
     private void GoMainMenu()
     {
         Time.timeScale = 1f;
+        UIStackManager.Clear();
         SceneManager.LoadScene(mainMenuSceneName);
     }
 

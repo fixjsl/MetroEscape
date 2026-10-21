@@ -18,5 +18,5 @@ MonoBehaviour:
   itemType: 2
   description: 강력 접착 테이프.
   maxamount: 99
-  weight: 0
+  weight: 0.2
   materials: []

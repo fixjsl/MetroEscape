@@ -19,6 +19,6 @@ MonoBehaviour:
   description: "\uC9C0\uC5ED \uC5B4\uB518\uAC00\uC5D0 \uC788\uB294 \uBE44\uC0C1\uAD6C\uB97C
     \uC5F4 \uC218 \uC788\uB2E4. \uAE30\uC9C0\uB85C \uBC14\uB85C \uBCF5\uADC0 \uAC00\uB2A5 "
   maxamount: 1
-  weight: 0
+  weight: 0.05
   canBurnAsFuel: 0
   materials: []

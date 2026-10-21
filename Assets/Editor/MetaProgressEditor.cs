@@ -49,7 +49,7 @@ public static class MetaProgressEditor
                 progress.unlockedPerkIds.Add(perk.PerkId);
         }
 
-        File.WriteAllText(MetaProgressManager.SavePath, JsonUtility.ToJson(progress));
+        JsonFileStore.Save(MetaProgressManager.SavePath, progress);
 
         string note = Application.isPlaying
             ? " 실행 중이므로 다음 재생부터 반영됩니다."

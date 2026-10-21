@@ -1,15 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemManager : MonoBehaviour
+public class ItemManager : SingletonBehaviour<ItemManager>
 {
-    [SerializeField] private ItemBase[] items;
-    public static Dictionary<int, ItemBase> itemDB { get; private set; }
+    [SerializeField] private ItemDatabase database;
 
-    private void Awake()
+    private static ItemDatabase db;
+
+    public static bool TryGet(int code, out ItemBase item) => db.TryGet(code, out item);
+    public static IReadOnlyList<ItemBase> Items => db.Items;
+    public static IReadOnlyList<RecipeSO> Recipes => db.Recipes;
+
+    protected override void Awake()
     {
-        itemDB = new Dictionary<int, ItemBase>();
-        foreach (var item in items)
-            itemDB[item.itemcode] = item;
+        base.Awake();
+        if (Instance != this) return;
+        db = database;
+        db.Build();
     }
 }

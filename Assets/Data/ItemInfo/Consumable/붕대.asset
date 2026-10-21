@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f813d826002ca6b45bcb1b8a8f3248af, type: 3}
+  m_Script: {fileID: 11500000, guid: 84c6cf3e23eb7f646ae62406590fbba7, type: 3}
   m_Name: "\uBD95\uB300"
-  m_EditorClassIdentifier: Assembly-CSharp::HealItem
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableItem
   icon: {fileID: 21300000, guid: 157b87a3fa35ee44280d86e2484e9383, type: 3}
   firstAcquireImage: {fileID: 21300000, guid: f0fc77eac9c2e1a40a0270d7ecb273af, type: 3}
   itemcode: 31
@@ -27,4 +27,10 @@ MonoBehaviour:
     amount: 3
   - item: {fileID: 11400000, guid: b74e5893af5f28a4aa4964f4aa4750fe, type: 2}
     amount: 1
-  healAmount: 15
+  instant:
+  - stat: 0
+    amount: 15
+  effects: []
+  references:
+    version: 2
+    RefIds: []

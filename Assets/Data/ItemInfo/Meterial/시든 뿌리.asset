@@ -18,6 +18,6 @@ MonoBehaviour:
   itemType: 2
   description: 시든 식물 뿌리. 불 피우기용 점화재.
   maxamount: 99
-  weight: 0
+  weight: 0.05
   canBurnAsFuel: 1
   materials: []

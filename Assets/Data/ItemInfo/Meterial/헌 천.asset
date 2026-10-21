@@ -18,6 +18,6 @@ MonoBehaviour:
   itemType: 2
   description: 찢어진 원단.
   maxamount: 99
-  weight: 0
+  weight: 0.1
   canBurnAsFuel: 0
   materials: []
