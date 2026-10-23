@@ -4,7 +4,7 @@ public class NoiseABright : PassiveState
 {
     public Light light;
 
-    [Header("���� ��ġ")]
+    [Header("소음 수치")]
     private float noiseIdle;
     private float noiseWalk;
     private float noiseSprint;

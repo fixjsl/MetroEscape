@@ -19,14 +19,20 @@ public class Battle : MonsterState
         if (Monster.Targetplayer == null) { Monster.ChangeState<Return>(); return; }
 
         Monster.Rb.linearVelocity = new Vector3(0f, Monster.Rb.linearVelocity.y, 0f);
-        delay = Mathf.Max(0.5f, Monster.status.atkdelay + Random.Range(-1f, 1f));
-        Timer.Reset();
+        bool keep = Monster.PreserveBattleTimer                                    // 피격 후 복귀 (보스)
+                    || (Monster.KeepsBattleTimer && Monster.IsReturningFromAttack);   // 공격 후 복귀 (보스)
+        Monster.PreserveBattleTimer = false;                                       // 한 번 쓰고 끔
+        if (!keep)
+        {
+            delay = Mathf.Max(0.5f, Monster.status.atkdelay + Random.Range(-1f, 1f));
+            Timer.Reset();
+        }
         if (Monster.IsReturningFromAttack)
         {
             Monster.IsReturningFromAttack = false;
             readyToAttack = false;
             isApproaching = true;
-            Monster.animator.speed = 0.7f;  
+            Monster.animator.speed = Monster.ApproachAnimSpeed;  
             Monster.animator.CrossFade(Monster.move, 0.1f);
         }
         else
@@ -49,7 +55,7 @@ public class Battle : MonsterState
         if (readyToAttack)
         {
             if (dist <= Monster.status.minSeparation)
-                Monster.ChangeState<Attack>();
+                Monster.ChooseAttack();
             return;
         }
 
@@ -84,7 +90,7 @@ public class Battle : MonsterState
         else
             moveX = (playerX >= myX) ? -1f : 1f;
 
-        float speed = readyToAttack ? Monster.status.chasespeed : Monster.status.battleWalkSpeed;
+        float speed = readyToAttack ? Monster.BattleChargeSpeed : Monster.status.battleWalkSpeed;
         Monster.Rb.linearVelocity = new Vector3(moveX * speed, Monster.Rb.linearVelocity.y, 0f);
     }
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using BossStates;
 
 // 전투 구역 경계 트리거
 // - 플레이어 진입: 보스가 귀환 중이면 즉시 전투 재개
@@ -10,7 +9,7 @@ public class BossCombatZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (boss.ActiveState is BossReturn)
+        if (boss.ActiveState is MonsterStates.Return)
             boss.OnPlayerEnterZone(other.GetComponent<PlayerStateMachine>());
     }
 

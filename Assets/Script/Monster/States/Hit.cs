@@ -1,4 +1,3 @@
-using Unity.Properties;
 using UnityEngine;
 
 namespace MonsterStates
@@ -36,6 +35,7 @@ namespace MonsterStates
         {
             if (Timer.Timer(hitduration))
             {
+                 if (Monster.KeepsBattleTimer) Monster.PreserveBattleTimer = true;
                 if (Monster.Targetplayer != null) Monster.ChangeState<Battle>();
                 else Monster.ChangeState<Return>();
             }

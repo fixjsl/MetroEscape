@@ -21,53 +21,38 @@ namespace MonsterStates
             Monster.status.detection_gauge = 0f;
             Monster.StartDetection();
             this.spawnPoint = Monster.spawnpoint;
-
-            //�������� ����� ���� ������ �� ���⿡ ���� ȸ��
             CheckDirection();
+
         }
         public override void Exit() {
            
         }
         private void CheckDirection()
         {
-            
 
-            // �÷��̾ ���������� ��������
-            float dirToPlayer = Monster.spawnpoint.transform.position.x - Monster.transform.position.x;
-            // ���� �ٶ󺸴� ����
-            float myDir = Vector3.Dot(Monster.transform.forward, Vector3.right);
+            if (Monster.spawnpoint == null) return;
 
-            // �ݴ� �����̸� Turn
-            if ((dirToPlayer > 0 && myDir < 0) || (dirToPlayer < 0 && myDir > 0))
-            {
-                isTurning = true;
-                Monster.animator.CrossFade(Monster.moveTurn, 0.01f);
-            }
-            else
-            {
-                Monster.animator.CrossFade(Monster.move, 0.01f);
-            }
+            isTurning = Monster.TurnToward(Monster.spawnpoint.position.x, Monster.ReturnAnim);
         }
         public override void LogicUpdate()
         {
             float distanceToSpawn = Vector3.Distance(Monster.transform.position, spawnPoint.transform.position);
 
-            // 2. �����ߴٸ� idle ���·� ��ȯ
+            // 2. 도착했다면 idle 상태로 전환
             if (distanceToSpawn <= arrivalThreshold)
             {
-                EndReturn();
+                Monster.OnReturnArrived();
             }
         }
         public override void PhysicalUpdate()
         {
             if (!isTurning)
             {
-                //�ڱ� ������������ ���ư�
                 Vector3 direction = (spawnPoint.transform.position - Monster.transform.position).normalized;
 
-                // 4. ������ٵ� �ӵ� �ο� (y���� �߷� ������ ���� ���� �� ���)
+                
                 Monster.Rb.linearVelocity = new Vector3(
-                    direction.x * Monster.status.speed,
+                    direction.x * Monster.ReturnSpeed,
                     Monster.Rb.linearVelocity.y,
                     0f
             );
@@ -77,14 +62,13 @@ namespace MonsterStates
  
         }
 
-        public override void OnAnimationFinished()
+        public override void OnTurnAnimationFinished()
         {
+            if (Monster.spawnpoint != null)
+                Monster.FinishTurn(Monster.spawnpoint.position.x, Monster.ReturnAnim);
             isTurning = false;
         }
-        public void EndReturn()
-        {
-            Monster.ChangeState<Idle>();
-        }
+
     }
 }
 

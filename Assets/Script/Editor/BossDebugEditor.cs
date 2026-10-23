@@ -17,26 +17,26 @@ public class BossDebugEditor : Editor
         EditorGUILayout.LabelField("─── Debug: 상태 강제 전환 ───", EditorStyles.boldLabel);
 
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Idle"))    boss.ChangeState<BossIdle>();
-        if (GUILayout.Button("Chase"))   boss.ChangeState<BossChase>();
-        if (GUILayout.Button("Battle"))  boss.ChangeState<BossBattle>();
+        if (GUILayout.Button("Idle"))    boss.ChangeState<MonsterStates.Idle>();
+        if (GUILayout.Button("Chase"))   boss.ChangeState<MonsterStates.Chase>();
+        if (GUILayout.Button("Battle"))  boss.ChangeState<MonsterStates.Battle>();
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Attack"))  boss.ChangeState<BossAttack>();
+        if (GUILayout.Button("Attack"))  boss.ChangeState<MonsterStates.Attack>();
         if (GUILayout.Button("Special")) boss.ChangeState<BossSpecial>();
         if (GUILayout.Button("Hit"))
         {
-            var hit = boss.fsm.Get<BossHit>() as BossHit;
-            hit.SetHitDuration(0.5f);
-            boss.ChangeState<BossHit>();
+            var hit = boss.fsm.Get<MonsterStates.Hit>() as MonsterStates.Hit;
+            hit.SetHitduration(0.5f);
+            boss.ChangeState<MonsterStates.Hit>();
         }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Stun"))    boss.ChangeState<BossStun>();
-        if (GUILayout.Button("Return"))  boss.ChangeState<BossReturn>();
-        if (GUILayout.Button("Die"))     boss.ChangeState<BossDie>();
+        if (GUILayout.Button("Stun"))    boss.ChangeState<MonsterStates.Stun>();
+        if (GUILayout.Button("Return"))  boss.ChangeState<MonsterStates.Return>();
+        if (GUILayout.Button("Die"))     boss.ChangeState<MonsterStates.Die>();
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space(6);

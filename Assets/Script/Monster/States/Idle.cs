@@ -12,7 +12,7 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            //idle�ִϸ��̼� ���
+            //idle애니메이션 재생
             changeTime = Random.Range(3, 5);
             Monster.Rb.linearVelocity = Vector3.zero;
             Monster.StartDetection();
@@ -26,8 +26,9 @@ namespace MonsterStates
 
         public override void LogicUpdate()
         {
+
             //3~5초뒤 Move로 전환
-            if (Timer.Timer(changeTime))
+            if (Monster.Patrols && Timer.Timer(changeTime))
             {
                 Monster.ChangeState<Move>();
             }

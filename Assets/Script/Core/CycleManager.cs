@@ -13,7 +13,7 @@ public class CycleManager : SingletonBehaviour<CycleManager>
     public void ExecuteCycleReset()
     {
         TeleportPlayerToBase();
-        RespawnMonsters();
+        MonsterManager.ResetAll();
         ResetContainers();
         LootTable.ResetUniquesForCycle();
         HideAllExits();
@@ -80,18 +80,6 @@ public class CycleManager : SingletonBehaviour<CycleManager>
         player.Rb.position = playerBasePosition.position;
         player.Rb.linearVelocity = Vector3.zero;
     }
-
-    private void RespawnMonsters()
-    {
-        // 컴포넌트가 disabled된 몬스터도 포함해서 검색, 보스는 제외
-        var monsters = FindObjectsByType<MonsterStateMachine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var m in monsters)
-        {
-            if (m is BossStateMachine) continue;
-            m.CycleRespawn();
-        }
-    }
-
     private void ResetContainers()
     {
         // SetActive(false)로 숨겨진 컨테이너도 포함

@@ -24,23 +24,7 @@ namespace MonsterStates
         private void CheckDirection()
         {
             if (Monster.Targetplayer == null) return;
-
-            // �÷��̾ ���������� ��������
-            float dirToPlayer = Monster.Targetplayer.transform.position.x - Monster.transform.position.x;
-            // ���� �ٶ󺸴� ����
-            float myDir = Vector3.Dot(Monster.transform.forward, Vector3.right);
-
-            // �ݴ� �����̸� Turn
-            if ((dirToPlayer > 0 && myDir < 0) || (dirToPlayer < 0 && myDir > 0))
-            {
-                isTurning = true;
-                Monster.animator.CrossFade(Monster.moveTurn, 0.01f);
-            }
-            else
-            {
-                isTurning = false;
-                Monster.animator.CrossFade(Monster.sprint, 0.01f);
-            }
+            isTurning = Monster.TurnToward(Monster.Targetplayer.transform.position.x, Monster.sprint);
         }
         public override void LogicUpdate()
         {
@@ -51,16 +35,15 @@ namespace MonsterStates
             }
             if (Monster.IsInBattleRange())
             {
-                Monster.ChangeState<Battle>();
+                Monster.OnReachedBattleRange();
             }
         }
         public override void PhysicalUpdate()
         {
-            //��ǥ���� �̵�
             if (Monster.Targetplayer == null) return;
 
             AnimatorStateInfo stateInfo = Monster.animator.GetCurrentAnimatorStateInfo(0);
-            // �÷��̾� �������� ȸ��
+            
             if (stateInfo.shortNameHash != Monster.moveTurn && !Monster.animator.IsInTransition(0))
             {
                 CheckDirection();
@@ -75,9 +58,7 @@ namespace MonsterStates
         }
         public override void OnTurnAnimationFinished()
         {
-            float dirToPlayer = Monster.Targetplayer.transform.position.x - Monster.transform.position.x;
-            float targetY = dirToPlayer > 0 ? 90f : 270f;
-            Monster.Rb.rotation = Quaternion.Euler(0, targetY, 0);
+            Monster.FaceTowardX(Monster.Targetplayer.transform.position.x);
 
             isTurning = false;
 

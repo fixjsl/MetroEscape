@@ -23,7 +23,7 @@ namespace BossStates
 
         public override void OnAnimationFinished()
         {
-            Boss.ChangeState<BossBattle>();
+            Boss.ChangeState<MonsterStates.Battle>();
         }
     }
 }

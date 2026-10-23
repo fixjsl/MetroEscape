@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using BossStates;
 using MonsterStates;
+using UnityEngine.Serialization;
 
 public class BossStateMachine : MonsterStateMachine
 {
@@ -13,7 +11,7 @@ public class BossStateMachine : MonsterStateMachine
     [SerializeField, Range(0f, 1f)] public float SpecialTriggerChance = 0.4f;
 
     [Header("Return")]
-    [SerializeField] public float ReturnSpeed = 12f;
+    [SerializeField][FormerlySerializedAs("ReturnSpeed")] private float returnSpeed = 12f;
 
     [Header("Trigger")]
     [SerializeField] private GameObject startTriggerObject;
@@ -21,6 +19,37 @@ public class BossStateMachine : MonsterStateMachine
     [Header("UI")]
     [SerializeField] private BossUI bossUI;
 
+    public override float ApproachAnimSpeed => 1;
+    public override float BattleChargeSpeed => status.speed;
+    public override void ChooseAttack()
+    {
+        if (IsSpecialReady && Random.value < SpecialTriggerChance)
+            ChangeState<BossSpecial>();
+        else
+            ChangeState<MonsterStates.Attack>();
+    }
+    public override bool CountsAsKill => false;
+    public override bool IgnoresHitReaction => ActiveState.isBlock || ActiveState is MonsterStates.Attack;
+    public override bool KeepsBattleTimer => true;
+    public override bool Patrols => false;
+    protected override bool UseDetection => false;
+    public override bool RespawnsOnCycle => false;
+    public override int ReturnAnim => sprint;
+    public override float ReturnSpeed => returnSpeed;
+    public override bool ScalesStunAnim => false;
+    public override void OnAggro() { }
+    public override void OnReachedBattleRange() { ChangeState<MonsterStates.Attack>(); }
+    public override void OnReturnArrived() { ActivateStartTrigger();ChangeState<MonsterStates.Idle>(); }
+    public override int PickAttackAnim()
+    {
+        if (IsFirstAttack)
+        {
+            IsFirstAttack = false;
+            return firstAttackHash;
+        }
+        else
+            return base.PickAttackAnim();
+    }
     public readonly int specialHash = Animator.StringToHash("bossSpecial");
     public readonly int firstAttackHash = Animator.StringToHash("bossFirstAttack");
 
@@ -29,7 +58,6 @@ public class BossStateMachine : MonsterStateMachine
     public void ResetSpecialCooldown() => specialTimer = SpecialCooldown;
 
     public bool IsFirstAttack { get; set; } = true;
-    public bool PreserveBattleTimer { get; set; } = false;
 
     // ──────────────────────────────────────────────
     // BossStartTrigger / BossCombatZone에서 호출
@@ -44,8 +72,8 @@ public class BossStateMachine : MonsterStateMachine
 
         bossUI?.Init(status);
 
-        if (ActiveState is BossIdle || ActiveState is BossReturn)
-            ChangeState<BossChase>();
+        if (ActiveState is MonsterStates.Idle || ActiveState is Return)
+            ChangeState<MonsterStates.Chase>();
     }
 
     public void OnPlayerExitZone()
@@ -74,7 +102,6 @@ public class BossStateMachine : MonsterStateMachine
     {
         base.Awake();
         specialTimer = SpecialCooldown;
-        if (Corpse != null) Corpse.enabled = false;
     }
 
     protected override void Update()
@@ -83,46 +110,18 @@ public class BossStateMachine : MonsterStateMachine
         if (specialTimer > 0f)
             specialTimer -= Time.deltaTime;
     }
-
-    protected override void OnEnable() { }
-    protected override void OnDisable() { }
-
     public override void stateInit()
     {
-        foreach (var s in StateFactory.CreateAll<MonsterState>(this, t => t.IsSubclassOf(typeof(BossState)))) fsm.Register(s);
-        fsm.Start<BossIdle>();
-    }
-
-    public override void OnHit(float Damage, float stunStrength)
-    {
-        bool isAttacking = ActiveState is BossAttack || ActiveState.isBlock;
-        if (isAttacking)
-        {
-            ActiveState?.HandleDamage(Damage);
-            return;
-        }
-
-        var hitState = fsm.Get<BossHit>() as BossHit;
-        hitState.SetHitDuration(stunStrength);
-        ChangeState<BossHit>();
-        ActiveState?.HandleDamage(Damage);
+        foreach (var s in StateFactory.CreateAll<MonsterState>(this, t => t.Namespace == "MonsterStates" || t.IsSubclassOf(typeof(BossState)))) fsm.Register(s);
+        fsm.Start<MonsterStates.Idle>();
     }
     public override void OnExeHit(float Damage)
-{
-    ActiveState?.HandleDamage(Damage);
-    if (status.Hp <= 0) return;
-    OnPlayerEnterZone(PlayerStateMachine.Instance);
-} 
-
-    public override void ChangeStun() => ChangeState<BossStun>();
-
-    public override void LoseTarget()
     {
-        SetTarget(null);
-        ChangeState<BossReturn>();
-    }
+        ActiveState?.HandleDamage(Damage);
+        if (status.Hp <= 0) return;
+        OnPlayerEnterZone(PlayerStateMachine.Instance);
+    } 
 
-    protected override void OnDieHandler() => ChangeState<BossDie>();
 
 #if UNITY_EDITOR
     protected override IEnumerator DebugStatusCoroutine()

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+
 using UnityEngine;
 using MonsterStates;
 using System.Collections;
@@ -34,7 +31,6 @@ public class MonsterStateMachine : MonoBehaviour
     [SerializeField] private ContainerObject corpse;
     public ContainerObject Corpse => corpse;
 
-    [Header("��������Ʈ �����ٶ�")]
     [SerializeField]
     public Transform spawnpoint;
     [SerializeField] private MonsterUI monsterUIPrefab;
@@ -45,9 +41,30 @@ public class MonsterStateMachine : MonoBehaviour
     public float HitAnimLength => hitAnimLength;
     [SerializeField] private float stunAnimLength = 1f;
     public float StunAnimLength => stunAnimLength;
-    [SerializeField] private Collider attackCollider; // �ν����� �Ҵ��
+    [SerializeField] private Collider attackCollider; 
      public bool IsReturningFromAttack { get; set; }
-    public Collider AttackCollider => attackCollider; // �ܺο��� �б� ����
+    public Collider AttackCollider => attackCollider;
+    // 훅영역
+    public bool PreserveBattleTimer { get; set; } = false;
+    protected virtual bool UseDetection => true; //탐지
+    public virtual bool Patrols => true; // 순찰
+    public virtual float ReturnSpeed => status.speed;//속도
+    public virtual int ReturnAnim => move; //애니메이션
+    public virtual void OnReturnArrived() => ChangeState<MonsterStates.Idle>();
+    public virtual void OnReachedBattleRange() => ChangeState<MonsterStates.Battle>();
+    public virtual void ChooseAttack() => ChangeState<MonsterStates.Attack>();
+    public virtual int PickAttackAnim() => AttackHashes[Random.Range(0, AttackHashes.Length)];
+    public virtual float BattleChargeSpeed => status.chasespeed;
+    public virtual float ApproachAnimSpeed => 0.7f;
+    public virtual bool KeepsBattleTimer => false;
+    public virtual bool ScalesStunAnim => true;
+    public virtual bool CountsAsKill => true;
+    public virtual bool RespawnsOnCycle => true;
+    public virtual bool IgnoresHitReaction => ActiveState.isBlock;
+    public virtual void OnAggro() {
+        status.detection_gauge = 100f;
+        if (Targetplayer == null) SetTarget(PlayerStateMachine.Instance);
+    }
     public virtual void stateInit()
     {
         foreach (var s in StateFactory.CreateAll<MonsterState>(this, t => t.Namespace == "MonsterStates")) fsm.Register(s);
@@ -67,15 +84,13 @@ public class MonsterStateMachine : MonoBehaviour
         status.OnDie += SpawnLoot;
         stateInit();
 
+        MonsterManager.Register(this);
         if (monsterUIPrefab != null)
         {
             monsterUI = Instantiate(monsterUIPrefab);
             monsterUI.Init(this, hpUIPoint, detectionUIPoint);
         }
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
-    // Update is called once per frame
     public bool IsFrozen { get; private set; }
 
     public void Freeze()
@@ -104,10 +119,9 @@ public class MonsterStateMachine : MonoBehaviour
     }
     public virtual void OnHit(float Damage, float stunStrength)
     {
-        status.detection_gauge = 100f;
-        if (Targetplayer == null) SetTarget(PlayerStateMachine.Instance);
 
-        if (ActiveState.isBlock)
+        OnAggro();
+        if (IgnoresHitReaction)
         {
             ActiveState?.HandleDamage(Damage);
             return;
@@ -125,6 +139,10 @@ public class MonsterStateMachine : MonoBehaviour
             SetTarget(PlayerStateMachine.Instance);
         ChangeState<Battle>();
     }
+    public void HideUI()
+    {
+        if (monsterUI != null) monsterUI.gameObject.SetActive(false);
+    }
     protected virtual void OnEnable()
     {
         StartDetection();
@@ -135,7 +153,8 @@ public class MonsterStateMachine : MonoBehaviour
     }
     public void StartDetection()
     {
-        StopDetection(); // �ߺ� ���� ����
+        if (!UseDetection) return;
+        StopDetection(); 
         DetectCorutine = StartCoroutine(Detect());
     }
 
@@ -158,11 +177,11 @@ public class MonsterStateMachine : MonoBehaviour
 
             if (hitPlayers.Length > 0)
             {
-                // �÷��̾ ã��!
+                // 플레이어를 찾음!
                 lostFrames = 0;
                 Targetplayer = hitPlayers[0].GetComponent<PlayerStateMachine>();
 
-                // 2. ���⼭ ���� �츮�� ®�� ��/���� ��� �Լ��� �����ϴ�.
+                // 2. 여기서 이제 우리가 짰던 빛/소음 계산 함수를 돌립니다.
                 // 전투범위 안 + 빛 → 즉시 감지 / 탐지범위 안 → 게이지 누적
                 float dist = Vector3.Distance(transform.position, Targetplayer.transform.position);
                 bool instantDetect = Targetplayer.status.currentbrighten > 0f
@@ -226,10 +245,9 @@ public class MonsterStateMachine : MonoBehaviour
         float dist = Vector3.Distance(transform.position, player.transform.position);
         float noise = player.status.currentnoise;
 
-        // ��ֹ��� �ִ��� üũ (Linecast)
         if (Physics.Linecast(transform.position, player.transform.position, obstacleMask))
         {
-            noise *= 0.2f; // ���� ������ ���� 80% ����
+            noise *= 0.2f; 
         }
 
         return noise / Mathf.Max(dist, 1f);
@@ -262,7 +280,6 @@ public class MonsterStateMachine : MonoBehaviour
     public virtual void LoseTarget()
     {
         Targetplayer = null;
-        // � ���¿� �ֵ� Ÿ���� ������ ����
         ChangeState<Return>();
     }
 
@@ -270,7 +287,19 @@ public class MonsterStateMachine : MonoBehaviour
     {
         ChangeState<Stun>();
     }
-
+    public bool NeedTurn(float targetx)
+    {
+        float dirToPlayer = targetx - transform.position.x;
+        // 내가 바라보는 방향
+        float myDir = Vector3.Dot(transform.forward, Vector3.right);
+        return (dirToPlayer > 0 && myDir < 0) || (dirToPlayer < 0 && myDir > 0);
+    }
+    public void FaceTowardX(float targetx)
+    {
+        float dirToPlayer = targetx - transform.position.x;
+        float targetY = dirToPlayer > 0 ? 90f : 270f;
+        Rb.rotation = Quaternion.Euler(0, targetY, 0);
+    }
     public void CycleRespawn()
     {
         gameObject.SetActive(true);
@@ -309,7 +338,21 @@ public class MonsterStateMachine : MonoBehaviour
     {
         ChangeState<MonsterStates.Die>();
     }
-
+    public bool TurnToward(float targetX, int moveAnim)
+    {
+        if (NeedTurn(targetX))
+        {
+            animator.CrossFade(moveTurn, 0.01f);
+            return true;
+        }
+        animator.CrossFade(moveAnim, 0.01f);
+        return false;
+    }
+    public void FinishTurn(float targetX, int moveAnim)
+    {
+        FaceTowardX(targetX);
+        animator.CrossFade(moveAnim, 0.0001f);
+    }
     private void SpawnLoot()
     {
         if (lootTable == null || itemPickupPrefab == null) return;
@@ -326,7 +369,10 @@ public class MonsterStateMachine : MonoBehaviour
     {
         Rb.MoveRotation(Rb.rotation * animator.deltaRotation);
     }
-
+    private void OnDestroy()
+    {
+        MonsterManager.Unregister(this);
+    }
 #if UNITY_EDITOR
     [SerializeField] private bool debugMode = false;
 

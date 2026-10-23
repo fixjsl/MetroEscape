@@ -14,7 +14,8 @@ namespace MonsterStates
         {
             Monster.gameObject.layer = Layercache.Stun;
             Monster.Rb.linearVelocity = Vector3.zero;
-            Monster.animator.speed = Monster.StunAnimLength / Mathf.Max(Monster.status.stunTime, 0.01f);
+            if (Monster.ScalesStunAnim)
+                Monster.animator.speed = Monster.StunAnimLength / Mathf.Max(Monster.status.stunTime, 0.01f);
             Monster.animator.CrossFade(Monster.stun, 0.01f);
             stunTimer.Reset();
         }

@@ -10,7 +10,6 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            //����ִϸ��̼�
             Monster.animator.CrossFade(Monster.die, 0.001f);
             Monster.Rb.linearVelocity = Vector3.zero;
             Monster.animator.applyRootMotion = false;
@@ -20,18 +19,18 @@ namespace MonsterStates
             col.isTrigger = true;
             col.enabled = true;
             Monster.gameObject.layer = Layercache.Die;
-            MetaProgressManager.Instance?.AddKill();
+            if(Monster.CountsAsKill)
+                MetaProgressManager.Instance?.AddKill();
             if (Monster.Corpse != null) Monster.Corpse.enabled = true;
         }
         public override void Exit()
         {
-            //���� HPȸ��
             Monster.status.Hp = Monster.status.Maxhp;
         }
 
         public override void LogicUpdate()
         {
-            //���� ��Ȱ��ȭ �� ���� Ǯ�� �ǵ���
+
         }
         public override void PhysicalUpdate()
         {
