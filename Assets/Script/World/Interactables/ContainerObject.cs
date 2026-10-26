@@ -19,12 +19,10 @@ public class ContainerObject : ItObjectBase
     [SerializeField] private AudioClip openSound;
     [SerializeField] private AudioClip closeSound;
 
-    public override bool isStuck => false;
-    public override string InteractMessage => open ? $"{closeMessage} [{InputBindings.Interact}]" : $"{openMessage} [{InputBindings.Interact}]";
+    public override string InteractMessage => Prompt(open ? closeMessage : openMessage);
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        isInteracting = false;
 
         if (open)
         {
@@ -50,18 +48,13 @@ public class ContainerObject : ItObjectBase
         PlayInteractSound(firstOpenSound, openSound);
     }
 
-    protected override void OnTriggerExit(Collider other)
+    protected override void OnPlayerExited(PlayerStateMachine player)
     {
-        base.OnTriggerExit(other);
-        if (other.TryGetComponent<PlayerStateMachine>(out _))
-        {
-            open = false;
-            ContainerUI.Instance.CloseKeepingInventory();
-            ContainerUI.Instance.Close();
+        open = false;
+        ContainerUI.Instance.CloseKeepingInventory();
 
-            if (disappearAfterOpen && hasBeenOpened)
-                gameObject.SetActive(false);
-        }
+        if (disappearAfterOpen && hasBeenOpened)
+            gameObject.SetActive(false);
     }
 
     public void CycleReset()

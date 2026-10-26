@@ -10,11 +10,9 @@ class DIYwaterfilter : ItObjectBase
     [SerializeField] private ItemBase OldWater;
     [SerializeField] private ItemBase Water;
 
-    public override bool isStuck => false;
     public override string InteractMessage =>
         isFilltering ? "정수중" :
-        isFiltered ? $"물 얻기 {InputBindings.Interact}" :
-        $"물 넣기 {InputBindings.Interact}";
+        Prompt(isFiltered ? "물 얻기" : "물 넣기");
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
@@ -23,24 +21,19 @@ class DIYwaterfilter : ItObjectBase
             if (PlayerStateMachine.Instance.inventory.AddItem(Water))
             {
                 isFiltered = false;
-                isInteracting = false;
                 RefreshPrompt();
-            }
-            else
-            {
-                isInteracting = false;
             }
             return;
         }
 
         if (!PlayerStateMachine.Instance.inventory.RemoveItem(OldWater))
         {
-            isInteracting = false;
             return;
         }
 
         isFilltering = true;
         RefreshPrompt();
+        BeginBusy();
         StartCoroutine(FilterRoutine());
     }
 
@@ -49,7 +42,7 @@ class DIYwaterfilter : ItObjectBase
         yield return new WaitForSeconds(fillteringTime);
         isFilltering = false;
         isFiltered = true;
-        isInteracting = false;
+        EndBusy();
         RefreshPrompt();
     }
 }

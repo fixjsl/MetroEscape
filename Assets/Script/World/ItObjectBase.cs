@@ -1,11 +1,9 @@
 
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class ItObjectBase : MonoBehaviour, IInteractable
 {
-    public abstract bool isStuck { get; }
     public abstract string InteractMessage { get; }
     [SerializeField] private GameObject TextObject;
     [SerializeField] private TextMeshPro promptText;
@@ -19,27 +17,39 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
 
     protected virtual void Start()
     {
-        TextObject.SetActive(false);
+        SetPromptVisible(false);
     }
 
     void LateUpdate()
     {
-        if (TextObject.activeSelf)
+        if (TextObject != null && TextObject.activeSelf && Camera.main != null)
             TextObject.transform.rotation = Camera.main.transform.rotation;
     }
 
-
+    protected void BeginBusy()
+    {
+        isInteracting = true;
+    }
+    protected void EndBusy()
+    {
+        isInteracting = false;
+        RefreshPrompt();
+    }
+    protected string Prompt(string action)
+    {
+        return $"{action} [{InputBindings.Interact}]";
+    }
+ 
     public void OnInteract(Vector3 interacterPosition)
     {
         if (isInteracting || Time.time < lastInteractTime + interactCooldown) return;
 
-        isInteracting = true;
         lastInteractTime = Time.time;
         OnInteractInternal(interacterPosition);
         hasInteracted = true;
 
-   
-            promptText.text = InteractMessage;
+
+        RefreshPrompt();
 
         if (currentPlayer != null && !gameObject.activeInHierarchy)
         {
@@ -51,8 +61,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
 
     public void RefreshPrompt()
     {
-        if (TextObject != null && TextObject.activeInHierarchy)
-            promptText.text = InteractMessage;
+        if (currentPlayer != null) ShowPrompt();   // 플레이어가 범위 안에 있을 때만 (빈 문구면 숨김)
     }
 
     private void OnTriggerEnter(Collider other)
@@ -62,19 +71,24 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
         if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
         currentPlayer = player;
         player.SetInteractable(this);
-        promptText.text = InteractMessage;
-        TextObject.SetActive(true);
+        ShowPrompt();
         OnPlayerEntered(player);
     }
 
     protected virtual void OnPlayerEntered(PlayerStateMachine player) { }
+    protected virtual void OnPlayerExited(PlayerStateMachine player) { }
+    protected static bool PlayerHas(ItemBase item)
+    {
+        return item != null && PlayerStateMachine.Instance != null && PlayerStateMachine.Instance.inventory.slots.ContainsKey(item.itemcode);
+    }
 
-    protected virtual void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
         player.ClearInteractable(this);
         if (player == currentPlayer) currentPlayer = null;
-        TextObject.SetActive(false);
+        SetPromptVisible(false);
+        OnPlayerExited(player);   // 자식은 이 훅만 override
     }
 
     protected void PlaySound(AudioClip clip)
@@ -87,7 +101,20 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
     {
         PlaySound(hasInteracted ? repeatClip : firstClip);
     }
-
+    protected void TogglePanel(UIPanel panel)
+    {
+        if (panel.IsOpen) panel.Close(); else panel.Open();
+    }
+    private void SetPromptVisible(bool on)
+    {
+        if (TextObject != null) TextObject.SetActive(on);   // 인스펙터에서 빠뜨려도 NRE 안 나게
+    }
+    private void ShowPrompt()
+    {
+        string msg = InteractMessage;
+        if (string.IsNullOrEmpty(msg)) { SetPromptVisible(false); }
+        else { if (promptText != null) promptText.text = msg; SetPromptVisible(true); }
+    }
     private void OnEnable()
     {
         var col = GetComponent<Collider>();
@@ -98,8 +125,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
         {
             currentPlayer = player;
             player.SetInteractable(this);
-            promptText.text = InteractMessage;
-            TextObject.SetActive(true);
+            ShowPrompt();
         }
     }
 
@@ -110,6 +136,6 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
             currentPlayer.ClearInteractable(this);
             currentPlayer = null;
         }
-        TextObject.SetActive(false);
+        SetPromptVisible(false);
     }
 }

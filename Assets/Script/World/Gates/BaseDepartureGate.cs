@@ -10,13 +10,11 @@ public class BaseDepartureGate : ItObjectBase
 
     private bool departed = false;
 
-    public override bool isStuck => false;
     public override string InteractMessage =>
-        departed ? "" : $"출발 [{InputBindings.Interact}]";
+        departed ? "" : Prompt("출발");
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        isInteracting = false;
         if (departed) return;
 
         var open = CycleManager.Instance.GetOpenZones();

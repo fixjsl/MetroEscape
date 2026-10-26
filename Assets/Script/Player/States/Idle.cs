@@ -1,4 +1,3 @@
-using System.Security;
 using UnityEngine;
 
 public class Idle : PlayerState
@@ -31,8 +30,7 @@ public class Idle : PlayerState
 
     public override void LogicUpdate()
     {
-        if(player.status.Stamina != player.status.MaxStamina)
-            player.status.Stamina += player.status.StaminaRecoveryRate * Time.deltaTime;
+        player.status.TickStamina(false, Time.deltaTime);
 
         if (!player.animator.IsInTransition(1))
         {

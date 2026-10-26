@@ -1,12 +1,14 @@
 
-using System.Security;
 using UnityEngine;
 
-public class Crunch : PlayerState
+public class Crunch : GroundMoveState
 {
-    private float movebuffer;
 
-    bool canSprint;
+
+    protected override float walkSpeed => player.status.crunchspeed;
+    protected override float sprintSpeed => player.status.crunchsprintspeed;
+    protected override int moveAni => player.crunchmove;
+    protected override int turnAni => player.crunchturn;
     private AnimatorStateInfo curAni;
     private AnimatorStateInfo curUpperAni;
     public Crunch(PlayerStateMachine stateMachine) : base(stateMachine)
@@ -15,8 +17,8 @@ public class Crunch : PlayerState
     }
     public override void Enter()
     {
-        float dot = Vector3.Dot(player.transform.forward, Vector3.right);
-        movebuffer = (dot > 0) ? 1f : -1f;
+        base.Enter();
+
         player.animator.CrossFade(player.crunch, 0.15f);
         if (player.isTired && !player.animator.IsInTransition(1))
             player.animator.CrossFade(player.tired, 0.15f, 1);
@@ -30,32 +32,25 @@ public class Crunch : PlayerState
         player.Col.size = player.StandSize;
         player.Col.center = player.StandCenter;
     }
-    public override void LogicUpdate()
+    protected override bool BeforeMove()
     {
         curAni = player.animator.GetCurrentAnimatorStateInfo(0);
         canSprint = player.isSprint && !player.isTired;
         if (!player.isCrunch)
         {
-            if (curAni.shortNameHash != player.outcrunch && !player.animator.IsInTransition(0) )
+            if (curAni.shortNameHash != player.outcrunch && !player.animator.IsInTransition(0))
             {
                 canChanged = false;
                 player.animator.CrossFade(player.outcrunch, 0.15f);
             }
-            return;
+            return true;
         }
-        if (player.MoveInput != 0 && player.MoveInput != movebuffer)
-        {
-            float targetY = (movebuffer > 0) ? 90f : -90f;
-            player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
-            canChanged = false;
-            player.animator.CrossFade(player.crunchturn, 0.15f);
-            movebuffer = player.MoveInput;
-        }
-        if(player.animator.IsInTransition(0)) return;
-        
+        return false;
+    }
+    protected override void UpdateAni()
+    {
+    
         curUpperAni = player.animator.GetCurrentAnimatorStateInfo(1);
-        if (canChanged)
-        {
             if(player.MoveInput != 0)
             {
                 if (curAni.shortNameHash != player.crunchmove)
@@ -66,40 +61,8 @@ public class Crunch : PlayerState
 
             if (player.isTired && curUpperAni.shortNameHash != player.tired && !player.animator.IsInTransition(1))
                 player.animator.CrossFade(player.tired, 0.15f, 1);
-        }
 
-        if (!player.isSprint || player.isTired)
-        {
-            player.status.Stamina += player.status.StaminaRecoveryRate * Time.deltaTime;
-        }
-        else
-        {
-            player.status.Stamina -= player.status.SprintCost * Time.deltaTime;
-        }
     }
 
-    public override void PhysicalUpdate()
-    {
-        if (canChanged)
-        {
-
-            if (player.status.currentspeed != player.status.crunchspeed)
-                player.status.currentspeed = player.status.crunchspeed;
-            if (canSprint && player.status.currentspeed != player.status.crunchsprintspeed)
-                player.status.currentspeed = player.status.crunchsprintspeed;
-
-            player.Rb.linearVelocity = new Vector3(
-                player.MoveInput * player.status.currentspeed,
-                player.Rb.linearVelocity.y,
-                0f);
-        }
-    }
-    public override void OnTurnAnimationFinished()
-    {
-        float targetY = (movebuffer > 0) ? 90f : -90f;
-        player.Rb.rotation = Quaternion.Euler(0, targetY, 0);
-        player.animator.CrossFade(player.crunch, 0.15f);
-        canChanged = true;
-    }
 
 }
