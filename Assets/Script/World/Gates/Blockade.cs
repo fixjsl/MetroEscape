@@ -6,7 +6,6 @@ public class Blockade : ItObjectBase
     [SerializeField] private string noKeyMessage = "열쇠 필요";
     [SerializeField] private string hasKeyMessage = "다음 구역 해방";
 
-    public override bool isStuck => false;
      protected bool HasKey =>
         keyItem != null &&
         PlayerStateMachine.Instance != null &&

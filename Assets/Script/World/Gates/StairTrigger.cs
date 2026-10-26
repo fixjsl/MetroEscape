@@ -4,7 +4,6 @@ public class StairTrigger : ItObjectBase
 {
     [SerializeField] private StairObject stair;
 
-    public override bool isStuck => false;
     public override string InteractMessage =>
         stair.IsOnStair
             ? $"하차 [{InputBindings.Interact}]"

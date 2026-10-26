@@ -5,7 +5,6 @@ public class ItemPickup : ItObjectBase
     [SerializeField] private ItemBase item;
     [SerializeField] private int count = 1;
 
-    public override bool isStuck => false;
     public override string InteractMessage => item != null ? $"{item.name} 줍기  [F]" : "줍기  [F]";
 
     public void Setup(ItemBase item, int count)

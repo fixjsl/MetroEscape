@@ -26,7 +26,6 @@ public class Campfire : ItObjectBase
         if (screenLight != null) screenLight.enabled = false;
     }
 
-    public override bool isStuck => false;
     public override string InteractMessage =>
         IsBurning ? $"요리하기 {InputBindings.Interact}" : $"불피우기 {InputBindings.Interact}";
 

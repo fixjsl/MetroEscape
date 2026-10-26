@@ -33,6 +33,10 @@ public class PlayerStatus
             if (stamina <= 0) StaminaEmpty?.Invoke();
         }
     }
+    public void TickStamina(bool sprinting, float dt) {
+        if (!sprinting && Stamina >= curMaxStamina) return;
+        Stamina += sprinting ? -SprintCost * dt : StaminaRecoveryRate * dt; 
+    }
     public float currentspeed;
     public float walkspeed;
     public float crunchspeed;

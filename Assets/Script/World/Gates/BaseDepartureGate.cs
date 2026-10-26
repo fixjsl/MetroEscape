@@ -10,7 +10,6 @@ public class BaseDepartureGate : ItObjectBase
 
     private bool departed = false;
 
-    public override bool isStuck => false;
     public override string InteractMessage =>
         departed ? "" : $"출발 [{InputBindings.Interact}]";
 

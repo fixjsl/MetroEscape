@@ -9,7 +9,6 @@ public class BaseReturnExit : ItObjectBase
 
     private bool used = false;
 
-    public override bool isStuck => false;
 
     public override string InteractMessage
     {

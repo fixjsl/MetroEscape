@@ -10,7 +10,6 @@ class DIYwaterfilter : ItObjectBase
     [SerializeField] private ItemBase OldWater;
     [SerializeField] private ItemBase Water;
 
-    public override bool isStuck => false;
     public override string InteractMessage =>
         isFilltering ? "정수중" :
         isFiltered ? $"물 얻기 {InputBindings.Interact}" :

@@ -19,7 +19,6 @@ public class ContainerObject : ItObjectBase
     [SerializeField] private AudioClip openSound;
     [SerializeField] private AudioClip closeSound;
 
-    public override bool isStuck => false;
     public override string InteractMessage => open ? $"{closeMessage} [{InputBindings.Interact}]" : $"{openMessage} [{InputBindings.Interact}]";
 
     protected override void OnInteractInternal(Vector3 interacterPosition)

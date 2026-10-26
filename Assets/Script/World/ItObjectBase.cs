@@ -1,11 +1,9 @@
 
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class ItObjectBase : MonoBehaviour, IInteractable
 {
-    public abstract bool isStuck { get; }
     public abstract string InteractMessage { get; }
     [SerializeField] private GameObject TextObject;
     [SerializeField] private TextMeshPro promptText;

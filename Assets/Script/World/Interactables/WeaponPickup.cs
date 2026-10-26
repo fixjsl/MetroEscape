@@ -4,7 +4,6 @@ public class WeaponPickup : ItObjectBase
 {
     private Weapon weapon;
 
-    public override bool isStuck => false;
     public override string InteractMessage => "줍기  [F]";
 
     public void SetWeapon(Weapon weapon)
