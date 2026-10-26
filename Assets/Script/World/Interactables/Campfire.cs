@@ -27,7 +27,7 @@ public class Campfire : ItObjectBase
     }
 
     public override string InteractMessage =>
-        IsBurning ? $"요리하기 {InputBindings.Interact}" : $"불피우기 {InputBindings.Interact}";
+        Prompt(IsBurning ? "요리하기" : "불피우기");
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
@@ -35,14 +35,11 @@ public class Campfire : ItObjectBase
             CampfireUI.Instance.Close();
         else
             CampfireUI.Instance.Open(this);
-        isInteracting = false;
     }
 
-    protected override void OnTriggerExit(Collider other)
+    protected override void OnPlayerExited(PlayerStateMachine player)
     {
-        base.OnTriggerExit(other);
-        if (other.TryGetComponent<PlayerStateMachine>(out _))
-            CampfireUI.Instance.Close();
+        CampfireUI.Instance.Close();
     }
 
     public static int CountFuel(Inventory inv)

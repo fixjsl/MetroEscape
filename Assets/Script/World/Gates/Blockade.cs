@@ -6,16 +6,12 @@ public class Blockade : ItObjectBase
     [SerializeField] private string noKeyMessage = "열쇠 필요";
     [SerializeField] private string hasKeyMessage = "다음 구역 해방";
 
-     protected bool HasKey =>
-        keyItem != null &&
-        PlayerStateMachine.Instance != null &&
-        PlayerStateMachine.Instance.inventory.slots.ContainsKey(keyItem.itemcode);
+     protected bool HasKey => PlayerHas(keyItem);
     public override string InteractMessage
-        => $"{(HasKey ? hasKeyMessage : noKeyMessage)} [{InputBindings.Interact}]";
+        => Prompt(HasKey ? hasKeyMessage : noKeyMessage);
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        isInteracting = false;
 
         if (!HasKey)
         {

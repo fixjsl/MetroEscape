@@ -4,7 +4,7 @@ public class WeaponPickup : ItObjectBase
 {
     private Weapon weapon;
 
-    public override string InteractMessage => "줍기  [F]";
+    public override string InteractMessage => Prompt("줍기");
 
     public void SetWeapon(Weapon weapon)
     {
@@ -14,7 +14,6 @@ public class WeaponPickup : ItObjectBase
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
         if (weapon == null) return;
-        Debug.Log(weapon);
         PlayerStateMachine.Instance.EquipWeapon(weapon);
         GetComponent<Collider>().enabled = false;
         if (TutorialManager.Instance != null)

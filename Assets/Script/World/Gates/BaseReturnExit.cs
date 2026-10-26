@@ -15,17 +15,12 @@ public class BaseReturnExit : ItObjectBase
         get
         {
             if (used) return "";
-            bool hasKey = keyItem != null
-                       && PlayerStateMachine.Instance != null
-                       && PlayerStateMachine.Instance.inventory.slots.ContainsKey(keyItem.itemcode);
-            string msg = hasKey ? hasKeyMessage : noKeyMessage;
-            return $"{msg} [{InputBindings.Interact}]";
+            return Prompt(PlayerHas(keyItem) ? hasKeyMessage : noKeyMessage);
         }
     }
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        isInteracting = false;
         if (used) return;
 
         if (keyItem != null && !PlayerStateMachine.Instance.inventory.RemoveItem(keyItem, 1))

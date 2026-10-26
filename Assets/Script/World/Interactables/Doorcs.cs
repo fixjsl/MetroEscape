@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Doorcs : ItObjectBase
 {
-    public override string InteractMessage => isOpen ? $"닫기  [{InputBindings.Interact}]" : $"열기  [{InputBindings.Interact}]";
+    public override string InteractMessage => Prompt(isOpen ? "닫기" : "열기");
 
     protected override float interactCooldown => 0.5f;
 
@@ -55,6 +55,7 @@ public class Doorcs : ItObjectBase
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
+        BeginBusy();
         if (!isOpen)
         {
             Vector3 localPos = offset.transform.InverseTransformPoint(interacterPosition);
@@ -81,7 +82,7 @@ public class Doorcs : ItObjectBase
 
         if (offset.transform.rotation == targetRot)
         {
-            isInteracting = false;
+            EndBusy();
             SetIgnorePlayer(false);
         }
     }
