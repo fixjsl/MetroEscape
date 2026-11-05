@@ -89,7 +89,7 @@ public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffec
     public readonly int dodge = Animator.StringToHash("dodge");
     public event Action ParrySuccess;
     public void InvokeParrySuccess() => ParrySuccess?.Invoke();
-    public void PlaySFX(AudioClip clip) { if (clip != null) GameManager.Instance.PlaySFX(clip); }
+    public void PlaySFX(AudioClip clip) { if (clip != null) GameManager.Instance.audio.PlaySFX(clip); }
     //플레이어 버퍼입력
     public StateType bufferinput { get; private set; }
     public float buffertime { get; private set; } = 0.2f;

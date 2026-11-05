@@ -132,3 +132,7 @@ InitTestScene*.unity*
 /[Aa]ssets/Plugins/Demigiant.meta
 /[Aa]ssets/Resources/DOTweenSettings.asset
 /[Aa]ssets/Resources/DOTweenSettings.asset.meta
+
+
+/[Pp]ackages/com.unity.ai.assistant/
+ignore.conf

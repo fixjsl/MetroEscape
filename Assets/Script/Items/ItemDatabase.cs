@@ -48,7 +48,17 @@ public class ItemDatabase : ScriptableObject
         }
         return errors;
     }
-
+    public IEnumerable<RecipeSO> RecipesFor(ItemType tab)
+    {
+        foreach (var r in recipes)
+        {
+            if (r == null || r.result == null) continue;
+            var type = r.result.itemType;
+            // 지금 CraftingUI:78-79의 규칙 그대로: 소모품 탭에는 설치물(InteractObject)도 함께
+            if (type == tab || (tab == ItemType.Consumable && type == ItemType.InteractObject))
+                yield return r;
+        }
+    }
 
 #if UNITY_EDITOR
     private void OnValidate()

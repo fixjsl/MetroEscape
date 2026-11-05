@@ -20649,7 +20649,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1559354784}
   m_HandleRect: {fileID: 1559354783}
   m_Direction: 3
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -32626,7 +32626,6 @@ MonoBehaviour:
   bgmSource: {fileID: 1746130079}
   sfxSource: {fileID: 1746130081}
   ambientSource: {fileID: 1746130080}
-  defaultBGM: {fileID: 8300000, guid: d9b013d18142f8b498dd9b090e108571, type: 3}
 --- !u!4 &1746130078
 Transform:
   m_ObjectHideFlags: 0

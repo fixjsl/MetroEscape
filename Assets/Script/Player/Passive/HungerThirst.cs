@@ -17,13 +17,13 @@ public class HungerThirst : PassiveState
     public override void Exit()
     {
         if (subscribeCoroutine != null) { player.StopCoroutine(subscribeCoroutine); subscribeCoroutine = null; }
-        if (GameManager.Instance != null) GameManager.Instance.ChangeTime -= OnMinuteTick;
+        if (GameManager.Instance != null) GameManager.Instance.clock.ChangeTime -= OnMinuteTick;
     }
 
     private IEnumerator WaitAndSubscribe()
     {
         yield return new WaitUntil(() => GameManager.Instance != null);
-        GameManager.Instance.ChangeTime += OnMinuteTick;
+        GameManager.Instance.clock.ChangeTime += OnMinuteTick;
         subscribeCoroutine = null;
     }
 

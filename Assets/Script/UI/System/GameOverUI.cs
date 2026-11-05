@@ -24,7 +24,7 @@ public class GameOverUI : UIPanel
     protected override void OnOpened()
     {
 
-        var newly = MetaProgressManager.Instance?.EvaluateUnlocks();
+        var newly = MetaProgressManager.Instance?.LastUnlocks;
         if (unlockLabel != null)
         {
             if (newly != null && newly.Count > 0)

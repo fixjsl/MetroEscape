@@ -94,7 +94,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
     protected void PlaySound(AudioClip clip)
     {
         if (clip != null)
-            GameManager.Instance.PlaySFX(clip);
+            GameManager.Instance.audio.PlaySFX(clip);
     }
 
     protected void PlayInteractSound(AudioClip firstClip, AudioClip repeatClip)
