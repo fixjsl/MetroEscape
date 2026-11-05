@@ -124,3 +124,11 @@ InitTestScene*.unity*
 /기능명세서.md
 /기능명세서_수정본.md
 /기획서 초안.docx
+
+# Asset Store 에셋 (EULA상 공개 저장소 재배포 불가 → 각자 Asset Store에서 설치)
+/[Aa]ssets/Kevin Iglesias/
+/[Aa]ssets/Kevin Iglesias.meta
+/[Aa]ssets/Plugins/Demigiant/
+/[Aa]ssets/Plugins/Demigiant.meta
+/[Aa]ssets/Resources/DOTweenSettings.asset
+/[Aa]ssets/Resources/DOTweenSettings.asset.meta
