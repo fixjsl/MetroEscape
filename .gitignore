@@ -102,3 +102,15 @@ InitTestScene*.unity*
 *.pdata 
 /Docs/
 /Claude outputs/
+# AI 답변/분석 문서 (로컬 보관)
+/개선점_AI/
+/관련연구 검증_AI/
+/제안_AI/
+
+# Asset Store 에셋 (EULA상 공개 저장소 재배포 불가 → 각자 Asset Store에서 설치)
+/[Aa]ssets/Kevin Iglesias/
+/[Aa]ssets/Kevin Iglesias.meta
+/[Aa]ssets/Plugins/Demigiant/
+/[Aa]ssets/Plugins/Demigiant.meta
+/[Aa]ssets/Resources/DOTweenSettings.asset
+/[Aa]ssets/Resources/DOTweenSettings.asset.meta
