@@ -20,6 +20,8 @@ public class MonsterStateMachine : MonoBehaviour
     public Animator animator { get; private set; }
     private Collider _col;
     public MonsterStatus status;
+    public const float MaxDetectionGauge = 100f;   // 감지 게이지 최대(= 발견)
+    public const float ExecutableGauge = 50f;      // 이 값 이하면 처형 가능
     public int[] AttackHashes => status.AttackHashes;
     [SerializeField] private LootTable lootTable;
     [SerializeField] private ItemPickup itemPickupPrefab;
@@ -53,7 +55,7 @@ public class MonsterStateMachine : MonoBehaviour
     public virtual bool RespawnsOnCycle => true;
     public virtual bool IgnoresHitReaction => ActiveState.isBlock;
     public virtual void OnAggro() {
-        status.detection_gauge = 100f;
+        status.detection_gauge = MaxDetectionGauge;
         if (Targetplayer == null) SetTarget(PlayerStateMachine.Instance);
     }
     public virtual void stateInit()
@@ -150,7 +152,7 @@ public class MonsterStateMachine : MonoBehaviour
                Mathf.Abs(delta.y) <= status.battleHalfExtents.y;
     }
 
-    public bool CanBeExecuted() => status.detection_gauge <= 50f;
+    public bool CanBeExecuted() => status.detection_gauge <= ExecutableGauge;
 
     public void SetTarget(PlayerStateMachine target)
     {

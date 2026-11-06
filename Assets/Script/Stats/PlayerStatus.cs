@@ -30,11 +30,12 @@ public class PlayerStatus
            ChangeStamina?.Invoke(stamina);
 
             if (stamina <= 0) { isTired = true; StaminaEmpty?.Invoke(); }
-            else if (isTired && stamina >= MaxStamina * 0.3f) isTired = false;   // 30% 회복하면 지침 해제
+            else if (isTired && stamina >= MaxStamina * TiredRecoverRatio) isTired = false;
         }
     }
     // 스태미나가 0이 되면 true, 최대치의 30%까지 회복하면 false (PlayerStateMachine에서 옮김)
     public bool isTired { get; private set; }
+    const float TiredRecoverRatio = 0.3f;   // 지침은 최대치의 30%까지 회복하면 풀림
     public void TickStamina(bool sprinting, float dt) {
         if (!sprinting && Stamina >= curMaxStamina) return;
         Stamina += sprinting ? -SprintCost * dt : StaminaRecoveryRate * dt; 

@@ -66,7 +66,7 @@ public class BossStateMachine : MonsterStateMachine
         if (Targetplayer != null) return;
 
         SetTarget(player);
-        status.detection_gauge = 100f;
+        status.detection_gauge = MaxDetectionGauge;
         IsFirstAttack = true;
 
         bossUI?.Init(status);

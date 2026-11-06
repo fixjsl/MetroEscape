@@ -24,7 +24,7 @@ namespace MonsterStates
         {
             Monster.animator.speed = 1f;
             Monster.gameObject.layer = LayerCache.Monster;
-            Monster.status.detection_gauge = 100f;
+            Monster.status.detection_gauge = MonsterStateMachine.MaxDetectionGauge;
         }
         public override void LogicUpdate()
         {

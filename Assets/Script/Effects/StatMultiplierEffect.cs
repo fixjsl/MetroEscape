@@ -1,5 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
+[System.Serializable]
 public class StatMultiplierEffect : TimedEffect
 {
     public StatType stat;

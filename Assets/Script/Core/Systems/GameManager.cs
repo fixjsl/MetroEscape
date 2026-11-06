@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 using UnityEngine.Audio;
@@ -22,7 +22,7 @@ public class GameManager : SingletonBehaviour<GameManager>
     public GameSetting settings { get; private set; }
 
     public GameClock clock { get; private set; }
-    public GameAudio audio { get; private set; }
+    public new GameAudio audio { get; private set; }   // new: 옛 Component.audio(사용 중단됨)를 가림
 
     protected override bool Persistent => true;
 

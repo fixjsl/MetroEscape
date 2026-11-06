@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class MonsterUI : MonoBehaviour
@@ -51,8 +51,8 @@ public class MonsterUI : MonoBehaviour
         onDetectionChanged = (gauge) =>
         {
             if (detectionFill != null)
-                detectionFill.fillAmount = gauge / 100f;
-            if (gauge >= 100f && detect != null)
+                detectionFill.fillAmount = gauge / MonsterStateMachine.MaxDetectionGauge;
+            if (gauge >= MonsterStateMachine.MaxDetectionGauge && detect != null)
                 detect.gameObject.SetActive(true);
         };
         monster.status.ChangeDetectionGauge += onDetectionChanged;
