@@ -53,7 +53,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
 
         if (currentPlayer != null && !gameObject.activeInHierarchy)
         {
-            currentPlayer.ClearInteractable(this);
+            currentPlayer.interact.ClearInteractable(this);
             currentPlayer = null;
         }
     }
@@ -70,7 +70,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
         if(isInteracting) return;
         if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
         currentPlayer = player;
-        player.SetInteractable(this);
+        player.interact.SetInteractable(this);
         ShowPrompt();
         OnPlayerEntered(player);
     }
@@ -85,7 +85,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
     private void OnTriggerExit(Collider other)
     {
         if (!other.TryGetComponent<PlayerStateMachine>(out var player)) return;
-        player.ClearInteractable(this);
+        player.interact.ClearInteractable(this);
         if (player == currentPlayer) currentPlayer = null;
         SetPromptVisible(false);
         OnPlayerExited(player);   // 자식은 이 훅만 override
@@ -124,7 +124,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
         if (col.bounds.Contains(player.transform.position))
         {
             currentPlayer = player;
-            player.SetInteractable(this);
+            player.interact.SetInteractable(this);
             ShowPrompt();
         }
     }
@@ -133,7 +133,7 @@ public abstract class ItObjectBase : MonoBehaviour, IInteractable
     {
         if (currentPlayer != null)
         {
-            currentPlayer.ClearInteractable(this);
+            currentPlayer.interact.ClearInteractable(this);
             currentPlayer = null;
         }
         SetPromptVisible(false);

@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class NoiseABright : PassiveState
+public class NoiseABright : CharacterSystem<PlayerStateMachine>
 {
-    public Light light;
+    // Flashlight가 나중에 EquipLight로 바꿔도 따라가도록 equip에서 바로 읽음
+    public Light light => owner.equip.CurrentLight;
 
     [Header("소음 수치")]
     private float noiseIdle;
@@ -11,22 +12,18 @@ public class NoiseABright : PassiveState
     private float noiseCrouch;
     public NoiseABright(PlayerStateMachine player) : base(player)  
     {
-        interval = 0f;
-        light = player.currentLight;
         RefreshNoiseStats();
     }
-    public override void Enter()
+    public override void Start()
     {
-        player.status.ChangeNoiseStat += RefreshNoiseStats;
-        base.Enter();
+        owner.status.ChangeNoiseStat += RefreshNoiseStats;
     }
 
-    public override void Exit()
+    public override void Stop()
     {
-        player.status.ChangeNoiseStat -= RefreshNoiseStats;
-        base.Exit();
+        owner.status.ChangeNoiseStat -= RefreshNoiseStats;
     }
-    protected override void OnTick()
+    public override void Tick()
     {
         UpdateNoise();
         UpdateBrighten();
@@ -34,31 +31,31 @@ public class NoiseABright : PassiveState
 
     private void RefreshNoiseStats()
     {
-        noiseIdle = player.status.noiseIdle;
-        noiseWalk = player.status.noiseWalk;
-        noiseSprint = player.status.noiseSprint;
-        noiseCrouch = player.status.noiseCrouch;
+        noiseIdle = owner.status.noiseIdle;
+        noiseWalk = owner.status.noiseWalk;
+        noiseSprint = owner.status.noiseSprint;
+        noiseCrouch = owner.status.noiseCrouch;
     }
     private void UpdateNoise()
     {
-        if (player.isCrunch)
+        if (owner.input.IsCrouch)
         {
-            player.status.currentnoise = noiseCrouch;
+            owner.status.currentnoise = noiseCrouch;
             return;
         }
 
-        if (player.ActiveState is Move)
+        if (owner.ActiveState is Move)
         {
-            player.status.currentnoise = player.isSprint ? noiseSprint : noiseWalk;
+            owner.status.currentnoise = owner.input.IsSprint ? noiseSprint : noiseWalk;
         }
         else
         {
-            player.status.currentnoise = noiseIdle;
+            owner.status.currentnoise = noiseIdle;
         }
 
     }
     private void UpdateBrighten()
     {
-        player.status.currentbrighten = player.IsLightOn ? 1f : 0f;
+        owner.status.currentbrighten = owner.equip.IsLightOn ? 1f : 0f;
     }
 }

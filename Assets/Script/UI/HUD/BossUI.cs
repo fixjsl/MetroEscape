@@ -36,10 +36,15 @@ public class BossUI : MonoBehaviour
     {
         // 이전 구독 해제
         if (linkedStatus != null)
+        {
             linkedStatus.ChangeHP -= OnHPChanged;
+            linkedStatus.OnDie -= Hide;
+        }
+            
 
         linkedStatus = status;
         linkedStatus.ChangeHP += OnHPChanged;
+        linkedStatus.OnDie += Hide;
 
         if (bossNameText != null)
             bossNameText.text = status.Name;
@@ -92,6 +97,10 @@ public class BossUI : MonoBehaviour
     private void OnDestroy()
     {
         if (linkedStatus != null)
+        {
             linkedStatus.ChangeHP -= OnHPChanged;
+            linkedStatus.OnDie -= Hide;
+        }
+
     }
 }

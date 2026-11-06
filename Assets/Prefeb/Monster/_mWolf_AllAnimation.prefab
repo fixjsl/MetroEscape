@@ -2163,6 +2163,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4477059489608554451}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8983377420312787414}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4001678746317169816}
   m_SourcePrefab: {fileID: 100100000, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}
 --- !u!1 &4988243617428578412 stripped
 GameObject:
@@ -2259,7 +2265,6 @@ MonoBehaviour:
   hitAnimLength: 0.5
   stunAnimLength: 1
   attackCollider: {fileID: 3317776381566185302}
-  debugMode: 0
 --- !u!114 &7422683690677201704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2292,9 +2297,40 @@ MonoBehaviour:
   openMessage: "\uC2DC\uCCB4\uD655\uC778"
   closeMessage: "\uB9C8\uCE58\uAE30"
   disappearAfterOpen: 1
+  excludeFromCycle: 0
   firstOpenSound: {fileID: 0}
   openSound: {fileID: 0}
   closeSound: {fileID: 0}
+--- !u!114 &8983377420312787414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4988243617428578412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c72ed27f8319594fbad4bb24d5ea5ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterUIBinder
+  monsterUIPrefab: {fileID: 6762878744632319702, guid: df499373c10683647897c610d7be268b, type: 3}
+  hpUIPoint: {fileID: 5249418745695858743}
+  detectionUIPoint: {fileID: 6559890950210638439}
+--- !u!114 &4001678746317169816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4988243617428578412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d6253c345d34240b186293e5e26938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterDebug
+  logStatus: 0
+  logInterval: 0.5
+  drawGizmos: 1
 --- !u!4 &5652612955464858326 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 17da2172d518ea64f899b36219d7ef64, type: 3}

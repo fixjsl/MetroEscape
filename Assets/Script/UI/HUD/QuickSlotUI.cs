@@ -1,5 +1,4 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class QuickSlotUI : MonoBehaviour
@@ -7,22 +6,20 @@ public class QuickSlotUI : MonoBehaviour
     [SerializeField] private Image[] slotIcons = new Image[2];
 
     private Inventory inventory;
+    private PlayerInput input;
 
     void Start()
     {
         inventory = PlayerStateMachine.Instance.inventory;
         inventory.OnQuickSlotsChanged += Refresh;
         inventory.OnInventoryChanged += Refresh;
+        // 숫자키는 PlayerInput이 읽어서 알려줌 (입력을 한 곳에서만 읽기)
+        input = PlayerStateMachine.Instance.input;
+        input.QuickSlotPressed += UseSlot;
         Refresh();
     }
 
-    void Update()
-    {
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)
-            inventory.UseQuickSlot(0, PlayerStateMachine.Instance);
-        if (Keyboard.current.digit2Key.wasPressedThisFrame)
-            inventory.UseQuickSlot(1, PlayerStateMachine.Instance);
-    }
+    void UseSlot(int index) => inventory.UseQuickSlot(index, PlayerStateMachine.Instance);
 
     void Refresh()
     {
@@ -44,6 +41,7 @@ public class QuickSlotUI : MonoBehaviour
 
     void OnDestroy()
     {
+        if (input != null) input.QuickSlotPressed -= UseSlot;
         if (inventory == null) return;
         inventory.OnQuickSlotsChanged -= Refresh;
         inventory.OnInventoryChanged -= Refresh;

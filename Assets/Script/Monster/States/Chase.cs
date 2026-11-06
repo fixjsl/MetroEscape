@@ -13,7 +13,7 @@ namespace MonsterStates
         {
             Monster.IsReturningFromAttack = false;
             Monster.StopDetection();
-            Monster.animator.CrossFade(Monster.sprint, 0.01f);
+            Monster.animator.CrossFade(MonsterAnim.sprint, 0.01f);
             isTurning = false;
             CheckDirection();
         }
@@ -24,7 +24,7 @@ namespace MonsterStates
         private void CheckDirection()
         {
             if (Monster.Targetplayer == null) return;
-            isTurning = Monster.TurnToward(Monster.Targetplayer.transform.position.x, Monster.sprint);
+            isTurning = Monster.TurnToward(Monster.Targetplayer.transform.position.x, MonsterAnim.sprint);
         }
         public override void LogicUpdate()
         {
@@ -44,7 +44,7 @@ namespace MonsterStates
 
             AnimatorStateInfo stateInfo = Monster.animator.GetCurrentAnimatorStateInfo(0);
             
-            if (stateInfo.shortNameHash != Monster.moveTurn && !Monster.animator.IsInTransition(0))
+            if (stateInfo.shortNameHash != MonsterAnim.moveTurn && !Monster.animator.IsInTransition(0))
             {
                 CheckDirection();
             }
@@ -62,7 +62,7 @@ namespace MonsterStates
 
             isTurning = false;
 
-            Monster.animator.CrossFade(Monster.sprint, 0.0001f);
+            Monster.animator.CrossFade(MonsterAnim.sprint, 0.0001f);
         }
     }
 }

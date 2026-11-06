@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 using UnityEngine.Audio;
@@ -60,17 +59,9 @@ public class GameManager : SingletonBehaviour<GameManager>
     }
 
 
-    private Coroutine clockRoutine;
-    public void ClockStart()
+    private void Update()
     {
-        clock.Restart();
-        if (clockRoutine != null) StopCoroutine(clockRoutine);
-        clockRoutine = StartCoroutine(ClockRoutine());
-    }
-    IEnumerator ClockRoutine()
-    {
-        var wait = YeildCache.GetIntervals(2.5f);
-        while (true) { yield return wait; clock.Tick(); }
+        clock.Tick();
     }
 
 }

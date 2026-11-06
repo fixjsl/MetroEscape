@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public static class MonsterManager 
@@ -30,7 +30,14 @@ public static class MonsterManager
         return created;
     }
     public static void AddPoint(MonsterSpawnPoint p) { points.Add(p); Spawn(p); }    // points.Add + Spawn(p)
-    public static void RemovePoint(MonsterSpawnPoint p) { Despawn(p); points.Remove(p); }  // Despawn(p) + points.Remove
+    public static void RemovePoint(MonsterSpawnPoint p)
+    {
+        // 씬이 내려가는 중(플레이 종료·씬 전환)이면 몬스터도 같이 파괴되므로 풀로 옮기지 않음
+        // → 파괴 중인 오브젝트를 SetParent하면 'GetParent() == nullptr' Assertion이 남
+        if (p.gameObject.scene.isLoaded) Despawn(p);
+        else p.Current = null;
+        points.Remove(p);
+    }  // Despawn(p) + points.Remove
     public static void Spawn(MonsterSpawnPoint p)
     {
         var m = Take(p.Prefab);

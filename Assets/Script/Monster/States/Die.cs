@@ -10,7 +10,7 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            Monster.animator.CrossFade(Monster.die, 0.001f);
+            Monster.animator.CrossFade(MonsterAnim.die, 0.001f);
             Monster.Rb.linearVelocity = Vector3.zero;
             Monster.animator.applyRootMotion = false;
             Monster.enabled = false;

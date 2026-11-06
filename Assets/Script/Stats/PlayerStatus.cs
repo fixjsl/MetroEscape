@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
 public class PlayerStatus
@@ -30,9 +29,12 @@ public class PlayerStatus
             stamina = Mathf.Clamp(value, 0, curMaxStamina);
            ChangeStamina?.Invoke(stamina);
 
-            if (stamina <= 0) StaminaEmpty?.Invoke();
+            if (stamina <= 0) { isTired = true; StaminaEmpty?.Invoke(); }
+            else if (isTired && stamina >= MaxStamina * 0.3f) isTired = false;   // 30% 회복하면 지침 해제
         }
     }
+    // 스태미나가 0이 되면 true, 최대치의 30%까지 회복하면 false (PlayerStateMachine에서 옮김)
+    public bool isTired { get; private set; }
     public void TickStamina(bool sprinting, float dt) {
         if (!sprinting && Stamina >= curMaxStamina) return;
         Stamina += sprinting ? -SprintCost * dt : StaminaRecoveryRate * dt; 
@@ -118,7 +120,9 @@ public class PlayerStatus
 
 
     [Header("Recovery")]
-    public float StaminaRecovery;                 // 그대로 (저장된 10/15 유지)
+    // 예전 이름 staminaRecoverey로 저장된 값(10/15)을 그대로 읽어옴 — 이게 없으면 0이 돼서 회복이 안 됨
+    [UnityEngine.Serialization.FormerlySerializedAs("staminaRecoverey")]
+    public float StaminaRecovery;
     [Header("Survival")]
     public float hungerDecreasePerMinute = 0.1f;   // 그대로
     public float waterDecreasePerMinute = 0.3f;
@@ -143,6 +147,15 @@ public class PlayerStatus
     public event Action<int> ChangeWater;
     //Noise stat event
     public event Action ChangeNoiseStat;
+    // ✨ 시작 스탯 채우기 (PlayerStateMachine.Awake의 "스탯 초기화" 5줄을 옮김)
+    public void Init()
+    {
+        curMaxStamina = MaxStamina;
+        Hp      = Maxhp;
+        Stamina = MaxStamina;
+        Hungry  = MaxHungry;
+        Water   = MaxWater;
+    }
     public void UseStamina(float amount)
     {
         Stamina -= amount; 

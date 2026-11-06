@@ -13,7 +13,9 @@ public class Hit : PlayerState
     {
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
-        player.animator.CrossFade(player.hit, 0.02f);
+        player.animator.CrossFade(PlayerAnim.hit, 0.02f);
+        // 공격 중에 맞으면 상체 레이어(1)가 공격 모션에 남아 있음 → 같이 idle로 돌려 놓기
+        player.animator.CrossFade(PlayerAnim.idle, 0.02f, 1);
         player.PlaySFX(player.hitSound);
     }
 

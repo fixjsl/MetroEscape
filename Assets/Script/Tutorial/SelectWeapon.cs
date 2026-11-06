@@ -15,7 +15,7 @@ public class SelectWeapon : MonoBehaviour
     {
         var weaponObj = Instantiate(weaponPrefab);
         if (weaponObj.TryGetComponent<Weapon>(out var weapon))
-            PlayerStateMachine.Instance.EquipWeapon(weapon);
+            PlayerStateMachine.Instance.equip.EquipWeapon(weapon);
         else
             Destroy(weaponObj);
 

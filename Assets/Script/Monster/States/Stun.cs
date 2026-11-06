@@ -16,7 +16,7 @@ namespace MonsterStates
             Monster.Rb.linearVelocity = Vector3.zero;
             if (Monster.ScalesStunAnim)
                 Monster.animator.speed = Monster.StunAnimLength / Mathf.Max(Monster.status.stunTime, 0.01f);
-            Monster.animator.CrossFade(Monster.stun, 0.01f);
+            Monster.animator.CrossFade(MonsterAnim.stun, 0.01f);
             stunTimer.Reset();
         }
 

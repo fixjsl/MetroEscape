@@ -48,7 +48,7 @@ public class TutorialManager : SingletonBehaviour<TutorialManager>
 
     IEnumerator TutorialSequence()
     {
-        GameManager.Instance.ClockStart();
+        GameManager.Instance.clock.Restart();
 
         // 1단계: 이동키 튜토리얼
         yield return WaitForTrigger(TutorialTriggerType.ShowMoveKeyNdialogue);

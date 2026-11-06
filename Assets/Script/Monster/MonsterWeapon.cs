@@ -49,7 +49,7 @@ public class MonsterWeapon : MonoBehaviour
         if (player.isParrying)
         {
             monster.ChangeStun();
-            player.InvokeParrySuccess();
+            player.combat.InvokeParrySuccess();
             Debug.Log("ParryingSucess");
             return;
         }

@@ -1,7 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 public class Weapon : MonoBehaviour
 {
-    private PlayerStateMachine player;
     public WeaponStatus status;
     [SerializeField] private ItemBase _iteminfo;
     public ItemBase iteminfo => _iteminfo;
@@ -18,8 +17,4 @@ public class Weapon : MonoBehaviour
         monster.OnHit(status.attack, status.stunStrength);
     }
 
-    public void SetPlayer(PlayerStateMachine stateMachine)
-    {
-        player = stateMachine;
-    }
 }

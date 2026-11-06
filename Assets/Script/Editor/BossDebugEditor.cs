@@ -49,9 +49,9 @@ public class BossDebugEditor : Editor
         else
         {
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("anim: idle"))    boss.animator.CrossFade(boss.idle, 0.01f);
-            if (GUILayout.Button("anim: chase"))   boss.animator.CrossFade(boss.sprint, 0.01f);
-            if (GUILayout.Button("anim: hit"))     boss.animator.CrossFade(boss.hit, 0.01f);
+            if (GUILayout.Button("anim: idle"))    boss.animator.CrossFade(MonsterAnim.idle, 0.01f);
+            if (GUILayout.Button("anim: chase"))   boss.animator.CrossFade(MonsterAnim.sprint, 0.01f);
+            if (GUILayout.Button("anim: hit"))     boss.animator.CrossFade(MonsterAnim.hit, 0.01f);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
@@ -63,7 +63,7 @@ public class BossDebugEditor : Editor
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("anim: firstAtk")) boss.animator.CrossFade(boss.firstAttackHash, 0.01f);
             if (GUILayout.Button("anim: special"))  boss.animator.CrossFade(boss.specialHash, 0.01f);
-            if (GUILayout.Button("anim: die"))      boss.animator.CrossFade(boss.die, 0.01f);
+            if (GUILayout.Button("anim: die"))      boss.animator.CrossFade(MonsterAnim.die, 0.01f);
             EditorGUILayout.EndHorizontal();
         }
 

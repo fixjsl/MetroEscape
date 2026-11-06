@@ -491,6 +491,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afb91b604059c1845b929beea61641f6, type: 3}
       insertIndex: -1
       addedObject: {fileID: -6290476081187679638}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: afb91b604059c1845b929beea61641f6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1207480748890732565}
   m_SourcePrefab: {fileID: 100100000, guid: afb91b604059c1845b929beea61641f6, type: 3}
 --- !u!4 &263550371221452191 stripped
 Transform:
@@ -531,10 +534,9 @@ MonoBehaviour:
   hitAnimLength: 0.5
   stunAnimLength: 1
   attackCollider: {fileID: 613615296692477707}
-  debugMode: 0
   SpecialCooldown: 6
   SpecialTriggerChance: 0.4
-  ReturnSpeed: 100
+  returnSpeed: 100
   startTriggerObject: {fileID: 0}
   bossUI: {fileID: 0}
 --- !u!114 &5521886047518427584
@@ -621,3 +623,18 @@ MonoBehaviour:
   firstOpenSound: {fileID: 0}
   openSound: {fileID: 0}
   closeSound: {fileID: 0}
+--- !u!114 &1207480748890732565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640497434981822245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d6253c345d34240b186293e5e26938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterDebug
+  logStatus: 0
+  logInterval: 0.5
+  drawGizmos: 1
