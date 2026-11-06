@@ -25,14 +25,14 @@ public class MonsterWeapon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == Layercache.PlayerHitbox) return;
+        if (other.gameObject.layer == LayerCache.PlayerHitbox) return;
         if (hitbox == null || !hitbox.enabled || hitDealt) return;
         ProcessHit(other);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == Layercache.PlayerHitbox) return;
+        if (other.gameObject.layer == LayerCache.PlayerHitbox) return;
         if (hitbox == null || !hitbox.enabled || hitDealt) return;
         ProcessHit(other);
     }

@@ -1,8 +1,8 @@
-
+﻿
 
 using UnityEngine;
 
-public class Doorcs : ItObjectBase
+public class Door : InteractableBase
 {
     public override string InteractMessage => Prompt(isOpen ? "닫기" : "열기");
 

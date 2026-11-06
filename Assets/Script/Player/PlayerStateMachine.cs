@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum StateType
 {
-    None, idle, Dodge, Attack, interact,Parry, crunch
+    None, idle, Dodge, Attack, interact,Parry, crouch
 }
 [RequireComponent(typeof(BoxCollider))]
 public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffectTarget, IDamageable
@@ -73,7 +73,7 @@ public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffec
         foreach (var s in StateFactory.CreateAll<PlayerState>(this)) fsm.Register(s);
         status.OnDie += () => ChangeState<Die>();
 
-        Passive.Add(new NoiseABright(this));
+        Passive.Add(new NoiseAndBrightness(this));
         Passive.Add(new HungerThirst(this));
 
         fsm.Start<Idle>();
@@ -173,9 +173,9 @@ public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffec
         if (ActiveState.canChanged)
         {
 
-            if (input.IsCrouch && ActiveState is not Crunch)
+            if (input.IsCrouch && ActiveState is not Crouch)
             {
-                ChangeState<Crunch>();
+                ChangeState<Crouch>();
                 return true;
             }
 
@@ -195,7 +195,7 @@ public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffec
                 ChangeState<Idle>();
                 return true ;
             }
-            if (ActiveState is Crunch && input.IsCrouch) return false;
+            if (ActiveState is Crouch && input.IsCrouch) return false;
             if (input.MoveInput != 0f)
             {
                 if (ActiveState is not Move) ChangeState<Move>();
@@ -224,7 +224,7 @@ public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffec
 
                     // 스턴 처형 (기존)
                     Collider[] stunHits = Physics.OverlapSphere(transform.position,
-                        executionRange, 1 << Layercache.Stun);
+                        executionRange, 1 << LayerCache.Stun);
                     if (stunHits.Length > 0)
                     {
                         execTarget = stunHits[0].GetComponentInParent<MonsterStateMachine>();
@@ -234,7 +234,7 @@ public class PlayerStateMachine : SingletonBehaviour<PlayerStateMachine>, IEffec
                     if (execTarget == null)
                     {
                         Collider[] monsterHits = Physics.OverlapSphere(transform.position,
-                            executionRange, 1 << Layercache.Monster);
+                            executionRange, 1 << LayerCache.Monster);
                         foreach (var col in monsterHits)
                         {
                             var m = col.GetComponentInParent<MonsterStateMachine>();

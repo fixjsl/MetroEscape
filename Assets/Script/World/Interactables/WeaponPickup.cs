@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class WeaponPickup : ItObjectBase
+public class WeaponPickup : InteractableBase
 {
     private Weapon weapon;
 

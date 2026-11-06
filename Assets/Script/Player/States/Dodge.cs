@@ -24,8 +24,8 @@ public class Dodge : PlayerState
     {
         lastTime = Time.time;
         canChanged = false;
-        player.gameObject.layer = Layercache.Dodge;
-        Physics.IgnoreLayerCollision(Layercache.Dodge, Layercache.Monster, true);
+        player.gameObject.layer = LayerCache.Dodge;
+        Physics.IgnoreLayerCollision(LayerCache.Dodge, LayerCache.Monster, true);
         player.status.UseStamina(player.status.DodgeCost);
         player.animator.SetLayerWeight(1, 0f);
         player.animator.CrossFade(PlayerAnim.dodge, 0.15f);
@@ -35,8 +35,8 @@ public class Dodge : PlayerState
 
     public override void Exit()
     {
-        player.gameObject.layer = Layercache.Player;
-        Physics.IgnoreLayerCollision(Layercache.Dodge, Layercache.Monster, false);
+        player.gameObject.layer = LayerCache.Player;
+        Physics.IgnoreLayerCollision(LayerCache.Dodge, LayerCache.Monster, false);
         player.animator.SetLayerWeight(1, 1f);
         player.Rb.linearVelocity = new Vector3(0f, player.Rb.linearVelocity.y, 0f);
     }

@@ -1,11 +1,11 @@
-using MonsterStates;
+﻿using MonsterStates;
 using UnityEngine;
 
 namespace MonsterStates
 {
     public class Idle : MonsterState
     {
-        private TimeManager Timer = new TimeManager();
+        private IntervalTimer Timer = new IntervalTimer();
         private float changeTime;
         public Idle(MonsterStateMachine monster) : base(monster)
         {

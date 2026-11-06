@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using BossStates;
@@ -28,7 +28,7 @@ public class BossDebugEditor : Editor
         if (GUILayout.Button("Hit"))
         {
             var hit = boss.fsm.Get<MonsterStates.Hit>() as MonsterStates.Hit;
-            hit.SetHitduration(0.5f);
+            hit.SetHitDuration(0.5f);
             boss.ChangeState<MonsterStates.Hit>();
         }
         EditorGUILayout.EndHorizontal();

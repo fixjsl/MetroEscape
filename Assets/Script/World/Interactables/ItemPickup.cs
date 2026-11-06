@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ItemPickup : ItObjectBase
+public class ItemPickup : InteractableBase
 {
     [SerializeField] private ItemBase item;
     [SerializeField] private int count = 1;

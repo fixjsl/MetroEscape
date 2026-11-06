@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerAnimationEvent : MonoBehaviour
 {
@@ -31,11 +31,11 @@ public class PlayerAnimationEvent : MonoBehaviour
         player.PlaySFX(clip);
     }
 
-    public void OnAttackCollider() => player.combat.OnAttackColider();
-    public void OffAttackCollider() => player.combat.OffAttackColider();
+    public void OnAttackCollider() => player.combat.OnAttackCollider();
+    public void OffAttackCollider() => player.combat.OffAttackCollider();
     public void OnEndInvincible()
     {
-        player.gameObject.layer = Layercache.Player;
+        player.gameObject.layer = LayerCache.Player;
     }
     public void OnDamage()
     {

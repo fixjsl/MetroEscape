@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 [System.Serializable]
 public class PlayerStatus
@@ -41,9 +41,11 @@ public class PlayerStatus
     }
     public float currentspeed;
     public float walkspeed;
-    public float crunchspeed;
+    [UnityEngine.Serialization.FormerlySerializedAs("crunchspeed")]
+    public float crouchspeed;
     public float sprintspeed;
-    public float crunchsprintspeed;
+    [UnityEngine.Serialization.FormerlySerializedAs("crunchsprintspeed")]
+    public float crouchsprintspeed;
 
     [Header("Player Status")]
     public float parryduration;

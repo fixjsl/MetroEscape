@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 
-public static class Layercache
+public static class LayerCache
     {
     public static readonly int Player = LayerMask.NameToLayer("Player");
     public static readonly int PlayerHitbox = LayerMask.NameToLayer("PlayerHitbox");

@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MonsterStates
 {
     public class Move : MonsterState
     {
-        private TimeManager Timer = new TimeManager();
+        private IntervalTimer Timer = new IntervalTimer();
         private float changeTime;
         private float MoveDir;
         public Move(MonsterStateMachine monster) : base(monster)

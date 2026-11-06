@@ -1,9 +1,9 @@
-using MonsterStates;
+﻿using MonsterStates;
 using UnityEngine;
 
 public class MonsterDetection : CharacterSystem<MonsterStateMachine>
 {
-    TimeManager Timer = new();
+    IntervalTimer Timer = new();
     bool running;
     int lostFrames;
     const int lostThreshold = 20;         // 2초 유예

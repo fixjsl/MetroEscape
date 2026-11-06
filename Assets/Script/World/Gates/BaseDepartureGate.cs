@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // 기지 출발 게이트 — 한번 나가면 비상구로만 귀환 가능
-public class BaseDepartureGate : ItObjectBase
+public class BaseDepartureGate : InteractableBase
 {
     [SerializeField] private Transform[] explorationStartPoints;
     [SerializeField] private float spawnZ = -3f;

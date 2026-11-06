@@ -23,7 +23,7 @@ public class Attack : PlayerState
         
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
-        player.combat.OffAttackColider();
+        player.combat.OffAttackCollider();
         // 마지막 인자 0f: 상체 레이어가 이미 같은 공격 상태에 멈춰 있어도(공격 중 피격 등) 처음부터 다시 재생
         // → 안 그러면 OnAnimationFinishedAt이 안 와서 canChanged가 false로 남아 먹통
         player.animator.CrossFade(PlayerAnim.attackHashes[ComboIndex], 0.15f, 1, 0f);

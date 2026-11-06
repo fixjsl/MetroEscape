@@ -115,7 +115,7 @@ public class MonsterStateMachine : MonoBehaviour
             return;
         }
         var hitState = fsm.Get<MonsterStates.Hit>() as MonsterStates.Hit;
-        hitState.SetHitduration(stunStrength);
+        hitState.SetHitDuration(stunStrength);
         ChangeState<MonsterStates.Hit>();
         ActiveState?.HandleDamage(Damage);
     }
@@ -185,11 +185,11 @@ public class MonsterStateMachine : MonoBehaviour
         gameObject.SetActive(true);
         enabled = true;
 
-        gameObject.layer = Layercache.Monster;
+        gameObject.layer = LayerCache.Monster;
         if (_col != null) { _col.isTrigger = false; _col.enabled = true; }
         if (AttackCollider != null)
         {
-            AttackCollider.gameObject.layer = Layercache.MonsterHitbox;
+            AttackCollider.gameObject.layer = LayerCache.MonsterHitbox;
             AttackCollider.enabled = false;
         }
 

@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RecipeSO", menuName = "Scriptable Objects/RecipeSO")]
 public class RecipeSO : ScriptableObject
 {
     [System.Serializable]
-    public struct Ingrediednt
+    public struct Ingredient
     {
         public ItemBase item;
         public int amount;
@@ -13,7 +13,7 @@ public class RecipeSO : ScriptableObject
 
     public ItemBase result;
     public int resultcount = 1;
-    public List<Ingrediednt> ingredients = new();
+    public List<Ingredient> ingredients = new();
 
     public bool CanCraft(Inventory inventory)
     {

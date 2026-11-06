@@ -1,11 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MonsterStates
 {
     public class Hit : MonsterState
     {
         private float hitduration;
-        private TimeManager Timer = new TimeManager();
+        private IntervalTimer Timer = new IntervalTimer();
         public Hit(MonsterStateMachine monster) : base(monster)
         {
         }
@@ -27,7 +27,7 @@ namespace MonsterStates
             Monster.Rb.linearVelocity = new Vector3(0f, Monster.Rb.linearVelocity.y, 0f);
         }
 
-        public void SetHitduration(float duration)
+        public void SetHitDuration(float duration)
         {
             hitduration = duration;
         }

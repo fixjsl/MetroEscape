@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum VitalStat {Hp,Hungry, Water, Stamina};
 [System.Serializable]
-public struct StatDalta
+public struct StatDelta
 {
     public VitalStat stat;
     public float amount;
@@ -35,7 +35,7 @@ public struct StatDalta
 [CreateAssetMenu(fileName = "ConsumableItem", menuName = "Scriptable Objects/Item/Consumable")]
 public class ConsumableItem : ItemBase
 {
-    public List<StatDalta> instant = new();
+    public List<StatDelta> instant = new();
     [SerializeReference] public List<TimedEffect> effects = new();
 
     public override bool OnUse(PlayerStateMachine player)

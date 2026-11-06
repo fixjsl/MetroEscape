@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Die : PlayerState
@@ -14,7 +14,7 @@ public class Die : PlayerState
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
         player.Rb.isKinematic = true;
-        player.gameObject.layer = Layercache.Die;
+        player.gameObject.layer = LayerCache.Die;
         player.OnDisable();
         player.inventory.LoseOnDeath(player.status.curdeathItemLossRate);
         player.effects.ClearOnDeath();
@@ -34,7 +34,7 @@ public class Die : PlayerState
 
         CycleManager.Instance.ExecuteCycleReset();
 
-        player.gameObject.layer = Layercache.Player;
+        player.gameObject.layer = LayerCache.Player;
         player.Rb.isKinematic = false;
         player.OnEnable();
         ContinueGame();

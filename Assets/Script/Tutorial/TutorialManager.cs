@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
@@ -15,10 +15,11 @@ public class TutorialManager : SingletonBehaviour<TutorialManager>
     [SerializeField] private GameObject dodgeKeyUI;
     [SerializeField] private GameObject parryKeyUI;
     [SerializeField] private GameObject GetItemUI;
-    [SerializeField] private GameObject crunchKeyUI;
+    [UnityEngine.Serialization.FormerlySerializedAs("crunchKeyUI")]
+    [SerializeField] private GameObject crouchKeyUI;
     [SerializeField] private float keyUIDisplayTime = 3f;
 
-    [SerializeField] private Doorcs weaponRoomDoor;
+    [SerializeField] private Door weaponRoomDoor;
     [SerializeField] private Transform playerStopPoint;
     [SerializeField] private GameObject weaponCardContainer;
     [SerializeField] private GameObject wolfPrefab;
@@ -129,11 +130,11 @@ public class TutorialManager : SingletonBehaviour<TutorialManager>
         if (GetItemUI != null) GetItemUI.SetActive(true);
 
         // 11단계: 웅크리기 튜토리얼
-        yield return WaitForTrigger(TutorialTriggerType.DialogeNShowCrunchKey);
-        yield return ShowKeyUI(crunchKeyUI);
+        yield return WaitForTrigger(TutorialTriggerType.DialogueNShowCrouchKey);
+        yield return ShowKeyUI(crouchKeyUI);
 
         //12단계 : 곰 출몰 후 도망
-        yield return WaitForTrigger(TutorialTriggerType.ApperBear);
+        yield return WaitForTrigger(TutorialTriggerType.AppearBear);
         //13단계 : 도망치는 곳의 벽이 무너짐 ( 계단을 따라 지하로 도망침)
 
         //14단계 : 기지 진입 후 진입한 곳의 벽이 무너짐(안전지대 진입 및 프롤로그, 튜토리얼 종료, 이후 스킵 가능 생성)

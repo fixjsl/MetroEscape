@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Campfire : ItObjectBase
+public class Campfire : InteractableBase
 {
     [SerializeField] private ParticleSystem fireParticle;
     [SerializeField] private Light fireLight;

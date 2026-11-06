@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Execution : PlayerState
 {
@@ -19,7 +19,7 @@ public class Execution : PlayerState
         damage = player.equip.CurrentWeapon.status.attack * player.equip.CurrentWeapon.status.execution_m;
         player.animator.CrossFade(PlayerAnim.execution, 0.15f);
         player.animator.CrossFade(PlayerAnim.idle, 0.15f, 0);
-        player.gameObject.layer = Layercache.Dodge;
+        player.gameObject.layer = LayerCache.Dodge;
         player.Rb.linearVelocity = Vector3.zero;
 
         if (target != null)
@@ -34,7 +34,7 @@ public class Execution : PlayerState
     }
     public override void Exit()
     {
-        player.gameObject.layer = Layercache.Player;
+        player.gameObject.layer = LayerCache.Player;
         if (target != null)
             target.Unfreeze();
     }

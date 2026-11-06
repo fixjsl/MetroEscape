@@ -1,9 +1,9 @@
-using System.Threading;
+﻿using System.Threading;
 using UnityEngine;
 
 public class Parry: PlayerState
 {
-    private TimeManager parryTimer = new TimeManager();
+    private IntervalTimer parryTimer = new IntervalTimer();
 
     public bool IsInParryWindow { get; private set; }
 
@@ -33,7 +33,7 @@ public class Parry: PlayerState
     private void OnParrySuccess()
     {
         
-        player.animator.CrossFade(PlayerAnim.parrysucess, 0.02f);
+        player.animator.CrossFade(PlayerAnim.parrySuccess, 0.02f);
     }
 
     public override void HandleDamage(float Damage)

@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class NoiseABright : CharacterSystem<PlayerStateMachine>
+public class NoiseAndBrightness : CharacterSystem<PlayerStateMachine>
 {
     // Flashlight가 나중에 EquipLight로 바꿔도 따라가도록 equip에서 바로 읽음
     public Light light => owner.equip.CurrentLight;
@@ -10,7 +10,7 @@ public class NoiseABright : CharacterSystem<PlayerStateMachine>
     private float noiseWalk;
     private float noiseSprint;
     private float noiseCrouch;
-    public NoiseABright(PlayerStateMachine player) : base(player)  
+    public NoiseAndBrightness(PlayerStateMachine player) : base(player)  
     {
         RefreshNoiseStats();
     }

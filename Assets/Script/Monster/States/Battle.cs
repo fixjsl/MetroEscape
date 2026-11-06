@@ -1,11 +1,11 @@
-using MonsterStates;
+﻿using MonsterStates;
 using UnityEngine;
 
 namespace MonsterStates
 {
 public class Battle : MonsterState
 {
-    private TimeManager Timer = new TimeManager();
+    private IntervalTimer Timer = new IntervalTimer();
     private float delay;
     private bool readyToAttack;
     private bool isApproaching;

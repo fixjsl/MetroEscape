@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 //상호작용가능 장애물 코드
-public class Blockade : ItObjectBase
+public class Blockade : InteractableBase
 {
     [SerializeField] private ItemBase keyItem;
     [SerializeField] private string noKeyMessage = "열쇠 필요";

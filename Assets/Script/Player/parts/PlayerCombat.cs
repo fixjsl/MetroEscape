@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 public class PlayerCombat
 {
@@ -7,7 +7,7 @@ public class PlayerCombat
     public bool isInCancelWindow { get; private set; }
     public bool isInComboWindow { get; private set; }
     private bool postAnimWindowActive;
-    private readonly TimeManager postAnimTimer = new();
+    private readonly IntervalTimer postAnimTimer = new();
     private const float PostAnimComboTime = 0.5f;
     public event Action ParrySuccess;
     public void InvokeParrySuccess() => ParrySuccess?.Invoke();
@@ -38,8 +38,8 @@ public class PlayerCombat
             postAnimTimer.Reset();
         }
     }
-    public void OnAttackColider() => attackHitbox.EnableHitbox();
-    public void OffAttackColider() => attackHitbox.DisableHitbox();
+    public void OnAttackCollider() => attackHitbox.EnableHitbox();
+    public void OffAttackCollider() => attackHitbox.DisableHitbox();
 
     public void Tick()   // PlayerStateMachine.Update에서 호출 (공격 후 콤보 유예 타이머)
     {

@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-class CraftingTable : ItObjectBase
+class CraftingTable : InteractableBase
 {
     public override string InteractMessage => Prompt("제작대");
 
