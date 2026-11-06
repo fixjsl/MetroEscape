@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 
-public abstract class  State : IState
+public abstract class State
 {
 
     public bool canChanged { get; protected set; } = true;

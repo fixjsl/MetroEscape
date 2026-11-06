@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,14 +27,12 @@ public class InventoryUI : UIPanel<InventoryUI>
         root.SetActive(false);
 
         _inventoryAction = InputBindings.GetAction("Inventory");
-        Debug.Log($"인벤토리 액션: {(_inventoryAction == null ? "null" : "정상")}");
         if (_inventoryAction != null)
             _inventoryAction.performed += OnInventoryPerformed;
     }
 
     private void OnInventoryPerformed(InputAction.CallbackContext ctx)
     {
-        Debug.Log("인벤토리 입력 들어옴");
         Toggle();
     }
 

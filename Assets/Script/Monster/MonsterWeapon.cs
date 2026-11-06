@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MonsterWeapon : MonoBehaviour
 {
@@ -18,8 +18,6 @@ public class MonsterWeapon : MonoBehaviour
     private void FixedUpdate()
     {
         bool enabled = hitbox != null && hitbox.enabled;
-        if (enabled != prevHitboxEnabled)
-            Debug.Log($"[MonsterWeapon] {gameObject.name} hitbox enabled={enabled}");
         if (!prevHitboxEnabled && enabled)
             hitDealt = false;
         prevHitboxEnabled = enabled;
@@ -27,7 +25,6 @@ public class MonsterWeapon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"[MonsterWeapon] Enter: {other.name} layer={LayerMask.LayerToName(other.gameObject.layer)} hitbox={hitbox != null && hitbox.enabled} hitDealt={hitDealt}");
         if (other.gameObject.layer == Layercache.PlayerHitbox) return;
         if (hitbox == null || !hitbox.enabled || hitDealt) return;
         ProcessHit(other);
@@ -37,7 +34,6 @@ public class MonsterWeapon : MonoBehaviour
     {
         if (other.gameObject.layer == Layercache.PlayerHitbox) return;
         if (hitbox == null || !hitbox.enabled || hitDealt) return;
-        Debug.Log($"[MonsterWeapon] Stay hit: {other.name}");
         ProcessHit(other);
     }
 
@@ -50,7 +46,6 @@ public class MonsterWeapon : MonoBehaviour
         {
             monster.ChangeStun();
             player.combat.InvokeParrySuccess();
-            Debug.Log("ParryingSucess");
             return;
         }
         player.OnHit(monster.status.atk);
