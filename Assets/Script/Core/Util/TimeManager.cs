@@ -11,7 +11,7 @@ public class TimeManager
     {
         curTime += unscaled ? Time.unscaledDeltaTime : Time.deltaTime;
         if (curTime >= second) {
-            curTime = 0;
+            curTime -= second;
             return true;
         }
         return false;

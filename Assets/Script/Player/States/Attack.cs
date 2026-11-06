@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Attack : PlayerState
 {
@@ -13,9 +13,9 @@ public class Attack : PlayerState
     // 3타 이후 쿨다운 체크 (BufferState에서 신규 공격 진입 시 사용)
     public override bool CanEnter()
     {
-        if (player.currentWeapon == null) return false;
-        if (player.isTired) return false;
-        return Time.time - lastCombo3FinishTime >= player.currentWeapon.status.attackSpeed;
+        if (player.equip.CurrentWeapon == null) return false;
+        if (player.status.isTired) return false;
+        return Time.time - lastCombo3FinishTime >= player.equip.CurrentWeapon.status.attackSpeed;
     }
 
     public override void Enter()
@@ -23,18 +23,18 @@ public class Attack : PlayerState
         
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
-        player.OffAttackColider();
-        player.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
-        player.animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0f);
-        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
-        player.PlaySFX(player.currentWeapon.status.attackSound);
-        player.status.UseStamina(player.currentWeapon.status.attackStamina);
+        player.combat.OffAttackColider();
+        // 마지막 인자 0f: 상체 레이어가 이미 같은 공격 상태에 멈춰 있어도(공격 중 피격 등) 처음부터 다시 재생
+        // → 안 그러면 OnAnimationFinishedAt이 안 와서 canChanged가 false로 남아 먹통
+        player.animator.CrossFade(PlayerAnim.attackHashes[ComboIndex], 0.15f, 1, 0f);
+        player.PlaySFX(player.equip.CurrentWeapon.status.attackSound);
+        player.status.UseStamina(player.equip.CurrentWeapon.status.attackStamina);
     }
 
     public override void Exit()
     {
         ComboIndex = 0;
-        player.CloseAllAttackWindows();
+        player.combat.CloseAllAttackWindows();
     }
 
     // PlayerStateMachine의 콤보 윈도우에서 호출
@@ -44,15 +44,15 @@ public class Attack : PlayerState
         if(ComboIndex >2) return;
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;
-        player.animator.CrossFade(player.attackHashes[ComboIndex], 0.15f, 1);
-        player.PlaySFX(player.currentWeapon.status.attackSound);
-        player.status.UseStamina(player.currentWeapon.status.attackStamina);
+        player.animator.CrossFade(PlayerAnim.attackHashes[ComboIndex], 0.15f, 1, 0f);
+        player.PlaySFX(player.equip.CurrentWeapon.status.attackSound);
+        player.status.UseStamina(player.equip.CurrentWeapon.status.attackStamina);
     }
 
     public override void PhysicalUpdate()
     {
         player.Rb.linearVelocity = new Vector3(
-            player.MoveInput * player.status.currentspeed,
+            player.input.MoveInput * player.status.currentspeed,
             player.Rb.linearVelocity.y,
             0f);
     }
@@ -60,7 +60,7 @@ public class Attack : PlayerState
     // 애니메이션 이벤트: 캔슬/콤보 허용 구간 시작
     public override void OncanCombo()
     {
-        player.OpenAttackCancelWindow(withCombo: ComboIndex < 2);
+        player.combat.OpenAttackCancelWindow(withCombo: ComboIndex < 2);
     }
 
     // OnAnimationFinished 기본 구현(canChanged=true)을 막음 - OnAnimationFinishedAt만 사용
@@ -81,7 +81,7 @@ public class Attack : PlayerState
         if (ComboIndex >= 2)
             lastCombo3FinishTime = Time.time;
 
-        player.OnAttackAnimFinished(ComboIndex);
+        player.combat.OnAttackAnimFinished(ComboIndex);
         canChanged = true;
     }
 }

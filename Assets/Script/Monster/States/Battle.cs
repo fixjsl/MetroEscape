@@ -33,13 +33,13 @@ public class Battle : MonsterState
             readyToAttack = false;
             isApproaching = true;
             Monster.animator.speed = Monster.ApproachAnimSpeed;  
-            Monster.animator.CrossFade(Monster.move, 0.1f);
+            Monster.animator.CrossFade(MonsterAnim.move, 0.1f);
         }
         else
         {
             readyToAttack = true;
             isApproaching = false;
-            Monster.animator.CrossFade(Monster.battle, 0.1f);
+            Monster.animator.CrossFade(MonsterAnim.battle, 0.1f);
         }
     }
 
@@ -63,7 +63,7 @@ public class Battle : MonsterState
         {
             readyToAttack = true;
             Monster.animator.speed = 1f;
-            Monster.animator.CrossFade(Monster.battle, 0.1f);
+            Monster.animator.CrossFade(MonsterAnim.battle, 0.1f);
         }
 
         // 접근/후퇴 전환

@@ -62,13 +62,13 @@ public class Doorcs : ItObjectBase
             float angle = localPos.x >= 0 ? 90f : -90f;
             targetRot = closedRot * Quaternion.Euler(0f, angle, 0f);
             isOpen = true;
-            GameManager.Instance.PlaySFX(openSound);
+            GameManager.Instance.audio.PlaySFX(openSound);
         }
         else
         {
             targetRot = closedRot;
             isOpen = false;
-            GameManager.Instance.PlaySFX(closeSound);
+            GameManager.Instance.audio.PlaySFX(closeSound);
         }
         SetIgnorePlayer(true);
     }

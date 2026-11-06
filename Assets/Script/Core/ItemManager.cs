@@ -10,7 +10,7 @@ public class ItemManager : SingletonBehaviour<ItemManager>
     public static bool TryGet(int code, out ItemBase item) => db.TryGet(code, out item);
     public static IReadOnlyList<ItemBase> Items => db.Items;
     public static IReadOnlyList<RecipeSO> Recipes => db.Recipes;
-
+    public static IEnumerable<RecipeSO> RecipesFor(ItemType tab) => db.RecipesFor(tab);
     protected override void Awake()
     {
         base.Awake();

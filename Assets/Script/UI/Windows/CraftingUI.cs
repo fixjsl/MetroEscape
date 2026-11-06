@@ -71,19 +71,13 @@ public class CraftingUI : UIPanel<CraftingUI>
         foreach (var slot in activeSlots) Destroy(slot.gameObject);
         activeSlots.Clear();
 
+
         var type = TabTypes[currentTab];
-
-        foreach (var item in ItemManager.Recipes)
+        foreach (var r in ItemManager.RecipesFor(type))     // 규칙은 DB에게, UI는 그리기만
         {
-            if (item == null || item.result == null) continue;
-            bool typeMatch = item.result.itemType == type ||
-                              (type == ItemType.Consumable && item.result.itemType == ItemType.InteractObject);
-            if (!typeMatch) continue;
-
-
             var slot = Instantiate(craftingSlotPrefab, recipeListParent);
-            var captured = item;
-            slot.Setup(item.result, () => SelectRecipe(captured));
+            var captured = r;
+            slot.Setup(r.result, () => SelectRecipe(captured));
             activeSlots.Add(slot);
         }
     }

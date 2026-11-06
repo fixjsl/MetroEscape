@@ -47,7 +47,7 @@ public class InventoryUI : UIPanel<InventoryUI>
     
     protected override void OnOpened()
     {
-        GameManager.Instance.PlaySFX(openSound);
+        GameManager.Instance.audio.PlaySFX(openSound);
         PositionByPlayerSide();
         Refresh();
         contextMenu.Hide();
@@ -69,7 +69,7 @@ public class InventoryUI : UIPanel<InventoryUI>
 
     protected override void OnClosed()
     {
-        GameManager.Instance.PlaySFX(closeSound);
+        GameManager.Instance.audio.PlaySFX(closeSound);
         contextMenu.Hide();
         ItemInfoUI.Instance.Hide();
     }

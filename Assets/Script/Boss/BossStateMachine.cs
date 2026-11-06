@@ -1,5 +1,4 @@
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using BossStates;
 using MonsterStates;
 using UnityEngine.Serialization;
@@ -34,7 +33,7 @@ public class BossStateMachine : MonsterStateMachine
     public override bool Patrols => false;
     protected override bool UseDetection => false;
     public override bool RespawnsOnCycle => false;
-    public override int ReturnAnim => sprint;
+    public override int ReturnAnim => MonsterAnim.sprint;
     public override float ReturnSpeed => returnSpeed;
     public override bool ScalesStunAnim => false;
     public override void OnAggro() { }
@@ -122,43 +121,4 @@ public class BossStateMachine : MonsterStateMachine
         OnPlayerEnterZone(PlayerStateMachine.Instance);
     } 
 
-
-#if UNITY_EDITOR
-    protected override IEnumerator DebugStatusCoroutine()
-    {
-        var wait = new WaitForSeconds(0.5f);
-        while (true)
-        {
-            yield return wait;
-
-            string targetName = Targetplayer != null ? Targetplayer.name : "없음";
-            float dist = Targetplayer != null
-                ? Vector3.Distance(transform.position, Targetplayer.transform.position)
-                : -1f;
-
-            Debug.Log(
-                $"[BOSS DEBUG] {gameObject.name}\n" +
-                $"  ActiveState     : {ActiveState?.GetType().Name ?? "null"}\n" +
-                $"  HP              : {status.Hp:F0} / {status.Maxhp}\n" +
-                $"  Target          : {targetName}\n" +
-                $"  TargetDist      : {(dist >= 0 ? dist.ToString("F1") : "N/A")}\n" +
-                $"  BattleRange     : {status.battleHalfExtents}\n" +
-                $"  IsFirstAttack   : {IsFirstAttack}\n" +
-                $"  IsSpecialReady  : {IsSpecialReady}\n" +
-                $"  --- 물리 ---\n" +
-                $"  Velocity        : {Rb.linearVelocity}\n" +
-                $"  Position        : {Rb.position}\n" +
-                $"  Rotation(Y)     : {Rb.rotation.eulerAngles.y:F1}"
-            );
-        }
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        if (status != null) Gizmos.DrawWireCube(transform.position, status.battleHalfExtents * 2f);
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, status != null ? status.atk_range : 0f);
-    }
-#endif
 }

@@ -12,7 +12,7 @@ public class Guard : PlayerState
     public override void Enter()
     {
         //Idle Animation code
-        player.animator.CrossFade(player.guard, 0.02f);
+        player.animator.CrossFade(PlayerAnim.guard, 0.02f);
     }
 
     public override void Exit()
@@ -22,8 +22,8 @@ public class Guard : PlayerState
     public override void HandleDamage(float Damage)
     {
 
-        player.status.Hp -= Damage * player.currentWeapon.status.GuardStrength;
-        player.status.UseStamina(player.currentWeapon.status.guardStamina);
+        player.status.Hp -= Damage * player.equip.CurrentWeapon.status.GuardStrength;
+        player.status.UseStamina(player.equip.CurrentWeapon.status.guardStamina);
     }
 
     

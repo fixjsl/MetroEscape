@@ -27,12 +27,12 @@ public class PlayerAnimationEvent : MonoBehaviour
     }
     public void OnFootstep()
     {
-        var clip = (player.isSprint && !player.isTired) ? player.footstepSprint : player.footstepWalk;
+        var clip = (player.input.IsSprint && !player.status.isTired) ? player.footstepSprint : player.footstepWalk;
         player.PlaySFX(clip);
     }
 
-    public void OnAttackCollider() => player.OnAttackColider();
-    public void OffAttackCollider() => player.OffAttackColider();
+    public void OnAttackCollider() => player.combat.OnAttackColider();
+    public void OffAttackCollider() => player.combat.OffAttackColider();
     public void OnEndInvincible()
     {
         player.gameObject.layer = Layercache.Player;

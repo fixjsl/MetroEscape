@@ -9,7 +9,7 @@ public class Die : PlayerState
 
     public override void Enter()
     {
-        player.animator.CrossFade(player.die, 0.001f);
+        player.animator.CrossFade(PlayerAnim.die, 0.001f);
         player.PlaySFX(player.deathSound);
         canChanged = false;
         player.Rb.linearVelocity = Vector3.zero;

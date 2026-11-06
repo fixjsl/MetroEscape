@@ -23,7 +23,8 @@ public class MetaProgressManager : SingletonBehaviour<MetaProgressManager>
 
     public IReadOnlyList<PerkBase> AllPerks => allPerks;
     public bool IsUnlocked(PerkBase p) => p != null && progress.unlockedPerkIds.Contains(p.PerkId);
-
+    private readonly List<PerkBase> lastUnlocks = new();
+    public IReadOnlyList<PerkBase> LastUnlocks => lastUnlocks;
     protected override void Awake()
     {
         base.Awake();
@@ -34,7 +35,12 @@ public class MetaProgressManager : SingletonBehaviour<MetaProgressManager>
 
     public void Save() => JsonFileStore.Save(SavePath, progress);
 
-    
+    public void OnGameOver()
+    {
+        lastUnlocks.Clear();
+        lastUnlocks.AddRange(EvaluateUnlocks());
+    }
+
 
     // 퍽 선택 보관 및 적용
     public void SetPending(IReadOnlyList<PerkBase> perks)

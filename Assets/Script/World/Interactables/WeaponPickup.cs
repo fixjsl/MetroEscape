@@ -14,7 +14,7 @@ public class WeaponPickup : ItObjectBase
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
         if (weapon == null) return;
-        PlayerStateMachine.Instance.EquipWeapon(weapon);
+        PlayerStateMachine.Instance.equip.EquipWeapon(weapon);
         GetComponent<Collider>().enabled = false;
         if (TutorialManager.Instance != null)
             TutorialManager.Instance.OnTrigger(TutorialTriggerType.CombatStart);

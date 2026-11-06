@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,8 @@ public class Campfire : ItObjectBase
     public int RequiredFuelCount => requiredFuelCount;
     public ItemBase LighterItem => lighterItem;
     public ItemBase RawMeat => rawMeat;
+
+    public event Action Changed;
 
     protected override void Start()
     {
@@ -52,7 +55,20 @@ public class Campfire : ItObjectBase
         }
         return total;
     }
-
+    public bool CanLight(Inventory inv)
+    {
+        if (IsBurning) return false;
+        if (CountFuel(inv) < requiredFuelCount) return false;
+        if (lighterItem == null) return true;
+        inv.slots.TryGetValue(lighterItem.itemcode, out int have);
+        return have >= 1;
+    }
+    public bool CanCook(Inventory inv)
+    {
+        if (!IsBurning) return false;
+        inv.slots.TryGetValue(rawMeat.itemcode, out int have);
+        return have >= 1;
+    }
     // 연료 소비 순서: 인벤토리 획득 순서(맨 위)부터 차례로 소비됨
     private bool ConsumeFuel(int amount)
     {
@@ -77,6 +93,7 @@ public class Campfire : ItObjectBase
     public void LightFire()
     {
         var inv = PlayerStateMachine.Instance.inventory;
+        if (!CanLight(inv)) return;
         if (lighterItem != null && !inv.RemoveItem(lighterItem, 1)) return;
         if (!ConsumeFuel(requiredFuelCount)) return;
 
@@ -87,15 +104,16 @@ public class Campfire : ItObjectBase
         if (fireAudioSource != null) fireAudioSource.Play();
         RefreshPrompt();
         StartCoroutine(BurnRoutine());
-        CampfireUI.Instance.Refresh(this);
+        Changed?.Invoke();
     }
 
     public void CookMeat()
     {
         var inv = PlayerStateMachine.Instance.inventory;
+        if (!CanCook(inv)) return;
         if (!inv.RemoveItem(rawMeat, 1)) return;
         if (!inv.AddItem(cookedMeat)) inv.AddItem(rawMeat, 1, false);
-        CampfireUI.Instance.Refresh(this);
+        Changed?.Invoke();
     }
 
     private IEnumerator BurnRoutine()
@@ -107,7 +125,6 @@ public class Campfire : ItObjectBase
         if (screenLight != null) screenLight.enabled = false;
         if (fireAudioSource != null) fireAudioSource.Stop();
         RefreshPrompt();
-        if (CampfireUI.Instance.IsOpen)
-            CampfireUI.Instance.Refresh(this);
+        Changed?.Invoke();
     }
 }

@@ -23,8 +23,8 @@ public class Flashlight : MonoBehaviour
     {
         var player = PlayerStateMachine.Instance;
         if (player == null) return;
-        player.EquipLight(spotLight);
-        player.OnLightToggle += SetEnabled;
+        player.equip.EquipLight(spotLight);
+        player.equip.OnLightToggle += SetEnabled;
     }
     void Update()
     {
@@ -34,7 +34,7 @@ public class Flashlight : MonoBehaviour
     void OnDestroy()
     {
         if (PlayerStateMachine.Instance != null)
-            PlayerStateMachine.Instance.OnLightToggle -= SetEnabled;
+            PlayerStateMachine.Instance.equip.OnLightToggle -= SetEnabled;
     }
 
 public void UpdateShaderGlobals()
@@ -42,7 +42,7 @@ public void UpdateShaderGlobals()
     bool isOn = spotLight != null && spotLight.enabled;
     Shader.SetGlobalFloat("_FlashlightEnabled", isOn ? 1f : 0f);
 
-    float moveInput = PlayerStateMachine.Instance.MoveInput;
+    float moveInput = PlayerStateMachine.Instance.input.MoveInput;
     if (Mathf.Abs(moveInput) > 0.01f) facingSign = Mathf.Sign(moveInput);
 
     // 1. 플레이어의 3D 월드 위치를 '화면 2D Viewport 좌표 (0~1)'로 안전하게 변환

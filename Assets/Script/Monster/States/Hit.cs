@@ -13,7 +13,7 @@ namespace MonsterStates
         {
             Timer.Reset();
             Monster.animator.speed = Monster.HitAnimLength / Mathf.Max(hitduration, 0.01f);
-            Monster.animator.CrossFade(Monster.hit, 0.01f);
+            Monster.animator.CrossFade(MonsterAnim.hit, 0.01f);
 
             if (Monster.Targetplayer != null)
             {

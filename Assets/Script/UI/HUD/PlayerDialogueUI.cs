@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -25,8 +25,6 @@ public class PlayerDialogueUI : SingletonBehaviour<PlayerDialogueUI>
 
     private Action onInventoryFull;
     private Action onSlotsFull;
-    private Action onStaminaEmpty;
-    private Action onParrySuccess;
     private Action<int>   onHungryChanged;
     private Action<int>   onWaterChanged;
     private Action<float> onHPChanged;
@@ -168,8 +166,6 @@ public class PlayerDialogueUI : SingletonBehaviour<PlayerDialogueUI>
 
         player.inventory.OnInventoryFull -= onInventoryFull;
         player.inventory.OnSlotsFull     -= onSlotsFull;
-        player.status.StaminaEmpty       -= onStaminaEmpty;
-        player.ParrySuccess              -= onParrySuccess;
         player.status.ChangeHungry       -= onHungryChanged;
         player.status.ChangeWater        -= onWaterChanged;
         player.status.ChangeHP           -= onHPChanged;

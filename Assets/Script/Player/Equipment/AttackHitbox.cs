@@ -36,6 +36,6 @@ public class AttackHitbox : MonoBehaviour
         var monster = other.GetComponentInParent<MonsterStateMachine>();
         if (monster == null) return;
         if (!hitTargets.Add(monster)) return;
-        player.currentWeapon.OnHit(monster);
+        player.equip.CurrentWeapon.OnHit(monster);
     }
 }

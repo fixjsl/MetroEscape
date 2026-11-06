@@ -11,29 +11,29 @@ public class Parry: PlayerState
     {
         isBlock = true;
     }
-    public override bool CanEnter() => !player.isTired;
+    public override bool CanEnter() => !player.status.isTired;
 
     public override void Enter()
     {
         canChanged = false;
         IsInParryWindow = true;
         parryTimer.Reset();
-        player.animator.CrossFade(player.parrying, 0.02f);
-        player.PlaySFX(player.currentWeapon?.status.parrySound);
-        player.status.UseStamina(player.currentWeapon.status.parryStamina);
-        player.ParrySuccess += OnParrySuccess;
+        player.animator.CrossFade(PlayerAnim.parrying, 0.02f);
+        player.PlaySFX(player.equip.CurrentWeapon?.status.parrySound);
+        player.status.UseStamina(player.equip.CurrentWeapon.status.parryStamina);
+        player.combat.ParrySuccess += OnParrySuccess;
     }
 
     public override void Exit()
     {
         IsInParryWindow = false;
-        player.ParrySuccess -= OnParrySuccess;
+        player.combat.ParrySuccess -= OnParrySuccess;
     }
 
     private void OnParrySuccess()
     {
         
-        player.animator.CrossFade(player.parrysucess, 0.02f);
+        player.animator.CrossFade(PlayerAnim.parrysucess, 0.02f);
     }
 
     public override void HandleDamage(float Damage)

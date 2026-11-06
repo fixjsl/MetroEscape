@@ -38,7 +38,7 @@ Shader "Custom/FlashlightPass"
             static const float ARC_FADE    = 0.08;  // 호 끝에서 dark까지 그라데 폭
             static const float ANG_FADE    = 0.45;  // 각도 경계 바깥쪽 그라데 비율 (outerTan 기준)
             static const float BOUND_FADE  = 0.05;  // 바닥/천장 경계 그라데 폭
-            static const float DARK_FACTOR = 0.02;
+            static const float DARK_FACTOR = 0.09;
             static const float BEAM_DIM    = 0.05; // 빔 안 원본 색상 밝기 배수 (낮출수록 어두움)
 
             half4 Frag(Varyings input) : SV_Target

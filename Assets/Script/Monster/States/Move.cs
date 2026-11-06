@@ -16,7 +16,7 @@ namespace MonsterStates
             changeTime = Random.Range(2f, 4f);
             float dot = Vector3.Dot(Monster.transform.forward, Vector3.right);
             MoveDir = (dot > 0) ? 1f : -1f;
-            Monster.animator.CrossFade(Monster.moveTurn, 0.01f);
+            Monster.animator.CrossFade(MonsterAnim.moveTurn, 0.01f);
             canChanged = false;
             Timer.Reset();
         }
@@ -48,7 +48,7 @@ namespace MonsterStates
             Monster.Rb.rotation = Quaternion.Euler(0, targetY, 0);
 
             canChanged = true;
-            Monster.animator.CrossFade(Monster.move, 0.0001f);
+            Monster.animator.CrossFade(MonsterAnim.move, 0.0001f);
         }
     }
 }

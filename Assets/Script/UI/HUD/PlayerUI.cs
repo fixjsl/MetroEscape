@@ -32,8 +32,8 @@ public class PlayerUI : MonoBehaviour
         status.ChangeStamina  += OnStaminaChanged;
         status.ChangeHungry   += OnHungryChanged;
         status.ChangeWater    += OnWaterChanged;
-        GameManager.Instance.ChangeTime += OnChangeTime;
-        GameManager.Instance.ChangeDay += OnChangeDay;
+        GameManager.Instance.clock.ChangeTime += OnChangeTime;
+        GameManager.Instance.clock.ChangeDay += OnChangeDay;
 
         // 초기값 반영
         SetFill(hpFill,      status.Hp,      status.Maxhp);
@@ -41,8 +41,8 @@ public class PlayerUI : MonoBehaviour
         SetStaminaFill(status.Stamina, status.MaxStamina);
         SetFill(hungryFill,  status.Hungry,   status.MaxHungry);
         SetFill(waterFill,   status.Water,    status.MaxWater);
-        HourMinute.text = $"{GameManager.Instance.Hour:D2}:{GameManager.Instance.Minute:D2}";
-        Day.text = $"Day - {GameManager.Instance.Day}";
+        HourMinute.text = $"{GameManager.Instance.clock.Hour:D2}:{GameManager.Instance.clock.Minute:D2}";
+        Day.text = $"Day - {GameManager.Instance.clock.Day}";
     }
 
     void OnHPChanged(float val)
@@ -77,8 +77,8 @@ public class PlayerUI : MonoBehaviour
         status.ChangeStamina -= OnStaminaChanged;
         status.ChangeHungry  -= OnHungryChanged;
         status.ChangeWater   -= OnWaterChanged;
-        GameManager.Instance.ChangeTime -= OnChangeTime;
-        GameManager.Instance.ChangeDay -= OnChangeDay;
+        GameManager.Instance.clock.ChangeTime -= OnChangeTime;
+        GameManager.Instance.clock.ChangeDay -= OnChangeDay;
     }
 
     void OnChangeTime(int hour, int minute)

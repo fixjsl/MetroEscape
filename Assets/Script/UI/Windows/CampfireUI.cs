@@ -24,20 +24,22 @@ public class CampfireUI : UIPanel<CampfireUI>
     public void Open(Campfire campfire)
     {
         currentCampfire = campfire;
+        currentCampfire.Changed += Refresh;
         Open();
     }
-    protected override void OnOpened() => Refresh(currentCampfire);
+    protected override void OnOpened() => Refresh();
 
     protected override void OnClosed()
     {
+        if (currentCampfire != null) currentCampfire.Changed -= Refresh;
         currentCampfire = null;
     }
 
 
-    public void Refresh(Campfire campfire)
+    public void Refresh()
     {
-        if (!IsOpen) return;
-        currentCampfire = campfire;
+        if (!IsOpen || currentCampfire == null) return;
+        var campfire = currentCampfire;
         var inv = PlayerStateMachine.Instance.inventory;
 
         if (campfire.IsBurning)
@@ -46,7 +48,7 @@ public class CampfireUI : UIPanel<CampfireUI>
             fuelSlot.Setup(campfire.RawMeat, 1, haveMeat);
             lighterSlot.gameObject.SetActive(false);
             actionButtonText.text = "굽기";
-            actionButton.interactable = haveMeat >= 1;
+            actionButton.interactable = campfire.CanCook(inv);
         }
         else
         {
@@ -58,14 +60,10 @@ public class CampfireUI : UIPanel<CampfireUI>
             {
                 inv.slots.TryGetValue(campfire.LighterItem.itemcode, out int haveLighter);
                 lighterSlot.Setup(campfire.LighterItem, 1, haveLighter);
-                actionButton.interactable = haveFuel >= campfire.RequiredFuelCount && haveLighter >= 1;
-            }
-            else
-            {
-                actionButton.interactable = haveFuel >= campfire.RequiredFuelCount;
             }
 
             actionButtonText.text = "불 피우기";
+            actionButton.interactable = campfire.CanLight(inv);
         }
     }
 

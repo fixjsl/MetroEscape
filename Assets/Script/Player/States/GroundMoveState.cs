@@ -21,14 +21,14 @@ public abstract class GroundMoveState : PlayerState
     }
     public sealed override void LogicUpdate()
     {
-        canSprint = player.isSprint && !player.isTired;
+        canSprint = player.input.IsSprint && !player.status.isTired;
         if (BeforeMove()) return;
-        if (player.MoveInput != 0 && player.MoveInput != movebuffer)
+        if (player.input.MoveInput != 0 && player.input.MoveInput != movebuffer)
         {
             FaceDirection(movebuffer);
             canChanged = false;
             player.animator.CrossFade(turnAni, 0.15f);
-            movebuffer = player.MoveInput;
+            movebuffer = player.input.MoveInput;
         }
         if (player.animator.IsInTransition(0)) return;
 
@@ -40,7 +40,7 @@ public abstract class GroundMoveState : PlayerState
         if (player.isMovementLocked) return;
         if (!canChanged) return;
         player.status.currentspeed = canSprint ? sprintSpeed : walkSpeed;   
-        player.Rb.linearVelocity = new Vector3(player.MoveInput * player.status.currentspeed, player.Rb.linearVelocity.y, 0f);
+        player.Rb.linearVelocity = new Vector3(player.input.MoveInput * player.status.currentspeed, player.Rb.linearVelocity.y, 0f);
     }
 
     public override void OnTurnAnimationFinished()

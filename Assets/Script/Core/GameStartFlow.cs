@@ -63,6 +63,6 @@ public class GameStartFlow : SingletonBehaviour<GameStartFlow>
         MetaProgressManager.Instance?.BeginSession();  
 
         Time.timeScale = 1f;
-        GameManager.Instance.TutorialStart();
+        GameManager.Instance.clock.Restart();
     }
 }

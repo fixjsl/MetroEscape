@@ -18,7 +18,7 @@ public class Dodge : PlayerState
 
     public override bool CanEnter()
     {
-        if (player.isTired) return false;
+        if (player.status.isTired) return false;
         return Time.time >= lastTime + cooltime && player.status.Stamina >= player.status.DodgeCost;
     }
     public override void Enter()
@@ -29,7 +29,7 @@ public class Dodge : PlayerState
         Physics.IgnoreLayerCollision(Layercache.Dodge, Layercache.Monster, true);
         player.status.UseStamina(player.status.DodgeCost);
         player.animator.SetLayerWeight(1, 0f);
-        player.animator.CrossFade(player.dodge, 0.15f);
+        player.animator.CrossFade(PlayerAnim.dodge, 0.15f);
         player.PlaySFX(player.dodgeSound);
         dodgeVelocity = new Vector3(player.transform.forward.x * 60f, 0f, 0f);
     }
