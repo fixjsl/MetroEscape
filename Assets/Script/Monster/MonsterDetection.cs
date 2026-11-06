@@ -1,9 +1,9 @@
-using MonsterStates;
+﻿using MonsterStates;
 using UnityEngine;
 
 public class MonsterDetection : CharacterSystem<MonsterStateMachine>
 {
-    TimeManager Timer = new();
+    IntervalTimer Timer = new();
     bool running;
     int lostFrames;
     const int lostThreshold = 20;         // 2초 유예
@@ -35,7 +35,7 @@ public class MonsterDetection : CharacterSystem<MonsterStateMachine>
 
             if (instantDetect)
             {
-                status.detection_gauge = 100f;
+                status.detection_gauge = MonsterStateMachine.MaxDetectionGauge;
             }
             else
             {
@@ -47,7 +47,7 @@ public class MonsterDetection : CharacterSystem<MonsterStateMachine>
             }
 
             // 감지 게이지 초과 시 Chase 전환
-            if (status.detection_gauge >= 100f)
+            if (status.detection_gauge >= MonsterStateMachine.MaxDetectionGauge)
             {
                 if (owner.ActiveState is MonsterStates.Idle || owner.ActiveState is MonsterStates.Move || owner.ActiveState is MonsterStates.Return)
                 {

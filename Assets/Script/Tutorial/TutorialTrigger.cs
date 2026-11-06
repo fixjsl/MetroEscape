@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 public enum TutorialTriggerType
 {
     ShowMoveKeyNdialogue,//게임 시작시 첫 대사 및 이동키 튜토리얼
@@ -9,8 +9,8 @@ public enum TutorialTriggerType
     WeaponSelected,// 무기 선택 완료
     CombatStart,// 적이 문 부수고 나옴 및 전투 튜토리얼 시작
     GetItem,
-    DialogeNShowCrunchKey, //웅크리기 키 튜토리얼
-    ApperBear, // 흉포한 곰 등장 
+    DialogueNShowCrouchKey, //웅크리기 키 튜토리얼
+    AppearBear, // 흉포한 곰 등장 
     CollapseWall, // 벽이 무너지거나 부셔져서 길이 막히는 이벤트
     TutorialEnd// 임시기지로 쓰일 수 있는 안전지대 도착
 }

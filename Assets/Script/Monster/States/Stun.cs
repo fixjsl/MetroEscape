@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MonsterStates
 {
     public class Stun : MonsterState
     {
-        TimeManager stunTimer = new TimeManager();
+        IntervalTimer stunTimer = new IntervalTimer();
 
         
         public Stun(MonsterStateMachine monster) : base(monster) { 
@@ -12,7 +12,7 @@ namespace MonsterStates
         }
         public override void Enter()
         {
-            Monster.gameObject.layer = Layercache.Stun;
+            Monster.gameObject.layer = LayerCache.Stun;
             Monster.Rb.linearVelocity = Vector3.zero;
             if (Monster.ScalesStunAnim)
                 Monster.animator.speed = Monster.StunAnimLength / Mathf.Max(Monster.status.stunTime, 0.01f);
@@ -23,8 +23,8 @@ namespace MonsterStates
         public override void Exit()
         {
             Monster.animator.speed = 1f;
-            Monster.gameObject.layer = Layercache.Monster;
-            Monster.status.detection_gauge = 100f;
+            Monster.gameObject.layer = LayerCache.Monster;
+            Monster.status.detection_gauge = MonsterStateMachine.MaxDetectionGauge;
         }
         public override void LogicUpdate()
         {

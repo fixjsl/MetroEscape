@@ -1,8 +1,8 @@
-
+﻿
 using TMPro;
 using UnityEngine;
 
-public abstract class ItObjectBase : MonoBehaviour, IInteractable
+public abstract class InteractableBase : MonoBehaviour, IInteractable
 {
     public abstract string InteractMessage { get; }
     [SerializeField] private GameObject TextObject;

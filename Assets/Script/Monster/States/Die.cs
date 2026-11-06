@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace MonsterStates
@@ -18,7 +18,7 @@ namespace MonsterStates
             var col = Monster.GetComponent<Collider>();
             col.isTrigger = true;
             col.enabled = true;
-            Monster.gameObject.layer = Layercache.Die;
+            Monster.gameObject.layer = LayerCache.Die;
             if(Monster.CountsAsKill)
                 MetaProgressManager.Instance?.AddKill();
             if (Monster.Corpse != null) Monster.Corpse.enabled = true;

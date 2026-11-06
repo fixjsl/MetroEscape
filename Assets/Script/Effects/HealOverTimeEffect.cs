@@ -1,5 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
+[System.Serializable]
 public class HealOverTimeEffect : TimedEffect
 {
     public float healPerSecond = 1f;

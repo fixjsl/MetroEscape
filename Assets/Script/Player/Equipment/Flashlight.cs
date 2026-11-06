@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Light))]
 public class Flashlight : MonoBehaviour
@@ -9,7 +9,9 @@ public class Flashlight : MonoBehaviour
     [SerializeField] private float range        = 8f;
     [SerializeField] private float intensity    = 2f;
     [SerializeField] private float tiltDown     = 30f;
+#pragma warning disable CS0414   // 기즈모(에디터 전용)에서만 읽음
     [SerializeField] private float nearRange    = 1.8f;
+#pragma warning restore CS0414
     [SerializeField] private Color lightColor   = new Color(1f, 0.95f, 0.8f);
     [Header("바닥/천장 반사")]
     [SerializeField] private float floorOffsetY   = -1f;  // 플레이어 기준 바닥 오프셋

@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ContainerObject : ItObjectBase
+public class ContainerObject : InteractableBase
 {
     [SerializeField] private LootTable lootTable;
     private bool open = false;

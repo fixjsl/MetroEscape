@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 public class GameClock
 {
@@ -8,7 +8,7 @@ public class GameClock
     public int Hour { get; private set; } = 0; // 시간
     public int Minute { get; private set; } = 0; //분
 
-    TimeManager Timer = new();
+    IntervalTimer Timer = new();
     public event Action<int, int> ChangeTime; // hour, minute
     public event Action<int, int> ChangeDay; // day, hour
 

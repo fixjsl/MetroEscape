@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class StairTrigger : ItObjectBase
+public class StairTrigger : InteractableBase
 {
     [SerializeField] private StairObject stair;
 

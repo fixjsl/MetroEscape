@@ -1,30 +1,33 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Guard : PlayerState
+namespace PlayerStates
 {
-
-
-
-    public Guard(PlayerStateMachine stateMachine) : base(stateMachine)
-    {
-        isBlock = true;
-    }
-    public override void Enter()
-    {
-        //Idle Animation code
-        player.animator.CrossFade(PlayerAnim.guard, 0.02f);
-    }
-
-    public override void Exit()
-    {
-    }
-    
-    public override void HandleDamage(float Damage)
+    public class Guard : PlayerState
     {
 
-        player.status.Hp -= Damage * player.equip.CurrentWeapon.status.GuardStrength;
-        player.status.UseStamina(player.equip.CurrentWeapon.status.guardStamina);
-    }
 
-    
+
+        public Guard(PlayerStateMachine stateMachine) : base(stateMachine)
+        {
+            isBlock = true;
+        }
+        public override void Enter()
+        {
+            //Idle Animation code
+            player.animator.CrossFade(PlayerAnim.guard, 0.02f);
+        }
+
+        public override void Exit()
+        {
+        }
+
+        public override void HandleDamage(float Damage)
+        {
+
+            player.status.Hp -= Damage * player.equip.CurrentWeapon.status.GuardStrength;
+            player.status.UseStamina(player.equip.CurrentWeapon.status.guardStamina);
+        }
+
+
+    }
 }

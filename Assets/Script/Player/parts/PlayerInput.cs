@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,7 +15,7 @@ public class PlayerInput
     // 버퍼 (지금 bufferinput / buffertime / bufferTimer)
     public StateType Buffer { get; private set; } = StateType.None;
     private const float BufferTime = 0.2f;
-    private readonly TimeManager bufferTimer = new();
+    private readonly IntervalTimer bufferTimer = new();
 
     // 판단이 필요한 키는 "눌렸다"만 알림 → PlayerStateMachine이 결정
     public event Action AttackPressed;

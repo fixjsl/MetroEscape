@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // 비상구 — 열쇠 소비 후 기지로 귀환 + 사이클 리셋 (1회성)
-public class BaseReturnExit : ItObjectBase
+public class BaseReturnExit : InteractableBase
 {
     [SerializeField] private ItemBase keyItem;
     [SerializeField] private string hasKeyMessage  = "기지로 귀환";

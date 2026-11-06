@@ -15,9 +15,9 @@ public static class MonsterManager
             return root;
         }
     }
-    private static MonsterStateMachine Take(MonsterStateMachine prefeb)
+    private static MonsterStateMachine Take(MonsterStateMachine prefab)
     {
-        if(pools.TryGetValue(prefeb, out var stack))
+        if(pools.TryGetValue(prefab, out var stack))
         {
             while (stack.Count > 0)
             {
@@ -25,7 +25,7 @@ public static class MonsterManager
                 if (m != null) return m;
             }
         }
-        var created = Object.Instantiate(prefeb, Root);
+        var created = Object.Instantiate(prefab, Root);
         Unregister(created);
         return created;
     }

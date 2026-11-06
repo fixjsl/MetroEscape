@@ -1,11 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TimeManager
+public class IntervalTimer
 {
     private float curTime = 0;
     private readonly bool unscaled;
 
-    public TimeManager(bool unscaled = false) => this.unscaled = unscaled;
+    public IntervalTimer(bool unscaled = false) => this.unscaled = unscaled;
     public void Reset() => curTime = 0;
     public bool Timer(float second)
     {
