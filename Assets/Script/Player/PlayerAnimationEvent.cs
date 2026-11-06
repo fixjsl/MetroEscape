@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using PlayerStates;
 
 public class PlayerAnimationEvent : MonoBehaviour
 {

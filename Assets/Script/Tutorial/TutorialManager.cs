@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using PlayerStates;
 
 public class TutorialManager : SingletonBehaviour<TutorialManager>
 {

@@ -1,58 +1,61 @@
 ﻿using System.Threading;
 using UnityEngine;
 
-public class Parry: PlayerState
+namespace PlayerStates
 {
-    private IntervalTimer parryTimer = new IntervalTimer();
-
-    public bool IsInParryWindow { get; private set; }
-
-    public Parry(PlayerStateMachine stateMachine) : base(stateMachine)
+    public class Parry: PlayerState
     {
-        isBlock = true;
-    }
-    public override bool CanEnter() => !player.status.isTired;
+        private IntervalTimer parryTimer = new IntervalTimer();
 
-    public override void Enter()
-    {
-        canChanged = false;
-        IsInParryWindow = true;
-        parryTimer.Reset();
-        player.animator.CrossFade(PlayerAnim.parrying, 0.02f);
-        player.PlaySFX(player.equip.CurrentWeapon?.status.parrySound);
-        player.status.UseStamina(player.equip.CurrentWeapon.status.parryStamina);
-        player.combat.ParrySuccess += OnParrySuccess;
-    }
+        public bool IsInParryWindow { get; private set; }
 
-    public override void Exit()
-    {
-        IsInParryWindow = false;
-        player.combat.ParrySuccess -= OnParrySuccess;
-    }
+        public Parry(PlayerStateMachine stateMachine) : base(stateMachine)
+        {
+            isBlock = true;
+        }
+        public override bool CanEnter() => !player.status.isTired;
 
-    private void OnParrySuccess()
-    {
-        
-        player.animator.CrossFade(PlayerAnim.parrySuccess, 0.02f);
-    }
+        public override void Enter()
+        {
+            canChanged = false;
+            IsInParryWindow = true;
+            parryTimer.Reset();
+            player.animator.CrossFade(PlayerAnim.parrying, 0.02f);
+            player.PlaySFX(player.equip.CurrentWeapon?.status.parrySound);
+            player.status.UseStamina(player.equip.CurrentWeapon.status.parryStamina);
+            player.combat.ParrySuccess += OnParrySuccess;
+        }
 
-    public override void HandleDamage(float Damage)
-    {
-        
-    }
-
-    public override void LogicUpdate()
-    {
-        if (parryTimer.Timer(player.status.parryduration))
+        public override void Exit()
         {
             IsInParryWindow = false;
-            canChanged = true;
+            player.combat.ParrySuccess -= OnParrySuccess;
         }
-    }
 
-    public override void PhysicalUpdate()
-    {
+        private void OnParrySuccess()
+        {
+
+            player.animator.CrossFade(PlayerAnim.parrySuccess, 0.02f);
+        }
+
+        public override void HandleDamage(float Damage)
+        {
+
+        }
+
+        public override void LogicUpdate()
+        {
+            if (parryTimer.Timer(player.status.parryduration))
+            {
+                IsInParryWindow = false;
+                canChanged = true;
+            }
+        }
+
+        public override void PhysicalUpdate()
+        {
 
 
+        }
     }
 }

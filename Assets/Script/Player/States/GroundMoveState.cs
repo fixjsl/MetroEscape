@@ -1,53 +1,56 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public abstract class GroundMoveState : PlayerState
+namespace PlayerStates
 {
-    protected float movebuffer;
-    protected bool canSprint;
-
-    protected abstract float walkSpeed { get; }
-    protected abstract float sprintSpeed { get; }
-    protected virtual bool BeforeMove() => false;
-    protected abstract int turnAni { get; }
-    protected abstract int moveAni { get; }
-    protected abstract void UpdateAni();
-    protected void FaceDirection(float dir) => player.Rb.rotation = Quaternion.Euler(0, dir > 0 ? 90f : -90f,0);
-    protected GroundMoveState(PlayerStateMachine player):base(player) { }
-
-    public override void Enter()
+    public abstract class GroundMoveState : PlayerState
     {
-        float dot = Vector3.Dot(player.transform.forward, Vector3.right);
-        movebuffer = (dot > 0) ? 1f : -1f;
-    }
-    public sealed override void LogicUpdate()
-    {
-        canSprint = player.input.IsSprint && !player.status.isTired;
-        if (BeforeMove()) return;
-        if (player.input.MoveInput != 0 && player.input.MoveInput != movebuffer)
+        protected float movebuffer;
+        protected bool canSprint;
+
+        protected abstract float walkSpeed { get; }
+        protected abstract float sprintSpeed { get; }
+        protected virtual bool BeforeMove() => false;
+        protected abstract int turnAni { get; }
+        protected abstract int moveAni { get; }
+        protected abstract void UpdateAni();
+        protected void FaceDirection(float dir) => player.Rb.rotation = Quaternion.Euler(0, dir > 0 ? 90f : -90f,0);
+        protected GroundMoveState(PlayerStateMachine player):base(player) { }
+
+        public override void Enter()
+        {
+            float dot = Vector3.Dot(player.transform.forward, Vector3.right);
+            movebuffer = (dot > 0) ? 1f : -1f;
+        }
+        public sealed override void LogicUpdate()
+        {
+            canSprint = player.input.IsSprint && !player.status.isTired;
+            if (BeforeMove()) return;
+            if (player.input.MoveInput != 0 && player.input.MoveInput != movebuffer)
+            {
+                FaceDirection(movebuffer);
+                canChanged = false;
+                player.animator.CrossFade(turnAni, 0.15f);
+                movebuffer = player.input.MoveInput;
+            }
+            if (player.animator.IsInTransition(0)) return;
+
+            if(canChanged)UpdateAni();
+            player.status.TickStamina(canSprint, Time.deltaTime);
+        }
+        public override void PhysicalUpdate()
+        {
+            if (player.isMovementLocked) return;
+            if (!canChanged) return;
+            player.status.currentspeed = canSprint ? sprintSpeed : walkSpeed;   
+            player.Rb.linearVelocity = new Vector3(player.input.MoveInput * player.status.currentspeed, player.Rb.linearVelocity.y, 0f);
+        }
+
+        public override void OnTurnAnimationFinished()
         {
             FaceDirection(movebuffer);
-            canChanged = false;
-            player.animator.CrossFade(turnAni, 0.15f);
-            movebuffer = player.input.MoveInput;
+            player.animator.CrossFade(moveAni, 0.15f);
+            canChanged = true;
         }
-        if (player.animator.IsInTransition(0)) return;
 
-        if(canChanged)UpdateAni();
-        player.status.TickStamina(canSprint, Time.deltaTime);
     }
-    public override void PhysicalUpdate()
-    {
-        if (player.isMovementLocked) return;
-        if (!canChanged) return;
-        player.status.currentspeed = canSprint ? sprintSpeed : walkSpeed;   
-        player.Rb.linearVelocity = new Vector3(player.input.MoveInput * player.status.currentspeed, player.Rb.linearVelocity.y, 0f);
-    }
-
-    public override void OnTurnAnimationFinished()
-    {
-        FaceDirection(movebuffer);
-        player.animator.CrossFade(moveAni, 0.15f);
-        canChanged = true;
-    }
-
 }
