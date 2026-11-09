@@ -32,7 +32,7 @@ jobs:
 
       # 2) 로컬 전용 임베디드 패키지(AI Assistant, 저장소에 없음)를 빼고 돌림
       - name: Remove local-only packages
-        shell: powershell
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"   # 이 단계에서만 실행 정책 우회 (PC 설정은 그대로)
         run: |
           foreach ($f in 'Packages/manifest.json', 'Packages/packages-lock.json') {
             $j = Get-Content $f -Raw | ConvertFrom-Json
@@ -42,7 +42,7 @@ jobs:
 
       # 3) Unity를 화면 없이 띄워 EditMode 테스트 실행 (내 PC의 Unity 라이선스 사용)
       - name: Run EditMode tests
-        shell: powershell
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"   # 이 단계에서만 실행 정책 우회 (PC 설정은 그대로)
         run: |
           $out = Join-Path $env:GITHUB_WORKSPACE 'TestResults'
           New-Item -ItemType Directory -Force $out | Out-Null
