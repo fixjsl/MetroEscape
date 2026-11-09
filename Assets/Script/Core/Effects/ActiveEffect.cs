@@ -1,5 +1,4 @@
-using UnityEngine;
-using UnityEngine.InputSystem.HID;
+﻿using UnityEngine;
 
 public class ActiveEffect
 {

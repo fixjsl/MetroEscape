@@ -1,0 +1,20 @@
+{
+    "name": "MetroEscape.UI",
+    "rootNamespace": "",
+    "references": [
+        "MetroEscape.Core",
+        "MetroEscape.Game",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

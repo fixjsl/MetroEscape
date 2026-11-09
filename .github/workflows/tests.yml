@@ -1,0 +1,53 @@
+name: EditMode Tests
+
+on:
+  push:
+    branches: [ "리팩토링중", "어셈블리분리" ]
+  pull_request:
+  workflow_dispatch:            # Actions 탭에서 수동 실행
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true      # 같은 브랜치에 새 푸시가 오면 이전 실행 취소
+
+jobs:
+  editmode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      # 1) 저장소 코드 받기 (LFS 파일 포함)
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # 2) 로컬 전용 임베디드 패키지(AI Assistant, 저장소에 없음)를 CI에서는 뺌
+      - name: Remove local-only packages
+        run: |
+          jq 'del(.dependencies["com.unity.ai.assistant"])' Packages/manifest.json > m.tmp && mv m.tmp Packages/manifest.json
+          jq 'del(.dependencies["com.unity.ai.assistant"])' Packages/packages-lock.json > l.tmp && mv l.tmp Packages/packages-lock.json
+
+      # 3) Library 캐시 → 두 번째 실행부터 임포트 시간이 크게 줄어듦
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-
+
+      # 4) Unity로 EditMode 테스트 실행 (Unity 버전은 ProjectSettings/ProjectVersion.txt에서 자동)
+      - uses: game-ci/unity-test-runner@v4
+        id: tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: editmode
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: EditMode Test Results
+
+      # 5) 결과 파일 올리기 (실패해도 올림)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: ${{ steps.tests.outputs.artifactsPath }}
