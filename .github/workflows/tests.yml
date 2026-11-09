@@ -57,7 +57,7 @@ jobs:
           # summary table on the Actions run page
           $xml = Join-Path $out 'editmode.xml'
           if (Test-Path $xml) {
-            [xml]$r = Get-Content $xml
+            $r = New-Object System.Xml.XmlDocument; $r.Load($xml)   # reads the UTF-8 declaration (Korean test names)
             $run = $r.'test-run'
             $sum = "## EditMode Tests`n`n| Passed | Failed | Skipped | Total |`n|---|---|---|---|`n| $($run.passed) | $($run.failed) | $($run.skipped) | $($run.total) |`n"
             $failed = $r.SelectNodes("//test-case[@result='Failed']")
@@ -65,7 +65,7 @@ jobs:
               $sum += "`n### Failed`n"
               foreach ($t in $failed) { $sum += "- ``$($t.fullname)``: $($t.failure.message.'#cdata-section')`n" }
             }
-            $sum | Out-File -Append -Encoding utf8 $env:GITHUB_STEP_SUMMARY
+            [IO.File]::AppendAllText($env:GITHUB_STEP_SUMMARY, $sum, (New-Object Text.UTF8Encoding($false)))
           } else {
             Write-Host "No result file - see unity.log"
             Get-Content (Join-Path $out 'unity.log') -Tail 60
