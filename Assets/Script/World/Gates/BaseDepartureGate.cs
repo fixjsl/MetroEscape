@@ -21,7 +21,7 @@ public class BaseDepartureGate : InteractableBase
         if (open.Count == 0) return;
 
         if (open.Count == 1) Confirm(open[0]);
-        else ZoneSelectUI.Instance.Show(open, Confirm);
+        else GameUI.ZoneSelect?.Show(open, Confirm);
     }
     private void Depart(ZoneEntry zone)
     {
@@ -38,7 +38,7 @@ public class BaseDepartureGate : InteractableBase
     private void Confirm(ZoneEntry zone)
     {
         string msg = $"{zone.zoneName}(으)로 출발합니다.\n{warningMessage}";
-        ConfirmUI.Instance.Show(msg, () => Depart(zone));
+        GameUI.Confirm?.Show(msg, () => Depart(zone));
     }
 
     // CycleManager가 기지 귀환 후 호출

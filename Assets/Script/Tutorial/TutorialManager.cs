@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using DG.Tweening;
 using UnityEngine;
 using PlayerStates;
 
@@ -36,6 +35,21 @@ public class TutorialManager : SingletonBehaviour<TutorialManager>
     public void OnTrigger(TutorialTriggerType type)
     {
         pendingTrigger = type;
+    }
+
+    // 리지드바디를 target까지 duration초 동안 부드럽게 이동 (DOTween DOMove + Ease.InOutSine 대체)
+    // 물리 이동이라 FixedUpdate 주기에 맞춰 MovePosition
+    IEnumerator MoveOverTime(Rigidbody rb, Vector3 target, float duration)
+    {
+        Vector3 start = rb.position;
+        var waitFixed = new WaitForFixedUpdate();
+        for (float t = 0f; t < duration; t += Time.fixedDeltaTime)
+        {
+            float k = -(Mathf.Cos(Mathf.PI * (t / duration)) - 1f) * 0.5f;   // InOutSine
+            rb.MovePosition(Vector3.Lerp(start, target, k));
+            yield return waitFixed;
+        }
+        rb.MovePosition(target);
     }
 
     // 특정 트리거가 들어올 때까지 대기
@@ -94,7 +108,7 @@ public class TutorialManager : SingletonBehaviour<TutorialManager>
         if (playerStopPoint != null)
         {
             Vector3 target = new Vector3(playerStopPoint.position.x, rb.position.y, rb.position.z);
-            yield return rb.DOMove(target, 1.5f).SetEase(Ease.InOutSine).WaitForCompletion();
+            yield return MoveOverTime(rb, target, 1.5f);
         }
         else
             yield return new WaitForSecondsRealtime(1.5f);

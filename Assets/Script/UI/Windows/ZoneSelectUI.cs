@@ -1,19 +1,20 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class ZoneSelectUI : UIPanel<ZoneSelectUI>
+public class ZoneSelectUI : UIPanel<ZoneSelectUI>, IZoneSelectDialog
 {
     [SerializeField] private Transform buttonContainer;
     [SerializeField] private Button buttonPrefab;
     [SerializeField] private Button cancelButton;
 
-    private Action<ZoneEntry> onSelescted;
+    private Action<ZoneEntry> onSelected;
 
     protected override void Awake()
     {
         base.Awake();
+        GameUI.ZoneSelect = this;
         root.SetActive(false);
         cancelButton.onClick.AddListener(Close);
     }
@@ -25,7 +26,7 @@ public class ZoneSelectUI : UIPanel<ZoneSelectUI>
             Debug.LogError("[ZoneSelectUI] buttonPrefab이 비어 있거나 파괴되었습니다.");
             return;
         }
-        onSelescted = callback;
+        onSelected = callback;
 
         foreach (Transform child in buttonContainer) Destroy(child.gameObject);
 
@@ -36,7 +37,7 @@ public class ZoneSelectUI : UIPanel<ZoneSelectUI>
             var label = btn.GetComponentInChildren<TMP_Text>(true);
             if (label != null) label.text = zone.zoneName;
             btn.onClick.AddListener(() => {    
-                 var cb = onSelescted;
+                 var cb = onSelected;
                 Close();
                 cb?.Invoke(zone);});
             }
@@ -44,5 +45,5 @@ public class ZoneSelectUI : UIPanel<ZoneSelectUI>
         Open();
     }
 
-    protected override void OnClosed() => onSelescted = null;
+    protected override void OnClosed() => onSelected = null;
 }

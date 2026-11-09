@@ -1,5 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 [System.Serializable]
+[UnityEngine.Scripting.APIUpdating.MovedFrom(true, sourceAssembly: "Assembly-CSharp")]   // 에셋에 저장된 옛 어셈블리 이름으로도 찾게 (asmdef 분리 때문)
 public abstract class TimedEffect
 {
     [Tooltip("0 이하 = 무한 지속")]

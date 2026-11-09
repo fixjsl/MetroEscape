@@ -1,9 +1,9 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
-public class CampfireUI : UIPanel<CampfireUI>
+public class CampfireUI : UIPanel<CampfireUI>, ICampfireWindow
 {
 
     [SerializeField] private CraftingMaterialUI fuelSlot;
@@ -16,6 +16,7 @@ public class CampfireUI : UIPanel<CampfireUI>
     protected override void Awake()
     {
         base.Awake();
+        GameUI.Campfire = this;
         root.SetActive(false);
         actionButton.onClick.AddListener(OnActionClicked);
     }

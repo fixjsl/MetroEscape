@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
+[UnityEngine.Scripting.APIUpdating.MovedFrom(true, sourceAssembly: "Assembly-CSharp")]   // 에셋에 저장된 옛 어셈블리 이름으로도 찾게 (asmdef 분리 때문)
 public class HealOverTimeEffect : TimedEffect
 {
     public float healPerSecond = 1f;

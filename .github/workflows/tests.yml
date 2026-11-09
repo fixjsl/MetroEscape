@@ -1,0 +1,80 @@
+name: EditMode Tests
+
+# 내 PC(self-hosted runner)에서 Unity로 EditMode 테스트를 돌림.
+# GameCI(클라우드)는 Unity 6000.3 Personal 라이선스 활성화가 막혀 있어서 사용 안 함
+#   (game-ci/unity-test-runner#336 "TimeStamp validation failed")
+#
+# ⚠ 공개 저장소 + 내 PC 러너: 남이 보낸 PR 코드가 내 PC에서 돌면 안 되므로
+#   pull_request 트리거는 일부러 넣지 않음 (내가 푸시한 것만 실행)
+
+on:
+  push:
+    branches: [ "리팩토링중", "어셈블리분리" ]
+  workflow_dispatch:            # Actions 탭에서 수동 실행
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UNITY_EXE: C:\Program Files\Unity\Hub\Editor\6000.3.26f1\Editor\Unity.exe
+
+jobs:
+  editmode:
+    runs-on: [ self-hosted, Windows ]
+    timeout-minutes: 90
+    steps:
+      # 1) 코드 받기. clean: false → Library 폴더를 지우지 않아서 두 번째부터 임포트가 빠름
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          clean: false
+
+      # 2) 로컬 전용 임베디드 패키지(AI Assistant, 저장소에 없음)를 빼고 돌림
+      - name: Remove local-only packages
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"   # 이 단계에서만 실행 정책 우회 (PC 설정은 그대로)
+        run: |
+          foreach ($f in 'Packages/manifest.json', 'Packages/packages-lock.json') {
+            $j = Get-Content $f -Raw | ConvertFrom-Json
+            $j.dependencies.PSObject.Properties.Remove('com.unity.ai.assistant')
+            [IO.File]::WriteAllText((Resolve-Path $f), ($j | ConvertTo-Json -Depth 20))   # no BOM
+          }
+
+      # 3) Unity를 화면 없이 띄워 EditMode 테스트 실행 (내 PC의 Unity 라이선스 사용)
+      - name: Run EditMode tests
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"   # 이 단계에서만 실행 정책 우회 (PC 설정은 그대로)
+        run: |
+          $out = Join-Path $env:GITHUB_WORKSPACE 'TestResults'
+          New-Item -ItemType Directory -Force $out | Out-Null
+          $unityArgs = @('-batchmode', '-nographics',
+                    '-projectPath', "`"$env:GITHUB_WORKSPACE`"",
+                    '-runTests', '-testPlatform', 'EditMode',
+                    '-testResults', "`"$out\editmode.xml`"",
+                    '-logFile', "`"$out\unity.log`"")
+          $p = Start-Process -FilePath $env:UNITY_EXE -ArgumentList $unityArgs -Wait -PassThru -NoNewWindow
+          Write-Host "Unity exit code: $($p.ExitCode)  (0 = all passed, 2 = some tests failed, other = run error)"
+
+          # summary table on the Actions run page
+          $xml = Join-Path $out 'editmode.xml'
+          if (Test-Path $xml) {
+            $r = New-Object System.Xml.XmlDocument; $r.Load($xml)   # reads the UTF-8 declaration (Korean test names)
+            $run = $r.'test-run'
+            $sum = "## EditMode Tests`n`n| Passed | Failed | Skipped | Total |`n|---|---|---|---|`n| $($run.passed) | $($run.failed) | $($run.skipped) | $($run.total) |`n"
+            $failed = $r.SelectNodes("//test-case[@result='Failed']")
+            if ($failed.Count -gt 0) {
+              $sum += "`n### Failed`n"
+              foreach ($t in $failed) { $sum += "- ``$($t.fullname)``: $($t.failure.message.'#cdata-section')`n" }
+            }
+            [IO.File]::AppendAllText($env:GITHUB_STEP_SUMMARY, $sum, (New-Object Text.UTF8Encoding($false)))
+          } else {
+            Write-Host "No result file - see unity.log"
+            Get-Content (Join-Path $out 'unity.log') -Tail 60
+          }
+          exit $p.ExitCode
+
+      # 4) 결과 파일 올리기 (실패해도 올림)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: TestResults

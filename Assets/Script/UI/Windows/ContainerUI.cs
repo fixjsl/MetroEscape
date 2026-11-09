@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-public class ContainerUI : UIPanel<ContainerUI>
+public class ContainerUI : UIPanel<ContainerUI>, IContainerWindow
 {    
     [SerializeField] private Transform slotParent;
     [SerializeField] private ContainerSlotUI slotPrefab;
@@ -16,12 +16,14 @@ public class ContainerUI : UIPanel<ContainerUI>
     protected override void Awake()
     {
         base.Awake();
+        GameUI.Container = this;
         root.SetActive(false);
-        
     }
 
     public void Open(ContainerObject contents)
     {
+        // 다른 상자 창이 열려 있으면 먼저 정리 (구독 해제 + 그 상자에 닫힘 알림)
+        if (IsOpen && currentContents != contents) CloseKeepingInventory();
         currentContents = contents;
         currentContents.ContentsChanged += Refresh;
         if (!InventoryUI.Instance.IsOpen)
@@ -32,7 +34,8 @@ public class ContainerUI : UIPanel<ContainerUI>
 
     protected override void OnClosed()
     {
-        if (currentContents != null) currentContents.ContentsChanged -= Refresh; 
+        if (currentContents != null) currentContents.ContentsChanged -= Refresh;
+        currentContents?.WindowClosed();
         currentContents = null;
         if(!keepInventoryOnClose)InventoryUI.Instance.Close();
         keepInventoryOnClose = false;

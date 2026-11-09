@@ -15,8 +15,6 @@ public class BossStateMachine : MonsterStateMachine
     [Header("Trigger")]
     [SerializeField] private GameObject startTriggerObject;
 
-    [Header("UI")]
-    [SerializeField] private BossUI bossUI;
 
     public override float ApproachAnimSpeed => 1;
     public override float BattleChargeSpeed => status.speed;
@@ -69,7 +67,7 @@ public class BossStateMachine : MonsterStateMachine
         status.detection_gauge = MaxDetectionGauge;
         IsFirstAttack = true;
 
-        bossUI?.Init(status);
+        GameUI.BossHud?.Init(status);
 
         if (ActiveState is MonsterStates.Idle || ActiveState is Return)
             ChangeState<MonsterStates.Chase>();
@@ -88,7 +86,7 @@ public class BossStateMachine : MonsterStateMachine
         IsFirstAttack = true;
         PreserveBattleTimer = false;
 
-        bossUI?.Hide();
+        GameUI.BossHud?.Hide();
 
         LoseTarget();
     }

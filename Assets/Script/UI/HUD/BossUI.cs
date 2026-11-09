@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 // 캔버스에 배치하는 보스 전용 UI
 // 전투 시작 시 Init(), 전투 종료 시 Hide() 호출
-public class BossUI : MonoBehaviour
+public class BossUI : MonoBehaviour, IBossHud
 {
     [Header("HP")]
     [SerializeField] private Image hpFill;
@@ -26,6 +26,7 @@ public class BossUI : MonoBehaviour
 
     private void Awake()
     {
+        GameUI.BossHud = this;
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null) canvasGroup = gameObject.AddComponent<CanvasGroup>();
         canvasGroup.alpha = 0f;

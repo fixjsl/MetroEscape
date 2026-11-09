@@ -6,11 +6,11 @@ class CraftingTable : InteractableBase
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        TogglePanel(CraftingUI.Instance);
+        if (GameUI.Crafting != null) TogglePanel(GameUI.Crafting);
     }
     protected override void OnPlayerExited(PlayerStateMachine player)
     {
-        if (CraftingUI.Instance.IsOpen)
-            CraftingUI.Instance.Close();
+        if (GameUI.Crafting != null && GameUI.Crafting.IsOpen)
+            GameUI.Crafting.Close();
     }
 }

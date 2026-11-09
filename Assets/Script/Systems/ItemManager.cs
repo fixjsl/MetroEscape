@@ -15,7 +15,13 @@ public class ItemManager : SingletonBehaviour<ItemManager>
     {
         base.Awake();
         if (Instance != this) return;
+        UseDatabase(database);
+    }
+
+    // 사용할 아이템 DB 지정. 씬에서는 Awake가, 테스트에서는 테스트용 DB로 직접 부름
+    public static void UseDatabase(ItemDatabase database)
+    {
         db = database;
-        db.Build();
+        if (db != null) db.Build();
     }
 }
