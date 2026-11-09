@@ -31,7 +31,7 @@ public class ContainerObject : InteractableBase
         if (open)
         {
             open = false;
-            ContainerUI.Instance.Close();
+            GameUI.Container?.Close();
             if (disappearAfterOpen && hasBeenOpened)
             {
                 gameObject.SetActive(false);
@@ -47,18 +47,30 @@ public class ContainerObject : InteractableBase
 
         open = true;
         hasBeenOpened = true;
-        ContainerUI.Instance.Open(this);
+        GameUI.Container?.Open(this);
         RefreshPrompt();
         PlayInteractSound(firstOpenSound, openSound);
     }
 
     protected override void OnPlayerExited(PlayerStateMachine player)
     {
-        open = false;
-        ContainerUI.Instance.CloseKeepingInventory();
+        // 내가 연 창일 때만 닫기 (옆 상자 창을 닫지 않게)
+        if (open)
+        {
+            open = false;
+            GameUI.Container?.CloseKeepingInventory();
+        }
 
+        // ESC로 먼저 닫았어도 한 번 연 1회용 상자는 떠날 때 사라짐
         if (disappearAfterOpen && hasBeenOpened)
             gameObject.SetActive(false);
+    }
+
+    // 창이 어떤 경로로든 닫히면(상호작용·범위 벗어남·ESC·다른 상자 열기) ContainerUI가 불러 줌
+    public void WindowClosed()
+    {
+        open = false;
+        RefreshPrompt();
     }
 
     public void CycleReset()

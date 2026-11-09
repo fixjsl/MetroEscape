@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -33,6 +33,7 @@ public class CraftingUI : UIPanel<CraftingUI>
     protected override void Awake()
     {
         base.Awake();
+        GameUI.Crafting = this;
         root.SetActive(false);
     }
 

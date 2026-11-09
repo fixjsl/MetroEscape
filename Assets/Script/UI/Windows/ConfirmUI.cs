@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class ConfirmUI : UIPanel<ConfirmUI>
+public class ConfirmUI : UIPanel<ConfirmUI>, IConfirmDialog
 {
 
     [SerializeField] private TMP_Text messageText;
@@ -18,6 +18,7 @@ public class ConfirmUI : UIPanel<ConfirmUI>
     protected override void Awake()
     {
         base.Awake();
+        GameUI.Confirm = this;
         root.SetActive(false);
         confirmButton.onClick.AddListener(OnConfirm);
         cancelButton.onClick.AddListener(OnCancel);

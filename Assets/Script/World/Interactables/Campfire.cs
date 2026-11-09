@@ -34,15 +34,15 @@ public class Campfire : InteractableBase
 
     protected override void OnInteractInternal(Vector3 interacterPosition)
     {
-        if (CampfireUI.Instance.IsOpen)
-            CampfireUI.Instance.Close();
-        else
-            CampfireUI.Instance.Open(this);
+        var window = GameUI.Campfire;
+        if (window == null) return;
+        if (window.IsOpen) window.Close();
+        else window.Open(this);
     }
 
     protected override void OnPlayerExited(PlayerStateMachine player)
     {
-        CampfireUI.Instance.Close();
+        GameUI.Campfire?.Close();
     }
 
     public static int CountFuel(Inventory inv)
