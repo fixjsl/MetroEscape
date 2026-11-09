@@ -173,6 +173,35 @@ public class StateMachineTests
     }
 }
 
+// StateFactory가 "상태 부모 클래스가 있는 어셈블리"에서 상태를 찾는지
+// (asmdef로 나눈 뒤 Core 어셈블리만 뒤져서 플레이어·몬스터 상태를 하나도 못 찾던 버그 재발 방지)
+public class StateFactoryTests
+{
+    public abstract class FactoryState : State
+    {
+        protected FactoryState(object owner) { }
+        public override void Enter() { }
+        public override void Exit() { }
+    }
+    public class First : FactoryState { public First(object owner) : base(owner) { } }
+    public class Second : FactoryState { public Second(object owner) : base(owner) { } }
+
+    [Test]
+    public void 다른_어셈블리에_있는_상태도_찾아서_만듦()
+    {
+        var states = StateFactory.CreateAll<FactoryState>(new object());
+        Assert.AreEqual(2, states.Count);
+    }
+
+    [Test]
+    public void 게임의_플레이어_몬스터_상태를_찾음()
+    {
+        // 생성까지는 안 하고(주인 객체 필요) 찾는 것만: 부모 클래스와 같은 어셈블리에 상태가 있어야 함
+        Assert.IsTrue(typeof(PlayerStates.Idle).Assembly == typeof(PlayerState).Assembly);
+        Assert.IsTrue(typeof(MonsterStates.Idle).Assembly == typeof(MonsterStates.MonsterState).Assembly);
+    }
+}
+
 public class IntervalTimerTests
 {
     [Test]
