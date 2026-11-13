@@ -23,7 +23,14 @@ public class CameraFollow : MonoBehaviour
     private Camera cam;
 
     void Awake() => cam = GetComponent<Camera>();
-
+    void Start(){
+        if (target == null) return;
+        currentLookAhead = Mathf.Sign(target.forward.x) * CalcLookAhead();
+        transform.position = new Vector3(
+        target.position.x + offset.x + currentLookAhead,
+        target.position.y + offset.y,
+        transform.position.z);
+    }
     float CalcLookAhead()
     {
         float dist = Mathf.Abs(transform.position.z - target.position.z);
@@ -45,7 +52,7 @@ public class CameraFollow : MonoBehaviour
             transform.position.z
         );
 
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed*Time.deltaTime);
     }
 
     // 런타임에 대상 설정
