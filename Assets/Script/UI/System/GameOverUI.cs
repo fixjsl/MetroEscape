@@ -1,6 +1,5 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using TMPro; 
 using System.Collections.Generic;
 
@@ -41,7 +40,7 @@ public class GameOverUI : UIPanel
     {
         Time.timeScale = 1f;
         UIStackManager.Clear();
-        SceneManager.LoadScene(mainMenuSceneName);
+        SceneFlow.Go(mainMenuSceneName);   // Core 빼고 내리고 메뉴 씬을 올림
     }
 
     void OnDestroy()

@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using System.Collections.Generic;
@@ -73,7 +72,7 @@ public class StartMenu : MonoBehaviour
 
     void LoadGameScene()
     {
-        SceneManager.LoadScene("Base&Main1");
+        SceneFlow.Go("Base&Main1");   // Core 위에 게임 씬을 올림 (Core는 그대로)
     }
 
     void OnSettings()

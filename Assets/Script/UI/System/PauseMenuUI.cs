@@ -1,8 +1,7 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
@@ -44,7 +43,7 @@ public class PauseMenuUI : UIPanel
     {
         Time.timeScale = 1f;
         UIStackManager.Clear();
-        SceneManager.LoadScene(mainMenuSceneName);
+        SceneFlow.Go(mainMenuSceneName);   // Core 빼고 내리고 메뉴 씬을 올림
     }
 
     private void AddHoverDesc(Button btn, string desc)
