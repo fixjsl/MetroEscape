@@ -20,6 +20,7 @@ public static class SceneFlow
     public static bool IsBusy { get; private set; }
     public static event Action<Scene> SceneLoaded;      // 콘텐츠 씬 하나가 다 올라온 뒤
     public static event Action<string> SceneUnloaded;   // 콘텐츠 씬 하나가 내려간 뒤
+    public static event Action<Scene> Arrived;          // Go로 화면 전환이 끝난 뒤 (도착한 활성 씬) — 플레이어 생성·스폰 위치 등
 
     public static void Go(string scene, Action done = null) => Run(GoRoutine(scene, done));
     public static void LoadAdditive(string scene, Action done = null) => Run(LoadRoutine(scene, false, done));
@@ -48,6 +49,7 @@ public static class SceneFlow
         }
         yield return LoadRoutine(scene, true, null);
         IsBusy = false;
+        Arrived?.Invoke(SceneManager.GetActiveScene());
         done?.Invoke();
     }
 
@@ -114,5 +116,5 @@ public static class SceneFlow
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { IsBusy = false; SceneLoaded = null; SceneUnloaded = null; }
+    static void ResetStatics() { IsBusy = false; SceneLoaded = null; SceneUnloaded = null; Arrived = null; }
 }
